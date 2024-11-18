@@ -1,18 +1,18 @@
 package at.ac.fhcampuswien.richAF;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import at.ac.fhcampuswien.richAF.crawler.Crawler;
+import lombok.extern.log4j.Log4j2;
 
 import java.io.IOException;
 
+@Log4j2
 public class Main {
-    private static final Logger log = LogManager.getLogger(Main.class);
-
     public static void main(String[] args) {
+        Crawler crawler = new Crawler();
         try {
-            new Crawler("https://fh-campuswien.ac.at", 1);
+            crawler.crawl("https://fh-campuswien.ac.at");
         } catch (IOException e) {
-            log.error(e);
+           log.error(e);
         }
     }
 }
