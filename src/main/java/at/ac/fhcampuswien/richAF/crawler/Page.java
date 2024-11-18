@@ -1,7 +1,8 @@
-package at.ac.fhcampuswien.richAF;
+package at.ac.fhcampuswien.richAF.crawler;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.BufferedReader;
@@ -9,17 +10,16 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+@Log4j2
 @Getter
 @Setter
-public class Page {
+public class Page implements Comparable<Page> {
 
     private URI uri;
     private String rawContent;
@@ -71,7 +71,12 @@ public class Page {
                 rawLinks.add(result.trim());
             }
         }
-        rawLinks.forEach(System.out::println);
+        rawLinks.forEach(System.out::println); // TODO: Remove unnecessary logging
         return rawLinks.stream().map(URI::create).collect(Collectors.toSet());
+    }
+
+    @Override
+    public int compareTo(Page o) {
+        return this.uri.toString().compareTo(o.uri.toString());
     }
 }
