@@ -2,7 +2,10 @@ package at.ac.fhcampuswien.richAF;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello world!");
-        System.out.println("pushing to new repo!");
+        testMethod();
+    }
+
+    public static void testMethod(){
+        System.out.print("Hello world");
     }
 }
