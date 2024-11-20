@@ -2,7 +2,7 @@ plugins {
     id("java")
 }
 
-group = "at.ac.fhcampuswien"
+group = "at.ac.fhcampuswien.richAF"
 version = "1.0-SNAPSHOT"
 
 repositories {
