@@ -1,4 +1,4 @@
-package at.ac.fhcampuswien.richAF.DataManager;
+package at.ac.fhcampuswien.richAF.data;
 
 public class LogManager {
     private String fileName;
