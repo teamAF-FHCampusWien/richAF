@@ -1,8 +1,6 @@
 package at.ac.fhcampuswien.richAF.data;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.Arrays;
 import java.util.List;
 import java.time.ZonedDateTime;
@@ -76,5 +74,22 @@ public class EventManager {
         } catch (IOException e) {
             System.out.println("An error occurred:"+e.getMessage());
         }
+    }
+
+    /**
+     * Read the log file and return its content as a list of strings.
+     *
+     * @thows IOException On input error.
+     */
+    public List<String> readLogFile(){
+        BufferedReader reader;
+        try {
+            // Read the file and return its content as a list of strings
+            reader = new BufferedReader(new FileReader(this.fileName));
+            return reader.lines().toList();
+        } catch (IOException e) {
+            System.out.println("An error occurred:"+e.getMessage());
+        }
+        return null;
     }
 }
