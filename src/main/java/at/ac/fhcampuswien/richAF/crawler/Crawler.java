@@ -7,6 +7,8 @@ import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 @Log4j2
 @Getter
@@ -19,15 +21,13 @@ public class Crawler {
     private int maxDepth = 2;
     private int currentDepth = 0;
 
-    public Crawler() {
+    public Crawler(String uri) throws IOException, URISyntaxException {
+        this.currentNode = this.mesh.createNode(new Page(URI.create(uri)), this.currentNode);
     }
 
-    public Crawler(int maxDepth) {
+    public Crawler(String uri, int maxDepth) throws IOException, URISyntaxException {
+        this.currentNode = this.mesh.createNode(new Page(URI.create(uri)), this.currentNode);
         this.maxDepth = maxDepth;
-    }
-
-    public void crawl(String uri) throws IOException {
-        this.currentNode = mesh.createNode(new Page(uri), null);
     }
 
     // Steps of the crawler
@@ -35,9 +35,12 @@ public class Crawler {
     // 2: Check if mesh already contains some of the page links (those can be omitted)
     // 3: Add node of generated page to mesh
     // TODO:    4: Crawl all remaining page links and start from the top
-    /*
-    public void crawl() {
-        this.currentNode = mesh.createNode(new Page(uri), null);
+    public void crawl() throws IOException, URISyntaxException {
+        currentDepth++;
+        if (this.currentDepth == this.maxDepth) return;
+        for (URI link : this.currentNode.getPage().getLinks()) {
+            mesh.createNode(new Page(link), this.currentNode);
+            log.info("New node created for URI: {}", link.toString());
+        }
     }
-     */
 }

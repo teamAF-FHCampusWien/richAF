@@ -21,7 +21,7 @@ public class Mesh {
         if (this.nodes.stream().map(n -> n.getPage().getUri().toString()).collect(Collectors.toSet()).contains(page.getUri().toString())) {
             return this.nodes.stream().filter(n -> n.getPage().getUri().toString().equals(page.getUri().toString())).findFirst().orElse(null);
         }
-        Node node = new Node(UUID.randomUUID(), page, parent, new ArrayList<>());
+        Node node = new Node(page, parent, new ArrayList<>());
         nodes.add(node);
         return node;
     }
