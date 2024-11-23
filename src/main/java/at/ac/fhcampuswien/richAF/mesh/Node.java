@@ -13,13 +13,11 @@ import java.util.UUID;
 @Setter
 public class Node implements Comparable<Node> {
 
-    private UUID uuid;
     private Page page;
     private Node parent;
     private List<Node> children;
 
-    public Node(UUID uuid, Page page, Node parent, List<Node> children) {
-        this.uuid = uuid;
+    public Node(Page page, Node parent, List<Node> children) {
         this.page = page;
         this.parent = parent;
         this.children = children;
