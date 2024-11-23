@@ -14,7 +14,7 @@ public class EventManager {
     public static final String INFO = "INFO";
     public static final String WARNING = "WARNING";
     public static final String ERROR = "ERROR";
-    public static List<String> availableTimeFormats = Arrays.asList("dd-MMM-yyyy HH:mm:ss z", "dd.MM.yyyy h:mm:ss.SSS a z", "E, MMM dd yyyy HH:mm:ss z");
+    public static final List<String> availableTimeFormats = Arrays.asList("dd-MMM-yyyy HH:mm:ss z", "dd.MM.yyyy h:mm:ss.SSS a z", "E, MMM dd yyyy HH:mm:ss z");
 
     public EventManager(String fileName, String timeFormat) {
         this.fileName = fileName;
@@ -51,25 +51,27 @@ public class EventManager {
     * Log a message to the destination file.
      *
      * @param message The message to log.
-     * @param className The name of the class that called the method.
+     * @param level The log level of the message.
      *
      * @thows IOException On input error.
     * */
     public void logMessage(String message, String level) {
-        // Get the class name of the caller
+        // Get the class name and method of the caller
         StackTraceElement[] stackTraceElement = Thread.currentThread().getStackTrace();
         String callerClassName = stackTraceElement[2].getClassName();
+        String callerMethodName = stackTraceElement[2].getMethodName();
 
         // Get the current time as a string in the specified format
         String time = ZonedDateTime.now().format(DateTimeFormatter.ofPattern(this.timeFormat));
 
         try {
-            // Write to file and create it if it does not exist
+            // Check if the file exists and create it if it doesn't
             if(!new File(this.fileName).exists()){
                 this.fileName = String.valueOf(new File(this.fileName).createNewFile());
             }
+            // Write the event to the file
             FileWriter myWriter = new FileWriter(this.fileName, true);
-            myWriter.write(String.format("[%s] %s %s: %s\n", time, level, callerClassName, message));
+            myWriter.write(String.format("[%s] %s %s %s: %s\n", time, level, callerClassName, callerMethodName, message));
             myWriter.close();
         } catch (IOException e) {
             System.out.println("An error occurred:"+e.getMessage());
