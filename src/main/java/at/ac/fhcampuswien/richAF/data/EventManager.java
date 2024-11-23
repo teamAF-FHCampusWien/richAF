@@ -1,6 +1,7 @@
 package at.ac.fhcampuswien.richAF.data;
 
-import java.time.format.FormatStyle;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.time.ZonedDateTime;
@@ -18,6 +19,11 @@ public class EventManager {
 
     public EventManager(String fileName) {
         this.fileName = fileName;
+        this.timeFormat = availableTimeFormats.get(0);
+    }
+
+    public EventManager() {
+        this.fileName = "/tmp/richAF.log";
         this.timeFormat = availableTimeFormats.get(0);
     }
 
@@ -43,9 +49,17 @@ public class EventManager {
      * @param message The message to log.
      * @param className The name of the class that called the method.
      *
+     * @thows IOException On input error.
     * */
     public void logMessage(String message, String className) {
         String time = ZonedDateTime.now().format(DateTimeFormatter.ofPattern(this.timeFormat));
-        System.out.printf("%s [%s]: %s\n", time, className, message);
+        try {
+            // Write to file
+            FileWriter myWriter = new FileWriter(this.fileName, true);
+            myWriter.write(String.format("%s [%s]: %s\n", time, className, message));
+            myWriter.close();
+        } catch (IOException e) {
+            System.out.println("An error occurred:"+e.getMessage());
+        }
     }
 }
