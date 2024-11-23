@@ -1,6 +1,6 @@
 package at.ac.fhcampuswien.richAF.data;
 
-public class DataExporter {
+public class Exporter {
 
     public static String exportCSV(){
         return "Placeholder";
