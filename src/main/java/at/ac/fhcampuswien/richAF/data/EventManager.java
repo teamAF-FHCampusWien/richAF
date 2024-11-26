@@ -1,6 +1,10 @@
 package at.ac.fhcampuswien.richAF.data;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileWriter;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.time.ZonedDateTime;
