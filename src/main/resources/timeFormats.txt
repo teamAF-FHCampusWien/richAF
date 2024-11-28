@@ -1,0 +1,6 @@
+E, MMM dd yyyy HH:mm:ss z
+dd.MM.yyyy h:mm:ss.SSS a z
+dd-MMM-yyyy HH:mm:ss.SSS z
+dd-MMM-yyyy HH:mm:ss.SSS
+dd-MMM-yyyy HH:mm:ss z
+dd-MMM-yyyy HH:mm:ss
