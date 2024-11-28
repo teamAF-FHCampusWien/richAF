@@ -13,23 +13,30 @@ import java.time.format.DateTimeFormatter;
 public class EventManager {
     private String fileName;
     private String timeFormat;
+    public List<String> availableTimeFormats;
     public static final String INFO = "INFO";
     public static final String WARNING = "WARNING";
     public static final String ERROR = "ERROR";
-    public static final List<String> availableTimeFormats = Arrays.asList("dd-MMM-yyyy HH:mm:ss z", "dd.MM.yyyy h:mm:ss.SSS a z", "E, MMM dd yyyy HH:mm:ss z");
 
     public EventManager(String fileName, String timeFormat) {
         this.fileName = fileName;
-        this.timeFormat = timeFormat;
+        if(isValidTimeFormat(timeFormat)){
+            this.timeFormat = timeFormat;
+        } else {
+            this.timeFormat = "dd-MMM-yyyy HH:mm:ss z";
+        }
+        readTimeFormats();
     }
 
     public EventManager(String fileName) {
         this.fileName = fileName;
+        readTimeFormats();
         this.timeFormat = availableTimeFormats.get(0);
     }
 
     public EventManager() {
         this.fileName = "/tmp/richAF.log";
+        readTimeFormats();
         this.timeFormat = availableTimeFormats.get(0);
     }
 
@@ -47,6 +54,50 @@ public class EventManager {
 
     public void setTimeFormat(String timeFormat) {
         this.timeFormat = timeFormat;
+    }
+
+    private void readTimeFormats() {
+        String path = System.getProperty("user.dir") + "/src/main/resources/timeFormats.txt";
+        BufferedReader reader;
+        List<String> formats = null;
+        List<String> fileContent = null;
+        List<String> replacement = Arrays.asList("dd-MMM-yyyy HH:mm:ss z", "dd.MM.yyyy h:mm:ss.SSS a z", "E, MMM dd yyyy HH:mm:ss z");
+
+        // Error handling of the file processing part
+        try {
+            // Read the file and return its content as a list of strings
+            reader = new BufferedReader(new FileReader(path));
+            fileContent = reader.lines().toList();
+        } catch (IOException e) {
+            this.timeFormat = replacement.get(0);
+            logMessage("An error occurred:"+e.getMessage(), ERROR);
+            this.availableTimeFormats = replacement;
+            return;
+        }
+
+        // Error handling of the time format validation
+        try{
+            for(String line : fileContent){
+                if(isValidTimeFormat(line)){
+                    formats.add(line);
+                }
+            }
+        } catch (Exception e){
+            this.timeFormat = replacement.get(0);
+            logMessage("An error occurred:"+e.getMessage(), ERROR);
+            this.availableTimeFormats = replacement;
+            return;
+        }
+        this.availableTimeFormats = formats;
+    }
+
+    private boolean isValidTimeFormat(String timeFormat) {
+        try {
+            DateTimeFormatter.ofPattern(timeFormat);
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
     }
 
     /**
@@ -83,6 +134,7 @@ public class EventManager {
     /**
      * Read the log file and return its content as a list of strings.
      *
+     * @return The content of the log file as a list of strings.
      * @thows IOException On input error.
      */
     public List<String> readLogFile(){
