@@ -70,7 +70,7 @@ public class EventManager {
             reader = new BufferedReader(new FileReader(path));
             fileContent = reader.lines().toList();
         } catch (IOException e) {
-            logMessage(ERROR,"An error occurred:"+e.getMessage());
+            logErrorMessage("An error occurred:"+e.getMessage());
             this.availableTimeFormats = replacement;
             return;
         }
@@ -83,7 +83,7 @@ public class EventManager {
                 }
             }
         } catch (Exception e){
-            logMessage(ERROR,"An error occurred:"+e.getMessage());
+            logErrorMessage("An error occurred:"+e.getMessage());
             this.availableTimeFormats = replacement;
             return;
         }
