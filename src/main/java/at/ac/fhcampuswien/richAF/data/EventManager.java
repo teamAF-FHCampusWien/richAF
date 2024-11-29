@@ -15,9 +15,6 @@ public class EventManager {
     private String fileName;
     private String timeFormat;
     public List<String> availableTimeFormats;
-    public static final String INFO = "INFO";
-    public static final String WARNING = "WARNING";
-    public static final String ERROR = "ERROR";
 
     public EventManager(String fileName, String timeFormat) {
         this.fileName = fileName;
@@ -134,16 +131,20 @@ public class EventManager {
         }
     }
 
+    public void logFatalMessage(String message) {
+        logMessage("FATAL", message);
+    }
+
     public void logErrorMessage(String message) {
-        logMessage(ERROR, message);
+        logMessage("ERROR", message);
     }
 
     public void logWarningMessage(String message) {
-        logMessage(WARNING, message);
+        logMessage("WARNING", message);
     }
 
     public void logInfoMessage(String message) {
-        logMessage(INFO, message);
+        logMessage("INFO", message);
     }
 
     /**
