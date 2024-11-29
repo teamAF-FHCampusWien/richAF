@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.time.ZonedDateTime;
@@ -59,9 +60,12 @@ public class EventManager {
     private void readTimeFormats() {
         String path = System.getProperty("user.dir") + "/src/main/resources/timeFormats.txt";
         BufferedReader reader;
-        List<String> formats = null;
+        List<String> formats = new ArrayList<String>();
         List<String> fileContent = null;
         List<String> replacement = Arrays.asList("dd-MMM-yyyy HH:mm:ss z", "dd.MM.yyyy h:mm:ss.SSS a z", "E, MMM dd yyyy HH:mm:ss z");
+
+        // Setting a default time format in case of an error
+        this.timeFormat = replacement.get(0);
 
         // Error handling of the file processing part
         try {
@@ -69,8 +73,7 @@ public class EventManager {
             reader = new BufferedReader(new FileReader(path));
             fileContent = reader.lines().toList();
         } catch (IOException e) {
-            this.timeFormat = replacement.get(0);
-            logMessage("An error occurred:"+e.getMessage(), ERROR);
+            logMessage(ERROR,"An error occurred:"+e.getMessage());
             this.availableTimeFormats = replacement;
             return;
         }
@@ -83,8 +86,7 @@ public class EventManager {
                 }
             }
         } catch (Exception e){
-            this.timeFormat = replacement.get(0);
-            logMessage("An error occurred:"+e.getMessage(), ERROR);
+            logMessage(ERROR,"An error occurred:"+e.getMessage());
             this.availableTimeFormats = replacement;
             return;
         }
@@ -103,16 +105,17 @@ public class EventManager {
     /**
     * Log a message to the destination file.
      *
-     * @param message The message to log.
      * @param level The log level of the message.
+     * @param message The message to log.
      *
      * @thows IOException On input error.
     * */
-    public void logMessage(String message, String level) {
+    private void logMessage(String level, String message) {
         // Get the class name and method of the caller
         StackTraceElement[] stackTraceElement = Thread.currentThread().getStackTrace();
-        String callerClassName = stackTraceElement[2].getClassName();
-        String callerMethodName = stackTraceElement[2].getMethodName();
+        String callerClassName = stackTraceElement[3].getClassName();
+        String callerMethodName = stackTraceElement[3].getMethodName();
+        int lineNumber = stackTraceElement[3].getLineNumber();
 
         // Get the current time as a string in the specified format
         String time = ZonedDateTime.now().format(DateTimeFormatter.ofPattern(this.timeFormat));
@@ -124,11 +127,23 @@ public class EventManager {
             }
             // Write the event to the file
             FileWriter myWriter = new FileWriter(this.fileName, true);
-            myWriter.write(String.format("[%s] %s %s %s: %s\n", time, level, callerClassName, callerMethodName, message));
+            myWriter.write(String.format("[%s] %s %s %s %d: %s\n", time, level, callerClassName, callerMethodName, lineNumber, message));
             myWriter.close();
         } catch (IOException e) {
             System.out.println("An error occurred:"+e.getMessage());
         }
+    }
+
+    public void logErrorMessage(String message) {
+        logMessage(ERROR, message);
+    }
+
+    public void logWarningMessage(String message) {
+        logMessage(WARNING, message);
+    }
+
+    public void logInfoMessage(String message) {
+        logMessage(INFO, message);
     }
 
     /**
