@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Log4j2
@@ -27,4 +28,5 @@ public class Node implements Comparable<Node> {
     public int compareTo(Node o) {
         return this.page.compareTo(o.getPage());
     }
+
 }
