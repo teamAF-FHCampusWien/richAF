@@ -76,7 +76,7 @@ public class EventManager {
             FileReader fileReader = new FileReader(path);
             config = new JSONObject(new JSONTokener(fileReader));
         } catch (Exception e) {
-            logErrorMessage("An error occurred:"+e.getMessage());
+            logErrorMessage(e);
             this.availableTimeFormats = replacement;
             return;
         }
@@ -89,7 +89,7 @@ public class EventManager {
                 }
             }
         } catch (Exception e){
-            logErrorMessage("An error occurred:"+e.getMessage());
+            logErrorMessage(e);
             this.availableTimeFormats = replacement;
             return;
         }
@@ -98,7 +98,7 @@ public class EventManager {
             debugModeOn = config.getBoolean("debugMode");
             informationalModeOn = config.getBoolean("informationalMode");
         } catch (Exception e) {
-            logWarningMessage("Invalid value for debugMode or informationalMode in the config file. Using default value.");
+            logWarningMessage(e);
             debugModeOn = false;
             informationalModeOn = false;
         }
@@ -147,27 +147,27 @@ public class EventManager {
         }
     }
 
-    public void logFatalMessage(String message) {
-        logMessage("FATAL", message);
+    public void logFatalMessage(Exception exception) {
+        logMessage("FATAL", exception.getMessage());
     }
 
-    public void logErrorMessage(String message) {
-        logMessage("ERROR", message);
+    public void logErrorMessage(Exception exception) {
+        logMessage("ERROR", exception.getMessage());
     }
 
-    public void logWarningMessage(String message) {
-        logMessage("WARNING", message);
+    public void logWarningMessage(Exception exception) {
+        logMessage("WARNING", exception.getMessage());
     }
 
-    public void logInfoMessage(String message) {
+    public void logInfoMessage(Exception exception) {
         if(informationalModeOn || debugModeOn){
-            logMessage("INFO", message);
+            logMessage("INFO", exception.getMessage());
         }
     }
 
-    public void logDebugMessage(String message) {
+    public void logDebugMessage(Exception exception) {
         if(debugModeOn){
-            logMessage("DEBUG", message);
+            logMessage("DEBUG", exception.getMessage());
         }
     }
 
