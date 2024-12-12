@@ -1,5 +1,6 @@
 {
   "debuggingMode": false,
+  "informationalMode": false,
   "timestamps": ["dd.MM.yyyy h:mm:ss.SSS a z",
     "E, MMM dd yyyy HH:mm:ss z",
     "dd-MMM-yyyy HH:mm:ss.SSS z",
