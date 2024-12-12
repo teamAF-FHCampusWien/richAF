@@ -1,5 +1,8 @@
 package at.ac.fhcampuswien.richAF.data;
 
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
 import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.io.FileReader;
@@ -15,6 +18,7 @@ public class EventManager {
     private String fileName;
     private String timeFormat;
     public List<String> availableTimeFormats;
+    public boolean debugModeOn = false;
 
     public EventManager(String fileName, String timeFormat) {
         this.fileName = fileName;
@@ -23,18 +27,18 @@ public class EventManager {
         } else {
             this.timeFormat = "dd-MMM-yyyy HH:mm:ss z";
         }
-        readTimeFormats();
+        readConfigFile();
     }
 
     public EventManager(String fileName) {
         this.fileName = fileName;
-        readTimeFormats();
+        readConfigFile();
         this.timeFormat = availableTimeFormats.get(0);
     }
 
     public EventManager() {
         this.fileName = "/tmp/richAF.log";
-        readTimeFormats();
+        readConfigFile();
         this.timeFormat = availableTimeFormats.get(0);
     }
 
@@ -54,22 +58,23 @@ public class EventManager {
         this.timeFormat = timeFormat;
     }
 
-    private void readTimeFormats() {
-        String path = System.getProperty("user.dir") + "/src/main/resources/timeFormats.txt";
-        BufferedReader reader;
+    private void readConfigFile() {
+        JSONObject obj;
         List<String> formats = new ArrayList<String>();
-        List<String> fileContent = null;
         List<String> replacement = Arrays.asList("dd-MMM-yyyy HH:mm:ss z", "dd.MM.yyyy h:mm:ss.SSS a z", "E, MMM dd yyyy HH:mm:ss z");
+
+        // Get the path of the file and decode it to UTF-8 to cope with special characters
+        String path = ClassLoader.getSystemResource("loggingConfig.json").getPath();
+        path = java.net.URLDecoder.decode(path, java.nio.charset.StandardCharsets.UTF_8);
 
         // Setting a default time format in case of an error
         this.timeFormat = replacement.get(0);
 
         // Error handling of the file processing part
         try {
-            // Read the file and return its content as a list of strings
-            reader = new BufferedReader(new FileReader(path));
-            fileContent = reader.lines().toList();
-        } catch (IOException e) {
+            FileReader fileReader = new FileReader(path);
+            obj = new JSONObject(new JSONTokener(fileReader));
+        } catch (Exception e) {
             logErrorMessage("An error occurred:"+e.getMessage());
             this.availableTimeFormats = replacement;
             return;
@@ -77,9 +82,9 @@ public class EventManager {
 
         // Error handling of the time format validation
         try{
-            for(String line : fileContent){
-                if(isValidTimeFormat(line)){
-                    formats.add(line);
+            for(Object format : obj.getJSONArray("timestamps")){
+                if(isValidTimeFormat((String) format)){
+                    formats.add((String) format);
                 }
             }
         } catch (Exception e){
@@ -87,6 +92,8 @@ public class EventManager {
             this.availableTimeFormats = replacement;
             return;
         }
+
+
         this.availableTimeFormats = formats;
     }
 
@@ -145,6 +152,12 @@ public class EventManager {
 
     public void logInfoMessage(String message) {
         logMessage("INFO", message);
+    }
+
+    public void logDebugMessage(String message) {
+        if(debugModeOn){
+            logMessage("DEBUG", message);
+        }
     }
 
     /**
