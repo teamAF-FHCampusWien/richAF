@@ -95,7 +95,7 @@ public class EventManager {
         }
 
         try {
-            debugModeOn = config.getBoolean("debugMode");
+            debugModeOn = config.getBoolean("debuggingMode");
             informationalModeOn = config.getBoolean("informationalMode");
         } catch (Exception e) {
             logWarningMessage(e);
