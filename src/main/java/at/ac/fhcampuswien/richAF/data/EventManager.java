@@ -19,6 +19,7 @@ public class EventManager {
     private String timeFormat;
     public List<String> availableTimeFormats;
     public boolean debugModeOn = false;
+    public boolean informationalModeOn = false;
 
     public EventManager(String fileName, String timeFormat) {
         this.fileName = fileName;
@@ -59,7 +60,7 @@ public class EventManager {
     }
 
     private void readConfigFile() {
-        JSONObject obj;
+        JSONObject config;
         List<String> formats = new ArrayList<String>();
         List<String> replacement = Arrays.asList("dd-MMM-yyyy HH:mm:ss z", "dd.MM.yyyy h:mm:ss.SSS a z", "E, MMM dd yyyy HH:mm:ss z");
 
@@ -73,7 +74,7 @@ public class EventManager {
         // Error handling of the file processing part
         try {
             FileReader fileReader = new FileReader(path);
-            obj = new JSONObject(new JSONTokener(fileReader));
+            config = new JSONObject(new JSONTokener(fileReader));
         } catch (Exception e) {
             logErrorMessage("An error occurred:"+e.getMessage());
             this.availableTimeFormats = replacement;
@@ -82,7 +83,7 @@ public class EventManager {
 
         // Error handling of the time format validation
         try{
-            for(Object format : obj.getJSONArray("timestamps")){
+            for(Object format : config.getJSONArray("timestamps")){
                 if(isValidTimeFormat((String) format)){
                     formats.add((String) format);
                 }
@@ -93,6 +94,14 @@ public class EventManager {
             return;
         }
 
+        try {
+            debugModeOn = config.getBoolean("debugMode");
+            informationalModeOn = config.getBoolean("informationalMode");
+        } catch (Exception e) {
+            logWarningMessage("Invalid value for debugMode or informationalMode in the config file. Using default value.");
+            debugModeOn = false;
+            informationalModeOn = false;
+        }
 
         this.availableTimeFormats = formats;
     }
@@ -151,7 +160,9 @@ public class EventManager {
     }
 
     public void logInfoMessage(String message) {
-        logMessage("INFO", message);
+        if(informationalModeOn || debugModeOn){
+            logMessage("INFO", message);
+        }
     }
 
     public void logDebugMessage(String message) {
