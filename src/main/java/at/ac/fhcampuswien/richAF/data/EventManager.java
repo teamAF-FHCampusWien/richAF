@@ -1,8 +1,9 @@
 package at.ac.fhcampuswien.richAF.data;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-
 import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.io.FileReader;
@@ -15,7 +16,11 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class EventManager {
+    @Getter
+    @Setter
     private String fileName;
+    @Setter
+    @Getter
     private String timeFormat;
     public List<String> availableTimeFormats;
     public boolean debugModeOn = false;
@@ -41,22 +46,6 @@ public class EventManager {
         this.fileName = "/tmp/richAF.log";
         readConfigFile();
         this.timeFormat = availableTimeFormats.get(0);
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
-    public String getFileName() {
-        return fileName;
-    }
-
-    public String getTimeFormat() {
-        return timeFormat;
-    }
-
-    public void setTimeFormat(String timeFormat) {
-        this.timeFormat = timeFormat;
     }
 
     private void readConfigFile() {
@@ -123,7 +112,15 @@ public class EventManager {
      *
      * @thows IOException On input error.
     * */
-    private void logMessage(String level, String message) {
+    private void logMessage(String level, Object message) {
+        if (message instanceof Exception) {
+            message = ((Exception) message).getMessage();
+        } else if (message instanceof String) {
+            message = message.toString();
+        } else {
+            message = "Unknown error";
+        }
+
         // Get the class name and method of the caller
         StackTraceElement[] stackTraceElement = Thread.currentThread().getStackTrace();
         String callerClassName = stackTraceElement[3].getClassName();
@@ -147,8 +144,8 @@ public class EventManager {
         }
     }
 
-    public void logFatalMessage(Exception exception) {
-        logMessage("FATAL", exception.getMessage());
+    public void logFatalMessage(Object exception) {
+        logMessage("FATAL", exception);
     }
 
     public void logErrorMessage(Exception exception) {
