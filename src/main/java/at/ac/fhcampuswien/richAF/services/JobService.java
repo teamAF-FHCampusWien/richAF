@@ -14,12 +14,12 @@ public class JobService {
 
 
     public static void CreateJobs( DBService dbservice, int pcounter, int companyid) {
-        ArrayList<tblPage> lisPages = dbservice.getPages(Enums.Status.NEW, "");
+        ArrayList<tblPage> lisPages = dbservice.getPages(Enums_.Status.NEW, "");
         if (pcounter < 1) return;
 
         for (tblPage p : lisPages) {
             Document doc = Jsoup.parse(p.getStrPage());
-            dbservice.UpdateStatus(p, Enums.Status.PROCESSING);
+            dbservice.UpdateStatus(p, Enums_.Status.PROCESSING);
             try {
                 String doctype = doc.documentType().name();
                 if (doctype.equals("html")) {
@@ -36,9 +36,9 @@ public class JobService {
                     if (strParagraph != "")
                         dbservice.addJob(strParagraph,companyid);
 
-                    dbservice.UpdateStatus(p, Enums.Status.PROCESSED);
+                    dbservice.UpdateStatus(p, Enums_.Status.PROCESSED);
                 }
-                else dbservice.UpdateStatus(p, Enums.Status.PROCESSED_FAILURE);
+                else dbservice.UpdateStatus(p, Enums_.Status.PROCESSED_FAILURE);
 
 
             } catch (Exception e) {
@@ -51,17 +51,17 @@ public class JobService {
     }
 
     public static void ExecuteJobs(OllamaService ollamaService, DBService dbservice) {
-        ArrayList<tblJob> lisJobs = dbservice.getJobs(Enums.Status.NEW);
+        ArrayList<tblJob> lisJobs = dbservice.getJobs(Enums_.Status.NEW);
         tblCompany comp=new tblCompany();
 
         for (tblJob j : lisJobs) {
             String response = "";
-            dbservice.UpdateStatus(j, Enums.Status.PROCESSING);
+            dbservice.UpdateStatus(j, Enums_.Status.PROCESSING);
             if (comp.getId()!= j.getIntCompanyID()){
                 comp = dbservice.GetCompanyById(j.getIntCompanyID());
                 if (comp.getId()<=0){
                     System.out.println("Jobs cant be processed, company not found");
-                    dbservice.UpdateStatus(j, Enums.Status.PROCESSED_FAILURE);
+                    dbservice.UpdateStatus(j, Enums_.Status.PROCESSED_FAILURE);
                     continue;
                 }
                 ollamaService.SetBasePrompt(comp.getStrName());
@@ -70,7 +70,7 @@ public class JobService {
                 response = ollamaService.askOllama(j.getStrParagraphs()).get();  //"format": {"type": "json","properties": {"positive": {"type": "integer"},"negative": {"type": "integer"}}, "required": ["positive", "negative"]}
 
                 if(!response.contains("response")){
-                    dbservice.UpdateStatus(j, Enums.Status.PROCESSED_FAILURE);
+                    dbservice.UpdateStatus(j, Enums_.Status.PROCESSED_FAILURE);
                     continue;
                 }
                 JSONObject jsonResponseObject = new JSONObject(response);
@@ -84,7 +84,7 @@ public class JobService {
                      positive = Integer.parseInt(responseParts[0].split("=")[1]);
                     negative = Integer.parseInt(responseParts[1].split("=")[1]);
                 } catch (NumberFormatException e) {
-                    dbservice.UpdateStatus(j, Enums.Status.PROCESSED_FAILURE);
+                    dbservice.UpdateStatus(j, Enums_.Status.PROCESSED_FAILURE);
                     continue;
                 }
 
@@ -97,7 +97,7 @@ public class JobService {
 
 
 
-            dbservice.UpdateStatus(j, Enums.Status.PROCESSED);
+            dbservice.UpdateStatus(j, Enums_.Status.PROCESSED);
         }
 
 

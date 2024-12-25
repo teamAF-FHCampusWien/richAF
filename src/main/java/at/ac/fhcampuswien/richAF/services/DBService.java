@@ -1,8 +1,8 @@
 package at.ac.fhcampuswien.richAF.services;
 
 import at.ac.fhcampuswien.richAF.model.*;
-import at.ac.fhcampuswien.richAF.crawler.Crawler;
-import at.ac.fhcampuswien.richAF.mesh.Node;
+//import at.ac.fhcampuswien.richAF.crawler.Crawler;
+//import at.ac.fhcampuswien.richAF.mesh.Node;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
@@ -141,7 +141,10 @@ public class DBService {
     }
 
 
-
+    /**Noch deaktiviert brauch die Crawler Klasse
+     *
+     */
+    /*
     public void SavePagesFromCrawler(Crawler crawler, String keyword) {
         for (Node node : crawler.getMesh().getNodes()) {
             if (keyword != "")
@@ -154,7 +157,7 @@ public class DBService {
                 if (conn != null) {
                     String sql = "INSERT INTO tblPages(intStatus, strPage, tsCreated_on, strKeyword) VALUES(?, ?, ?, ?)";
                     try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                        pstmt.setInt(1, Enums.Status.NEW.ordinal());
+                        pstmt.setInt(1, Enums_.Status.NEW.ordinal());
                         pstmt.setString(2, raw);
                         pstmt.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
                         pstmt.setString(4, keyword);
@@ -170,24 +173,25 @@ public class DBService {
 
         }
 
-    }
+    }*/
+
     public ArrayList<tblPage> getPages() {
-        return getPages(Enums.Status.ALL,"");
+        return getPages(Enums_.Status.ALL,"");
     }
 
-    public ArrayList<tblPage> getPages(Enums.Status status, String keyword) {
+    public ArrayList<tblPage> getPages(Enums_.Status status, String keyword) {
         int wcount= 0;
         ArrayList<tblPage> result = new ArrayList<>();
         Dao<tblPage, Integer> daoTblPage = _context.getTblPageDao();
 
         try {
-            if ((status == Enums.Status.ALL) && (keyword == "" )) {
+            if ((status == Enums_.Status.ALL) && (keyword == "" )) {
                 result.addAll(daoTblPage.queryForAll());
 
             }else {
                 QueryBuilder<tblPage, Integer> queryBuilder = daoTblPage.queryBuilder();
                 Where<tblPage, Integer> where = queryBuilder.where();
-                if (status != Enums.Status.ALL) {
+                if (status != Enums_.Status.ALL) {
                     wcount++;
                     where.eq("intStatus", status.ordinal());
                 }
@@ -209,7 +213,7 @@ public class DBService {
 
     }
 
-    public void UpdateStatus(baseTbl tbl, Enums.Status status){
+    public void UpdateStatus(baseTbl tbl, Enums_.Status status){
         tbl.setStatus(status);
         System.out.println(tbl.getClass());
 
@@ -235,7 +239,7 @@ public class DBService {
             if (conn != null) {
                 String sql = "INSERT INTO tblJobs (intStatus, strParagraphs, tsCreated_on, intCompanyID) VALUES(?, ?, ?, ?)";
                 try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                    pstmt.setInt(1, Enums.Status.NEW.ordinal());
+                    pstmt.setInt(1, Enums_.Status.NEW.ordinal());
                     pstmt.setString(2, paragraph);
                     pstmt.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
                     pstmt.setInt(4, companyid);
@@ -294,21 +298,21 @@ public class DBService {
     }
 
     public ArrayList<tblJob> getjobs() {
-        return getJobs(Enums.Status.ALL);
+        return getJobs(Enums_.Status.ALL);
     }
 
-    public ArrayList<tblJob> getJobs(Enums.Status status) {
+    public ArrayList<tblJob> getJobs(Enums_.Status status) {
         ArrayList<tblJob> result = new ArrayList<>();
         Dao<tblJob, Integer> daoTblJob = _context.getTblJobDao();
 
         try {
-            if ((status == Enums.Status.ALL) ) {
+            if ((status == Enums_.Status.ALL) ) {
                 result.addAll(daoTblJob.queryForAll());
 
             }else {
                 QueryBuilder<tblJob, Integer> queryBuilder = daoTblJob.queryBuilder();
                 Where<tblJob, Integer> where = queryBuilder.where();
-                if (status != Enums.Status.ALL) {
+                if (status != Enums_.Status.ALL) {
                     where.eq("intStatus", status.ordinal());
                 }
                 result.addAll(daoTblJob.query(queryBuilder.prepare()));
@@ -328,7 +332,7 @@ public class DBService {
             if (conn != null) {
                 String sql = "INSERT INTO tblResults (intStatus, intJobID, tsCreated_on, intCompanyID, intPositiv, intNegativ) VALUES(?, ?, ?, ?, ?, ?)";
                 try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                    pstmt.setInt(1, Enums.Status.NEW.ordinal());
+                    pstmt.setInt(1, Enums_.Status.NEW.ordinal());
                     pstmt.setInt(2, jobid);
                     pstmt.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
                     pstmt.setInt(4, companyid);
