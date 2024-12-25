@@ -15,15 +15,15 @@ public abstract class baseTbl {
         return intStatus;
     }
 
-    public Enums.Status getStatus() {
-        return Enums.Status.values()[intStatus];
+    public Enums_.Status getStatus() {
+        return Enums_.Status.values()[intStatus];
     }
 
     public void setIntStatus(int intStatus) {
         this.intStatus = intStatus;
     }
 
-    public void setStatus(Enums.Status status) {
+    public void setStatus(Enums_.Status status) {
         this.intStatus = status.ordinal();
     }
 
