@@ -1,13 +1,26 @@
 package at.ac.fhcampuswien.richAF.model;
-
 import com.j256.ormlite.field.DatabaseField;
-
 import java.sql.Timestamp;
 
+
+/**
+ * Base Model Class for the DAO Table Models
+ * containing properties with their Getters and Setters
+ * properties:
+ *      intStatus
+ *      tsCreated_on
+ * @author Stefan
+ */
 public abstract class baseTbl {
+    /**
+     * intStatus ... the ordinal value of the enumerator in Enums_.Status
+     */
     @DatabaseField
     private int intStatus;
 
+    /**
+     * tsCreated_on ... Timestamp value when the line was inserted to the table
+     */
     @DatabaseField
     private Timestamp tsCreated_on;
 

@@ -3,27 +3,43 @@ package at.ac.fhcampuswien.richAF.model;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-import java.sql.Timestamp;
-
+/**
+ * Model Class for the DAO Table Models
+ * corresponding Table tblJobs
+ * containing properties with their Getters and Setters
+ * properties/tablecolumns:
+ *      id
+ *      strParagraphs
+ *      intCompanyID
+ *      intStatus from baseTbl
+ *      tsCreated_on from baseTbl
+ * @author Stefan
+ */
 @DatabaseTable(tableName = "tblJobs")
 public class tblJob extends baseTbl {
 
-
+    /**
+     * id ...  autoincrement integer value
+     */
     @DatabaseField(generatedId = true)
-        private int id;
+    private int id;
 
-        @DatabaseField
-        private String strParagraphs;
-
-
-
+    /**
+     * strParagraphs ... The Text paragraphs of the webpage which should be processed
+     */
     @DatabaseField
-        private Integer intCompanyID;
+    private String strParagraphs;
 
 
-        public tblJob() {
+    /**
+     * intCompanyID ... ID from the tblCompany of the company which this job should be referred to
+     */
+    @DatabaseField
+    private Integer intCompanyID;
 
-        }
+
+    public tblJob() {
+    }
 
 
     public int getId() {
