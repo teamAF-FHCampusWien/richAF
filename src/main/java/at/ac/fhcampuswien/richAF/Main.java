@@ -15,4 +15,11 @@ public class Main {
         log.info("Crawl complete.");
         log.info("Created mesh with {} nodes", crawler.getMesh().getNodes().size());
     }
+
+
+
+
+
+
+
 }
