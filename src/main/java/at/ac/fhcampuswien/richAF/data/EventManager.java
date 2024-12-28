@@ -1,5 +1,9 @@
 package at.ac.fhcampuswien.richAF.data;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.io.FileReader;
@@ -12,9 +16,15 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class EventManager {
+    @Getter
+    @Setter
     private String fileName;
+    @Setter
+    @Getter
     private String timeFormat;
     public List<String> availableTimeFormats;
+    public boolean debugModeOn = false;
+    public boolean informationalModeOn = false;
 
     public EventManager(String fileName, String timeFormat) {
         this.fileName = fileName;
@@ -23,70 +33,65 @@ public class EventManager {
         } else {
             this.timeFormat = "dd-MMM-yyyy HH:mm:ss z";
         }
-        readTimeFormats();
+        readConfigFile();
     }
 
     public EventManager(String fileName) {
         this.fileName = fileName;
-        readTimeFormats();
+        readConfigFile();
         this.timeFormat = availableTimeFormats.get(0);
     }
 
     public EventManager() {
         this.fileName = "/tmp/richAF.log";
-        readTimeFormats();
+        readConfigFile();
         this.timeFormat = availableTimeFormats.get(0);
     }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
-    public String getFileName() {
-        return fileName;
-    }
-
-    public String getTimeFormat() {
-        return timeFormat;
-    }
-
-    public void setTimeFormat(String timeFormat) {
-        this.timeFormat = timeFormat;
-    }
-
-    private void readTimeFormats() {
-        String path = System.getProperty("user.dir") + "/src/main/resources/timeFormats.txt";
-        BufferedReader reader;
+    private void readConfigFile() {
+        JSONObject config;
         List<String> formats = new ArrayList<String>();
-        List<String> fileContent = null;
         List<String> replacement = Arrays.asList("dd-MMM-yyyy HH:mm:ss z", "dd.MM.yyyy h:mm:ss.SSS a z", "E, MMM dd yyyy HH:mm:ss z");
+
+        // Get the path of the file and decode it to UTF-8 to cope with special characters
+        String path = ClassLoader.getSystemResource("loggingConfig.json").getPath();
+        path = java.net.URLDecoder.decode(path, java.nio.charset.StandardCharsets.UTF_8);
 
         // Setting a default time format in case of an error
         this.timeFormat = replacement.get(0);
 
         // Error handling of the file processing part
         try {
-            // Read the file and return its content as a list of strings
-            reader = new BufferedReader(new FileReader(path));
-            fileContent = reader.lines().toList();
-        } catch (IOException e) {
-            logErrorMessage("An error occurred:"+e.getMessage());
+            FileReader fileReader = new FileReader(path);
+            config = new JSONObject(new JSONTokener(fileReader));
+        } catch (Exception e) {
+            logErrorMessage(e);
             this.availableTimeFormats = replacement;
             return;
         }
 
         // Error handling of the time format validation
         try{
-            for(String line : fileContent){
-                if(isValidTimeFormat(line)){
-                    formats.add(line);
+            for(Object format : config.getJSONArray("timestamps")){
+                if(isValidTimeFormat((String) format)){
+                    formats.add((String) format);
                 }
             }
         } catch (Exception e){
-            logErrorMessage("An error occurred:"+e.getMessage());
+            logErrorMessage(e);
             this.availableTimeFormats = replacement;
             return;
         }
+
+        try {
+            debugModeOn = config.getBoolean("debuggingMode");
+            informationalModeOn = config.getBoolean("informationalMode");
+        } catch (Exception e) {
+            logWarningMessage(e);
+            debugModeOn = false;
+            informationalModeOn = false;
+        }
+
         this.availableTimeFormats = formats;
     }
 
@@ -107,7 +112,15 @@ public class EventManager {
      *
      * @thows IOException On input error.
     * */
-    private void logMessage(String level, String message) {
+    private void logMessage(String level, Object message) {
+        if (message instanceof Exception) {
+            message = ((Exception) message).getMessage();
+        } else if (message instanceof String) {
+            message = message.toString();
+        } else {
+            message = "Unknown error";
+        }
+
         // Get the class name and method of the caller
         StackTraceElement[] stackTraceElement = Thread.currentThread().getStackTrace();
         String callerClassName = stackTraceElement[3].getClassName();
@@ -131,20 +144,28 @@ public class EventManager {
         }
     }
 
-    public void logFatalMessage(String message) {
-        logMessage("FATAL", message);
+    public void logFatalMessage(Object exception) {
+        logMessage("FATAL", exception);
     }
 
-    public void logErrorMessage(String message) {
-        logMessage("ERROR", message);
+    public void logErrorMessage(Exception exception) {
+        logMessage("ERROR", exception.getMessage());
     }
 
-    public void logWarningMessage(String message) {
-        logMessage("WARNING", message);
+    public void logWarningMessage(Exception exception) {
+        logMessage("WARNING", exception.getMessage());
     }
 
-    public void logInfoMessage(String message) {
-        logMessage("INFO", message);
+    public void logInfoMessage(Exception exception) {
+        if(informationalModeOn || debugModeOn){
+            logMessage("INFO", exception.getMessage());
+        }
+    }
+
+    public void logDebugMessage(Exception exception) {
+        if(debugModeOn){
+            logMessage("DEBUG", exception.getMessage());
+        }
     }
 
     /**
