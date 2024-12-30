@@ -44,7 +44,10 @@ public class tblCompany {
         this.strName = strName;
     }
 
-
+    @Override
+    public String toString() {
+        return strName;
+    }
 
 
 }

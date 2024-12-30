@@ -1,11 +1,13 @@
 package at.ac.fhcampuswien.richAF.services;
 
+import at.ac.fhcampuswien.richAF.data.EventManager;
 import at.ac.fhcampuswien.richAF.model.Config;
 
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 import org.json.JSONObject;
 /**
@@ -13,9 +15,10 @@ import org.json.JSONObject;
  * @author Stefan
  */
 public class OllamaService {
-    HttpClient client;
-    URI baseUri;
-    Config _config;
+    private HttpClient client;
+    private URI baseUri;
+    private Config _config;
+    private EventManager _em;
 
     /**
      * the first part prompt which will be sent which the API call, the prompt can be set with the Setter
@@ -38,9 +41,11 @@ public class OllamaService {
      * creates a httpclient
      * sets the endpoint url of the ollama api
      * @param config
+     * @param em EventManager object for logging
      */
-    public OllamaService(Config config) {
+    public OllamaService(Config config, EventManager em) {
         _config = config;
+        _em = em;
         client = HttpClient.newHttpClient();
         baseUri = URI.create(_config.getProperty("ollama.endpoint"));
     }
@@ -50,7 +55,7 @@ public class OllamaService {
      * @param companyname
      */
     public void SetBasePrompt(String companyname){
-        prompt = "count the positive and negative news about the company "+companyname+" in the following text and return as result only just the count in exact this Format {positve=#;negative=#} instead of the # then the corresponding count number no text of the news in the response: ";
+        prompt = String.format(_config.getProperty("ollama.baseprompt"), companyname);
     }
 
 
@@ -72,7 +77,7 @@ public class OllamaService {
             // building the request
             HttpRequest request = HttpRequest.newBuilder()
                     // adding generate to URI for the API Call
-                    .uri(baseUri.resolve("generate"))
+                    .uri(baseUri.resolve("/api/generate"))
                     //.header("Accept", "application/json")
                     //although we send it a JSON Object the best practise of users in the web was to use x-www-from-urlencoded as content type
                     // x-www-form-urlencoded is the type where the parameters als like pairs often used in post formular calls in URLs
@@ -84,10 +89,38 @@ public class OllamaService {
                 HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
                 return response.body();
             } catch (Exception e) {
-                System.out.println(e);
+                _em.logErrorMessage(e);
+                //_em.logErrorMessage("askOllama:"+ e.getMessage());
             }
-
+            //_em.logWarningMessage("Ollama API response did not return in time");
             return "ERROR WITH OLLAMA";
+        });
+    }
+
+    /**
+     * makes a http get request on the ollama api entry page to verify if the service is running
+     * @return CompletableFuture<String> response of the api as CompletableFuture to make an async call of it
+     */
+    public CompletableFuture<String> isOllamaRunning() {
+
+
+        return CompletableFuture.supplyAsync(() -> {
+            // building the request
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(baseUri)
+                    .timeout(Duration.ofSeconds(15))
+                    .GET()
+                    .build();
+            try {
+                // sending it to the Ollama endpoint
+                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                return response.body();
+            } catch (Exception e) {
+                _em.logErrorMessage(e);
+                //_em.logErrorMessage("isOllamaRunning:"+ e.getMessage());
+            }
+            //_em.logWarningMessage("Ollama did not respond in time");
+            return "ollama not responding";
         });
     }
 }
