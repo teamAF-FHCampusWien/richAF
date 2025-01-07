@@ -23,6 +23,9 @@ dependencies {
     implementation("org.apache.commons:commons-lang3:3.17.0")
     implementation("org.jsoup:jsoup:1.18.1")
     implementation("org.json:json:20231013")
+    implementation("org.xerial:sqlite-jdbc:3.44.0.0");
+    implementation("com.j256.ormlite:ormlite-core:5.1");
+    implementation("com.j256.ormlite:ormlite-jdbc:5.1");
 }
 
 tasks.test {
