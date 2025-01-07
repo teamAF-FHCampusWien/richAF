@@ -1,5 +1,6 @@
 package at.ac.fhcampuswien.richAF.services;
 
+import at.ac.fhcampuswien.richAF.data.EventManager;
 import at.ac.fhcampuswien.richAF.model.*;
 
 import com.j256.ormlite.dao.Dao;
@@ -43,8 +44,9 @@ public class DBContext {
      * if not all tables are created then they will here
      * @param config The Config object with the properties from the resources file
      * @param booTablesExists boolean value which holds the information of all Tables are already created
+     * @param em EventManager object for logging
      */
-    public DBContext(Config config, Boolean booTablesExists){
+    public DBContext(Config config, Boolean booTablesExists, EventManager em){
 
         try {
             connectionSource = new JdbcConnectionSource(config.getProperty("db.url"));
@@ -59,7 +61,7 @@ public class DBContext {
                 TableUtils.createTableIfNotExists(connectionSource, tblResult.class);
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+           em.logErrorMessage(e);
         }
 
     }

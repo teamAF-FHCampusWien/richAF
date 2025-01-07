@@ -1,8 +1,9 @@
 package at.ac.fhcampuswien.richAF.services;
 
+import at.ac.fhcampuswien.richAF.data.EventManager;
 import at.ac.fhcampuswien.richAF.model.*;
-//import at.ac.fhcampuswien.richAF.crawler.Crawler;
-//import at.ac.fhcampuswien.richAF.mesh.Node;
+import at.ac.fhcampuswien.richAF.crawler.Crawler;
+import at.ac.fhcampuswien.richAF.mesh.Node;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
@@ -22,25 +23,29 @@ public class DBService {
     private String _url;
     private Config _config;
     private DBContext _context;
+    private EventManager _em;
 
     /**
      * Constructor: setting the path for the Database and try the connection with getConnection
      * then the DBContext is created
      * @param config
+     * @param em EventManager object for logging
      */
-    public DBService(Config config)  {
+    public DBService(Config config, EventManager em)  {
         _config = config;
         _url = _config.getProperty("db.url");
+        _em = em;
         Connection conn = getConnection();
 
         if (conn == null) {
+            //_em.logErrorMessage("DBService Constructor: Could not connect to database");
             return;
         }
         try {
             conn.close();
-            _context = new DBContext( config,allTablesExist() );
+            _context = new DBContext( config,allTablesExist(),_em );
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            _em.logErrorMessage(e);
         }
 
     }
@@ -56,15 +61,15 @@ public class DBService {
             Connection conn = DriverManager.getConnection(_url);
             if (conn != null) {
                 DatabaseMetaData meta = conn.getMetaData();
-                System.out.println("Database Connection Established");
+                //_em.logInfoMessage("Database Connection Established");
             }
             return conn;
         } catch (ClassNotFoundException e) {
-            System.err.println("SQLite JDBC driver not found.");
-            e.printStackTrace();
+            _em.logFatalMessage(e);
+            //_em.logFatalMessage("getConnection:SQLite JDBC driver not found.");
         } catch (SQLException e) {
-            System.err.println("Connection failed.");
-            e.printStackTrace();
+            _em.logErrorMessage(e);
+           // _em.logErrorMessage("getConnection:Connection failed.");
         }
         return null;
     }
@@ -85,7 +90,8 @@ public class DBService {
                 tables.add(rs.getString("name"));
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            _em.logErrorMessage(e);
+           // _em.logErrorMessage("allTablesExist:"+e.getMessage());
         }
         //COPILOT ENDE
 
@@ -106,7 +112,6 @@ public class DBService {
     // * @param crawler .. the webcrawler object
     // * @param keyword ... keyword, most likely a company name which the urls have to contain, for no keyword "", the keyword will then also be put in the keyword collumn in tblPage
      */
-    /*
     public void SavePagesFromCrawler(Crawler crawler, String keyword) {
         for (Node node : crawler.getMesh().getNodes()) {
             if (keyword != "")
@@ -126,16 +131,18 @@ public class DBService {
                         pstmt.executeUpdate();
 
                     } catch (SQLException e) {
-                        System.out.println(e.getMessage());
+                        _em.logErrorMessage(e);
+                        //_em.logErrorMessage("SavePagesFromCrawler INSERT:"+e.getMessage());
                     }
                 }
             } catch (SQLException e) {
-                System.out.println(e.getMessage());
+                _em.logErrorMessage(e);
+                //_em.logErrorMessage("SavePagesFromCrawler:"+e.getMessage());
             }
 
         }
 
-    }*/
+    }
 
     /**
      * returns all tblPages from the DB
@@ -181,7 +188,8 @@ public class DBService {
 
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            _em.logErrorMessage(e);
+            //_em.logErrorMessage("getPages:"+e.getMessage());
         }
         return result;
 
@@ -205,11 +213,12 @@ public class DBService {
             } else if (tbl instanceof tblResult) {
                 _context.getTblResultDao().update((tblResult) tbl);
             } else {
-                System.out.println("Tabellen Objekttyp hat keinen Status");
+                //_em.logErrorMessage("UpdateStatus: table objecttyp has no status Status:"+tbl.getClass().getName());
             }
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            _em.logErrorMessage(e);
+            //_em.logErrorMessage("UpdateStatus:"+e.getMessage());
         }
     }
 
@@ -232,11 +241,13 @@ public class DBService {
                     pstmt.executeUpdate();
 
                 } catch (SQLException e) {
-                    System.out.println(e.getMessage());
+                    _em.logErrorMessage(e);
+                    //_em.logErrorMessage("addJob INSERT:"+e.getMessage());
                 }
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            _em.logErrorMessage(e);
+            //_em.logErrorMessage("addJob:"+e.getMessage());
         }
 
     }
@@ -250,7 +261,22 @@ public class DBService {
         try {
             return _context.getTblCompanyDao().queryForId(id);
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            _em.logErrorMessage(e);
+            //_em.logErrorMessage("GetCompanyById:"+e.getMessage());
+        }
+        return null;
+    }
+
+    /**
+     * returns all Entries of tblCompany
+     * @return
+     */
+    public List<tblCompany> GetAllCompanys(){
+        try {
+            return _context.getTblCompanyDao().queryForAll();
+        } catch (SQLException e) {
+            _em.logErrorMessage(e);
+            //_em.logErrorMessage("GetAllCompanys:"+e.getMessage());
         }
         return null;
     }
@@ -277,7 +303,8 @@ public class DBService {
                         pstmt.executeUpdate();
 
                     } catch (SQLException e) {
-                        System.out.println(e.getMessage());
+                        _em.logErrorMessage(e);
+                       // _em.logErrorMessage("AddOrGetCompany INSERT:"+e.getMessage());
                     }
                 }
 
@@ -285,11 +312,13 @@ public class DBService {
                 if (result.size()>0)
                     return result.get(0);
             } catch (SQLException e) {
-                System.out.println(e.getMessage());
+                _em.logErrorMessage(e);
+                //_em.logErrorMessage("AddOrGetCompany:"+e.getMessage());
             }
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            _em.logErrorMessage(e);
+            //_em.logErrorMessage("AddOrGetCompany SELECT:"+e.getMessage());
         }
 
         return null;
@@ -326,7 +355,8 @@ public class DBService {
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            _em.logErrorMessage(e);
+            //_em.logErrorMessage("getJobs:"+e.getMessage());
         }
         return result;
 
@@ -355,11 +385,13 @@ public class DBService {
                     pstmt.executeUpdate();
 
                 } catch (SQLException e) {
-                    System.out.println(e.getMessage());
+                    _em.logErrorMessage(e);
+                    //_em.logErrorMessage("addResult INSERT:"+e.getMessage());
                 }
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            _em.logErrorMessage(e);
+            //_em.logErrorMessage("addResult:"+e.getMessage());
         }
 
     }
