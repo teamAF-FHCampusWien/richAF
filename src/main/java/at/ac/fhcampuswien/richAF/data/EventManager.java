@@ -23,8 +23,8 @@ public class EventManager {
     @Getter
     private String timeFormat;
     public List<String> availableTimeFormats;
-    public boolean debugModeOn = false;
-    public boolean informationalModeOn = false;
+    private boolean debugModeOn = false;
+    private boolean informationalModeOn = false;
 
     public EventManager(String fileName, String timeFormat) {
         this.fileName = fileName;
@@ -43,9 +43,17 @@ public class EventManager {
     }
 
     public EventManager() {
-        this.fileName = "/tmp/richAF.log";
+        this.fileName = setCorrectOSSeperator("/tmp/richAF.log");
         readConfigFile();
         this.timeFormat = availableTimeFormats.get(0);
+    }
+
+    private String setCorrectOSSeperator(String path){
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.contains("win")) {
+            path = path.replace("/", "\\");
+        }
+        return path;
     }
 
     private void readConfigFile() {
@@ -54,7 +62,8 @@ public class EventManager {
         List<String> replacement = Arrays.asList("dd-MMM-yyyy HH:mm:ss z", "dd.MM.yyyy h:mm:ss.SSS a z", "E, MMM dd yyyy HH:mm:ss z");
 
         // Get the path of the file and decode it to UTF-8 to cope with special characters
-        String path = ClassLoader.getSystemResource("loggingConfig.json").getPath();
+        String configPath = setCorrectOSSeperator("config/loggingConfig.json");
+        String path = System.getProperty("user.dir")+File.separator+configPath;
         path = java.net.URLDecoder.decode(path, java.nio.charset.StandardCharsets.UTF_8);
 
         // Setting a default time format in case of an error
@@ -148,23 +157,23 @@ public class EventManager {
         logMessage("FATAL", exception);
     }
 
-    public void logErrorMessage(Exception exception) {
-        logMessage("ERROR", exception.getMessage());
+    public void logErrorMessage(Object exception) {
+        logMessage("ERROR", exception);
     }
 
-    public void logWarningMessage(Exception exception) {
-        logMessage("WARNING", exception.getMessage());
+    public void logWarningMessage(Object exception) {
+        logMessage("WARNING", exception);
     }
 
-    public void logInfoMessage(Exception exception) {
+    public void logInfoMessage(Object exception) {
         if(informationalModeOn || debugModeOn){
-            logMessage("INFO", exception.getMessage());
+            logMessage("INFO", exception);
         }
     }
 
-    public void logDebugMessage(Exception exception) {
+    public void logDebugMessage(Object exception) {
         if(debugModeOn){
-            logMessage("DEBUG", exception.getMessage());
+            logMessage("DEBUG", exception);
         }
     }
 
