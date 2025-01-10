@@ -1,4 +1,5 @@
-package at.ac.fhcampuswien.richAF.model;
+package at.ac.fhcampuswien.richAF.model.dao;
+import at.ac.fhcampuswien.richAF.model.Enums_;
 import com.j256.ormlite.field.DatabaseField;
 import java.sql.Timestamp;
 

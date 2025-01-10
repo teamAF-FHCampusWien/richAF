@@ -1,8 +1,9 @@
-package at.ac.fhcampuswien.richAF.model;
+package at.ac.fhcampuswien.richAF.model.dao;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 /**
+ * @deprecated this class and the concept behind it does not suit anymore our needs
  * Model Class for the DAO Table Models
  * corresponding Table tblCompany
  * containing properties with their Getters and Setters
@@ -11,8 +12,9 @@ import com.j256.ormlite.table.DatabaseTable;
  *      strName
  * @author Stefan
  */
+@Deprecated
 @DatabaseTable(tableName = "tblCompany")
-public class tblCompany {
+ class tblCompany {
     public tblCompany() {
 
     }
