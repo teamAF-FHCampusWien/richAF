@@ -1,8 +1,9 @@
 package at.ac.fhcampuswien.richAF.controller;
 
+import at.ac.fhcampuswien.richAF.crawler.Crawler;
 import at.ac.fhcampuswien.richAF.data.EventManager;
 import at.ac.fhcampuswien.richAF.model.Config;
-import at.ac.fhcampuswien.richAF.model.tblCompany;
+import at.ac.fhcampuswien.richAF.model.dao.tblSource;
 import at.ac.fhcampuswien.richAF.services.*;
 import at.ac.fhcampuswien.richAF.view.controls.OllamaServiceControl;
 import at.ac.fhcampuswien.richAF.view.controls.ServiceScheduler;
@@ -13,10 +14,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.shape.Circle;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 
 public class Controller {
@@ -34,8 +32,6 @@ public class Controller {
     @FXML
     private Tooltip ttOllama;
     @FXML
-    private ComboBox cmbCompany;
-    @FXML
     private ToggleButton tgbJobService;
     @FXML
     private ProgressIndicator pgiJob;
@@ -51,20 +47,18 @@ public class Controller {
         OllamaServiceControl osc= new OllamaServiceControl(lblOllama, cirOllama, ttOllama , _olService);
         _scheduler = new ServiceScheduler(_schedulerExec,pgiJob, _olService, _dbService,_em);
         _scheduler.setPcounter(Integer.parseInt(_config.getProperty("jobservice.pcounter")));
-        ObservableList<tblCompany> items = FXCollections.observableArrayList(_dbService.GetAllCompanys());
-        cmbCompany.setItems(items);
-        cmbCompany.setOnAction(event -> {_scheduler.setCompanyid(((tblCompany)this.cmbCompany.getSelectionModel().getSelectedItem()).getId());});
+        _dbService.SavePagesFromCrawler(new Crawler( _dbService.getSources().getLast().getStrUrl()));
+        //for (tblSource ts : _dbService.getSources())
+        //    _dbService.SavePagesFromCrawler(new Crawler(ts.getStrUrl()));
 
         tgbJobService.setOnAction(event -> {
             if (tgbJobService.isSelected()) {
                 tgbJobService.setText("Stop Scheduler");
                 _scheduler.startScheduler();
-                cmbCompany.setDisable(true);
             } else {
                 tgbJobService.setText("Start Scheduler");
                 _scheduler.stopScheduler();
                 JobService.Abort();
-                cmbCompany.setDisable(false);
             }
         });
 
