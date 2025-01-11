@@ -9,6 +9,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
+import org.json.JSONArray;
 import org.json.JSONObject;
 /**
  * Class containing the Ollama Service and its API Call
@@ -70,6 +71,36 @@ public class OllamaService {
         jsonObject.put("model", "llama3.2");
         jsonObject.put("prompt", this.prompt+paragraph);
         jsonObject.put("stream", false);
+        jsonObject.put("format", "json");
+
+        JSONObject jsonFormat = new JSONObject();
+        JSONObject schema = new JSONObject();
+        schema.put("type", "object");
+
+        JSONObject properties = new JSONObject();
+        JSONObject stock = new JSONObject();
+        stock.put("type", "string");
+        properties.put("stock", stock);
+
+        JSONObject relevant = new JSONObject();
+        relevant.put("type", "string");
+        properties.put("relevant", relevant);
+
+        JSONObject summary = new JSONObject();
+        summary.put("type", "string");
+        properties.put("summary", summary);
+
+        schema.put("properties", properties);
+
+        JSONArray required = new JSONArray();
+        required.put("stock");
+        required.put("relevant");
+        required.put("summary");
+        schema.put("required", required);
+
+        //jsonObject.put("format", schema.toString());
+        //{"stock":"NVDA", "relevant":"YES", "summary":"<summary of the article part that mentions the stock NVDA>"}
+
 
         // request is made asynchron because of the Ollama Client is very unreliable with its responsetimes
         // this can be done with a CompletableFuture can be compare in C# witch awaitable MethodCalls
@@ -87,6 +118,7 @@ public class OllamaService {
             try {
                 // sending it to the Ollama endpoint
                 HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                String test= response.body();
                 return response.body();
             } catch (Exception e) {
                 _em.logErrorMessage(e);
