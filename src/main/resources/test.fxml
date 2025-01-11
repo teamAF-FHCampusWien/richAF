@@ -35,7 +35,6 @@
                         </Label>
                      </children>
                   </VBox>
-                  <ComboBox fx:id="cmbCompany" prefWidth="150.0" promptText="Pick company" />
                </children>
             </HBox>
          </bottom>

@@ -3,6 +3,7 @@ package at.ac.fhcampuswien.richAF.services;
 import at.ac.fhcampuswien.richAF.data.EventManager;
 import at.ac.fhcampuswien.richAF.model.*;
 
+import at.ac.fhcampuswien.richAF.model.dao.*;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
@@ -29,9 +30,16 @@ public class DBContext {
      */
     private Dao<tblJob, Integer> daoTblJob;
     /**
-     * DAO for the tblCompany
+     * DAO for the tblSources
      */
+    private Dao<tblSource, Integer> daoTblSource;
+    /*does not suit needs anymore
+    /**
+     * DAO for the tblCompany
+     *
     private Dao<tblCompany, Integer> daoTblCompany;
+
+     */
     /**
      * DAO for the tblResult
      */
@@ -52,13 +60,16 @@ public class DBContext {
             connectionSource = new JdbcConnectionSource(config.getProperty("db.url"));
             daoTblPage = DaoManager.createDao(connectionSource, tblPage.class);
             daoTblJob = DaoManager.createDao(connectionSource, tblJob.class);
-            daoTblCompany = DaoManager.createDao(connectionSource, tblCompany.class);
+            //daoTblCompany = DaoManager.createDao(connectionSource, tblCompany.class);
             daoTblResult = DaoManager.createDao(connectionSource, tblResult.class);
+            daoTblSource = DaoManager.createDao(connectionSource, tblSource.class);
+
             if (!booTablesExists){
                 TableUtils.createTableIfNotExists(connectionSource, tblPage.class);
                 TableUtils.createTableIfNotExists(connectionSource, tblJob.class);
-                TableUtils.createTableIfNotExists(connectionSource, tblCompany.class);
+                //TableUtils.createTableIfNotExists(connectionSource, tblCompany.class);
                 TableUtils.createTableIfNotExists(connectionSource, tblResult.class);
+                TableUtils.createTableIfNotExists(connectionSource, tblSource.class);
             }
         } catch (SQLException e) {
            em.logErrorMessage(e);
@@ -74,12 +85,17 @@ public class DBContext {
         return daoTblJob;
     }
 
+    /* does not suit needs anymore
     public Dao<tblCompany, Integer> getTblCompanyDao() {
         return daoTblCompany;
-    }
+    }*/
 
     public Dao<tblResult, Integer> getTblResultDao() {
         return daoTblResult;
+    }
+
+    public Dao<tblSource, Integer> getTblSourceDao() {
+        return daoTblSource;
     }
 
     public void close() throws SQLException, IOException {

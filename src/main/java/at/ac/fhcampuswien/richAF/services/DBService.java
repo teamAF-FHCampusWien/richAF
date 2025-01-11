@@ -4,14 +4,14 @@ import at.ac.fhcampuswien.richAF.data.EventManager;
 import at.ac.fhcampuswien.richAF.model.*;
 import at.ac.fhcampuswien.richAF.crawler.Crawler;
 import at.ac.fhcampuswien.richAF.mesh.Node;
+import at.ac.fhcampuswien.richAF.model.dao.*;
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.Where;
+import com.j256.ormlite.support.DatabaseConnection;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Class containing the "Database Service"
@@ -110,24 +110,19 @@ public class DBService {
      *  to be saved in the Database
      *  TODO checking why the DAO Object throws exception when inserting, while this happens Insert via preparedStatements
     // * @param crawler .. the webcrawler object
-    // * @param keyword ... keyword, most likely a company name which the urls have to contain, for no keyword "", the keyword will then also be put in the keyword collumn in tblPage
-     */
-    public void SavePagesFromCrawler(Crawler crawler, String keyword) {
+    */
+    public void SavePagesFromCrawler(Crawler crawler) {
         for (Node node : crawler.getMesh().getNodes()) {
-            if (keyword != "")
-                if(!node.getPage().getUri().toString().toLowerCase().contains(keyword.toLowerCase()))
-                    continue;
 
             try  (Connection conn = DriverManager.getConnection(_url);){
                 String raw = node.getPage().getRawContent();
 
                 if (conn != null) {
-                    String sql = "INSERT INTO tblPages(intStatus, strPage, tsCreated_on, strKeyword) VALUES(?, ?, ?, ?)";
+                    String sql = "INSERT INTO tblPages(intStatus, strPage, tsCreated_on) VALUES(?, ?, ?)";
                     try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
                         pstmt.setInt(1, Enums_.Status.NEW.ordinal());
                         pstmt.setString(2, raw);
                         pstmt.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
-                        pstmt.setString(4, keyword);
                         pstmt.executeUpdate();
 
                     } catch (SQLException e) {
@@ -149,23 +144,22 @@ public class DBService {
      * @return ArrayList<tblPage> of all Entries in the DB
      */
     public ArrayList<tblPage> getPages() {
-        return getPages(Enums_.Status.ALL,"");
+        return getPages(Enums_.Status.ALL);
     }
 
     /**
      * returns the tblPages from the DB with the Status and the keyword in the columns
      * @param status ... Enumerator Status to be returned, Enums_.Status.ALL if the Status does not matter
-     * @param keyword ... keyword of the pages  to be returned. "" if the keyword shall does not matter
      * @return ArrayList<tblPage> of the pages requested
      */
-    public ArrayList<tblPage> getPages(Enums_.Status status, String keyword) {
+    public ArrayList<tblPage> getPages(Enums_.Status status) {
         // counter if there is a where set in the select
         int wcount= 0;
         ArrayList<tblPage> result = new ArrayList<>();
         Dao<tblPage, Integer> daoTblPage = _context.getTblPageDao();
 
         try {
-            if ((status == Enums_.Status.ALL) && (keyword == "" )) {
+            if ((status == Enums_.Status.ALL)) {
                 // Select query for all entries
                 result.addAll(daoTblPage.queryForAll());
 
@@ -177,12 +171,13 @@ public class DBService {
                     wcount++;
                     where.eq("intStatus", status.ordinal());
                 }
+                /* not needed anymore
                 if(keyword != "")
                     if (wcount==0)
                         where.eq("strKeyword", keyword);
                     else //if where is already in use add an and
                         where.and().eq("strKeyword", keyword);
-
+                    */
                 result.addAll(daoTblPage.query(queryBuilder.prepare()));
             }
 
@@ -226,18 +221,17 @@ public class DBService {
      *  Inserts a job in tblPages
      *  TODO checking why the DAO Object throws exception when inserting, while this happens Insert via preparedStatements
      * @param paragraph the paragraphs from the webpages
-     * @param companyid the companyid from tblCompany
      */
-    public void addJob(String paragraph, int companyid) {
+    public void addJob(String paragraph, int pageid) {
         try  (Connection conn = DriverManager.getConnection(_url);){
 
             if (conn != null) {
-                String sql = "INSERT INTO tblJobs (intStatus, strParagraphs, tsCreated_on, intCompanyID) VALUES(?, ?, ?, ?)";
+                String sql = "INSERT INTO tblJobs (intStatus, strParagraphs, tsCreated_on, intPageID) VALUES(?, ?, ?, ?)";
                 try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
                     pstmt.setInt(1, Enums_.Status.NEW.ordinal());
                     pstmt.setString(2, paragraph);
                     pstmt.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
-                    pstmt.setInt(4, companyid);
+                    pstmt.setInt(4, pageid);
                     pstmt.executeUpdate();
 
                 } catch (SQLException e) {
@@ -256,7 +250,7 @@ public class DBService {
      * returns the tblCompany line for the company with id in the parameter
      * @param id of the company
      * @return tblCompany
-     */
+     *//*
     public tblCompany GetCompanyById(int id){
         try {
             return _context.getTblCompanyDao().queryForId(id);
@@ -265,12 +259,12 @@ public class DBService {
             //_em.logErrorMessage("GetCompanyById:"+e.getMessage());
         }
         return null;
-    }
+    }*/
 
     /**
      * returns all Entries of tblCompany
      * @return
-     */
+     *//*
     public List<tblCompany> GetAllCompanys(){
         try {
             return _context.getTblCompanyDao().queryForAll();
@@ -279,7 +273,7 @@ public class DBService {
             //_em.logErrorMessage("GetAllCompanys:"+e.getMessage());
         }
         return null;
-    }
+    }*/
 
     /**
      * returns the tblCompany Object to the given name, if the ecxact name is not in the Database the company will be added and returned
@@ -287,7 +281,7 @@ public class DBService {
      *  TODO add case sensitive check for the name
      *  @param name name of the company
      * @return tblCompany
-     */
+     *//*
     public tblCompany AddOrGetCompany(String name){
 
         try {
@@ -322,7 +316,7 @@ public class DBService {
         }
 
         return null;
-    }
+    }*/
 
     /**
      * returns all Jobs from tblJobs
@@ -363,13 +357,14 @@ public class DBService {
     }
 
     /**
+     * @deprecated does not suit our needs anymore
      *  Inserts a result in tblResults
      *  TODO checking why the DAO Object throws exception when inserting, while this happens Insert via preparedStatements
      * @param jobid the jobid of the Job which lead to results
-     * @param companyid the company which this result should be accounted on
      * @param pos number of positive news mentions
      * @param neg number of negative news mentions
      */
+    @Deprecated
     public void addResult(int jobid, int companyid, int pos, int neg) {
         try  (Connection conn = DriverManager.getConnection(_url);){
 
@@ -394,5 +389,78 @@ public class DBService {
             //_em.logErrorMessage("addResult:"+e.getMessage());
         }
 
+    }
+
+    /**
+     * Inserts a result in tblResults
+     * @param jobid the jobid of the Job which lead to results
+     * @param json the content of the response
+     */
+    public void addResult(int jobid, String json) {
+        try  (Connection conn = DriverManager.getConnection(_url);){
+            Dao<tblResult, Integer> daoTblResult = _context.getTblResultDao();
+
+            tblResult newRes = new tblResult();
+            newRes.setIntJobID(jobid);
+            newRes.setStrResponeJson(json);
+            newRes.setTsCreated_on(new Timestamp(System.currentTimeMillis()));
+
+            daoTblResult.create(newRes);
+        } catch (SQLException e) {
+            _em.logErrorMessage(e);
+            //_em.logErrorMessage("addResult:"+e.getMessage());
+        }
+
+    }
+
+
+    /**
+     * returns all Entries of tblResults
+     * @return
+     */
+    public ArrayList<tblResult> GetResults(){
+        ArrayList<tblResult> result = new ArrayList<>();
+        try {
+            result.addAll(_context.getTblResultDao().queryForAll());
+            return result;
+        } catch (SQLException e) {
+            _em.logErrorMessage(e);
+        }
+        return null;
+    }
+
+
+    /**
+     * Inserts a result in tblSource
+     * @param name short description of the source
+     * @param url the url of source
+     */
+    public void addSource(String name, String url) {
+        try  (Connection conn = DriverManager.getConnection(_url);){
+            Dao<tblSource, Integer> daoTblSource= _context.getTblSourceDao();
+            tblSource ts = new tblSource();
+            ts.setName(name);
+            ts.setStrUrl(url);
+            ts.setTsCreated_on(new Timestamp(System.currentTimeMillis()));
+            daoTblSource.create(ts);
+        } catch (SQLException e) {
+            _em.logErrorMessage(e);
+        }
+
+    }
+
+    /**
+     * returns all Entries of tblSources
+     * @return
+     */
+    public ArrayList<tblSource> getSources(){
+        ArrayList<tblSource> result = new ArrayList<>();
+        try {
+            result.addAll(_context.getTblSourceDao().queryForAll());
+            return result;
+        } catch (SQLException e) {
+            _em.logErrorMessage(e);
+        }
+        return null;
     }
 }

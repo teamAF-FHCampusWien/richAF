@@ -1,4 +1,4 @@
-package at.ac.fhcampuswien.richAF.model;
+package at.ac.fhcampuswien.richAF.model.dao;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -30,13 +30,26 @@ public class tblJob extends baseTbl {
     @DatabaseField
     private String strParagraphs;
 
+    /**
+     * intPageID ... the id of the page the paragraphs origins of
+     */
+    @DatabaseField
+    private int intPageID;
+
 
     /**
      * intCompanyID ... ID from the tblCompany of the company which this job should be referred to
-     */
+     *//*does not suit needs anymore
     @DatabaseField
     private Integer intCompanyID;
+        public Integer getIntCompanyID() {
+        return intCompanyID;
+    }
 
+    public void setIntCompanyID(Integer intCompanyID) {
+        this.intCompanyID = intCompanyID;
+    }
+*/
 
     public tblJob() {
     }
@@ -58,13 +71,11 @@ public class tblJob extends baseTbl {
         this.strParagraphs = strParagraphs;
     }
 
-
-    public Integer getIntCompanyID() {
-        return intCompanyID;
+    public int getIntPageID() {
+        return intPageID;
     }
 
-    public void setIntCompanyID(Integer intCompanyID) {
-        this.intCompanyID = intCompanyID;
+    public void setIntPageID(int intPageID) {
+        this.intPageID = intPageID;
     }
-
 }
