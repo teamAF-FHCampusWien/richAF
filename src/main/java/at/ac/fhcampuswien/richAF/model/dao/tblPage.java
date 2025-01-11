@@ -1,4 +1,4 @@
-package at.ac.fhcampuswien.richAF.model;
+package at.ac.fhcampuswien.richAF.model.dao;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -10,7 +10,6 @@ import com.j256.ormlite.table.DatabaseTable;
  * properties/tablecolumns:
  *      id
  *      strPage
- *      strKeyword
  *      intStatus from baseTbl
  *      tsCreated_on from baseTbl
  * @author Stefan
@@ -29,12 +28,6 @@ public class tblPage extends baseTbl {
     @DatabaseField
     private String strPage;
 
-    /**
-     * strKeyword ... a keyword / company name which this page is explicit referred to
-     * value "" means that this webpage is for all companies relevant
-     */
-    @DatabaseField
-    private String strKeyword;
 
 
     public tblPage() {
@@ -55,19 +48,5 @@ public class tblPage extends baseTbl {
     public void setStrPage(String strPage) {
         this.strPage = strPage;
     }
-
-    public String getStrKeyword() {
-        return strKeyword;
-    }
-
-    public void setStrKeyword(String strKeyword) {
-        this.strKeyword = strKeyword;
-    }
-
-
-
-
-
-
 
 }
