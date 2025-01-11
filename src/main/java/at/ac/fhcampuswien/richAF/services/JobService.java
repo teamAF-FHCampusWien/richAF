@@ -2,6 +2,8 @@ package at.ac.fhcampuswien.richAF.services;
 
 import at.ac.fhcampuswien.richAF.data.EventManager;
 import at.ac.fhcampuswien.richAF.model.*;
+import at.ac.fhcampuswien.richAF.model.dao.tblJob;
+import at.ac.fhcampuswien.richAF.model.dao.tblPage;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.*;
@@ -25,17 +27,21 @@ public class JobService {
      *
      * @param dbservice ... dbservice Object
      * @param pcounter ... number of Paragraphs of a webpage which shall be used for one Ollama Request
-     * @param companyid ... id of the company from tblCompany which the Ollama shall use in Prompt and the Job shall create a result for
      * @param em EventManager object for logging
      */
-    public static void CreateJobs(DBService dbservice, int pcounter, int companyid, EventManager em) {
+    public static void CreateJobs(DBService dbservice, int pcounter, EventManager em) {
         JobService.wecanrun=true;
+
+        /*
+         does not suit anymore our needs
         if (companyid <= 0) {
             //em.logErrorMessage("CreateJobs: invalid companyid given");
             return;
         }
+        */
+
         // getting the Pages from DB which have not been processed
-        ArrayList<tblPage> lisPages = dbservice.getPages(Enums_.Status.NEW, "");
+        ArrayList<tblPage> lisPages = dbservice.getPages(Enums_.Status.NEW);
         // less than 1 Paragraph is not allowed
         if (pcounter < 1){
             //em.logErrorMessage("CreateJobs: pcounter to low");
@@ -61,13 +67,13 @@ public class JobService {
                         strParagraph = strParagraph + paragraphs.get(i).text();
                         if ((i+1) % pcounter == 0) {
                             // when the number of paragraphs is reached a Job will be created
-                            dbservice.addJob(strParagraph,companyid);
+                            dbservice.addJob(strParagraph, p.getId());
                             strParagraph = "";
 
                         }
                     }
                     if (strParagraph != "")
-                        dbservice.addJob(strParagraph,companyid);
+                        dbservice.addJob(strParagraph ,p.getId());
                     // page done
                     dbservice.UpdateStatus(p, Enums_.Status.PROCESSED);
                     //em.logInfoMessage(String.format("Page with id %s processed", p.getId()));
@@ -92,18 +98,20 @@ public class JobService {
 
     /**
      * Processes and executes the Jobs
+     * @deprecated First Version of the Olamainteraction with positive an negative results
      * the OllamaService get the Prompts and text send to it and answers with a response
      * the response should contain a counter of positive and negative news and this will be saved in the DB as a tblResult
      * @param ollamaService ...  the OllamaService
      * @param dbservice ... the DB service
      * @param em EventManager object for logging
      */
-    public static void ExecuteJobs(OllamaService ollamaService, DBService dbservice, EventManager em) {
+    @Deprecated
+    public static void ExecuteJobsOLD(OllamaService ollamaService, DBService dbservice, EventManager em) {
         JobService.wecanrun=true;
         // getting the jobs from DB which have not been processed
         ArrayList<tblJob> lisJobs = dbservice.getJobs(Enums_.Status.NEW);
         //company object which the results will be created for
-        tblCompany comp=new tblCompany();
+        //tblCompany comp=new tblCompany();
 
         for (tblJob j : lisJobs) {
             if (!wecanrun) {
@@ -114,6 +122,7 @@ public class JobService {
             String response = "";
             // job enters status processing
             dbservice.UpdateStatus(j, Enums_.Status.PROCESSING);
+            /* does not suit our needs anymore
             //get the Company for this Job
             if (comp.getId()!= j.getIntCompanyID()){
                 comp = dbservice.GetCompanyById(j.getIntCompanyID());
@@ -125,7 +134,7 @@ public class JobService {
                 }
                 // the standard Prompt for Ollama will be set the company name in it
                 ollamaService.SetBasePrompt(comp.getStrName());
-            }
+            }*/
             try {
                 // sending the Request to Ollama
                 response = ollamaService.askOllama(j.getStrParagraphs()).get();
@@ -155,7 +164,7 @@ public class JobService {
                     continue;
                 }
                 //adding the result to the DB
-                dbservice.addResult(j.getId(), comp.getId(), positive, negative);
+                dbservice.addResult(j.getId(), "");
 
             } catch (InterruptedException | ExecutionException e) {
                 em.logErrorMessage(e);
@@ -166,4 +175,50 @@ public class JobService {
     }
 
 
+    /**
+     * Processes and executes the Jobs
+     * the OllamaService get the Prompts and text send to it and answers with a response
+     * the response should contain a counter of positive and negative news and this will be saved in the DB as a tblResult
+     * @param ollamaService ...  the OllamaService
+     * @param dbservice ... the DB service
+     * @param em EventManager object for logging
+     */
+    public static void ExecuteJobs(OllamaService ollamaService, DBService dbservice, EventManager em) {
+        JobService.wecanrun=true;
+        // getting the jobs from DB which have not been processed
+        ArrayList<tblJob> lisJobs = dbservice.getJobs(Enums_.Status.NEW);
+        ollamaService.SetBasePrompt("");
+        for (tblJob j : lisJobs) {
+            if (!wecanrun) {
+                //em.logInfoMessage("ExecuteJobs: manual abort");
+                return;
+            }
+            // for the response of the ollamaservice
+            String response = "";
+            // job enters status processing
+            dbservice.UpdateStatus(j, Enums_.Status.PROCESSING);
+
+            try {
+                // sending the Request to Ollama
+                response = ollamaService.askOllama(j.getStrParagraphs()).get();
+                if(!response.contains("response")){
+                    //em.logWarningMessage(String.format("ExecuteJobs processing failed: Ollama did not responded correctly (Job-id %s)",j.getId()));
+                    dbservice.UpdateStatus(j, Enums_.Status.PROCESSED_FAILURE);
+                    continue;
+                }
+                // the response is in a json format so it will be casted in a json object
+                JSONObject jsonResponseObject = new JSONObject(response);
+                // the section response holds the created answer/result from the service
+                String strResponse = jsonResponseObject.getString("response");
+
+                //adding the result to the DB
+                dbservice.addResult(j.getId(), strResponse);
+
+            } catch (InterruptedException | ExecutionException e) {
+                em.logErrorMessage(e);
+                //em.logErrorMessage(String.format("ExecuteJobs (Job-id %s):%s",j.getId(),e.getMessage()));
+            }
+            dbservice.UpdateStatus(j, Enums_.Status.PROCESSED);
+        }
+    }
 }
