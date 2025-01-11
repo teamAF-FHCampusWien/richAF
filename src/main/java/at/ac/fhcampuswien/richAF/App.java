@@ -1,7 +1,5 @@
 package at.ac.fhcampuswien.richAF;
 
-import at.ac.fhcampuswien.richAF.controller.Controller;
-import at.ac.fhcampuswien.richAF.data.EventManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -15,7 +13,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/test.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/app.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 800, 400);
         stage.setScene(scene);
         stage.show();
