@@ -4,19 +4,13 @@ import at.ac.fhcampuswien.richAF.data.EventManager;
 import at.ac.fhcampuswien.richAF.model.Config;
 import at.ac.fhcampuswien.richAF.model.tblCompany;
 import at.ac.fhcampuswien.richAF.services.*;
-import at.ac.fhcampuswien.richAF.view.controls.OllamaServiceControl;
-import at.ac.fhcampuswien.richAF.view.controls.ServiceScheduler;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.shape.Circle;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 
 public class Controller {
