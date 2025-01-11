@@ -37,6 +37,7 @@ public class Controller {
     private ProgressIndicator pgiJob;
 
     public Controller() {
+        // ACHTUNG muss noch plattform und rechner unabhängig gewählt werden
         _em = new EventManager("D:\\temp\\richAF.log");
         _config = new Config();
         _olService = new OllamaService(_config,_em);
@@ -47,7 +48,8 @@ public class Controller {
         OllamaServiceControl osc= new OllamaServiceControl(lblOllama, cirOllama, ttOllama , _olService);
         _scheduler = new ServiceScheduler(_schedulerExec,pgiJob, _olService, _dbService,_em);
         _scheduler.setPcounter(Integer.parseInt(_config.getProperty("jobservice.pcounter")));
-        _dbService.SavePagesFromCrawler(new Crawler( _dbService.getSources().getLast().getStrUrl()));
+        // Beispiel für die Interaktion mit dem webcrawler
+        // _dbService.SavePagesFromCrawler(new Crawler( _dbService.getSources().getLast().getStrUrl()));
         //for (tblSource ts : _dbService.getSources())
         //    _dbService.SavePagesFromCrawler(new Crawler(ts.getStrUrl()));
 
