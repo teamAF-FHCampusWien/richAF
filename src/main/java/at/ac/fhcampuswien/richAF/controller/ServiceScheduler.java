@@ -1,4 +1,4 @@
-package at.ac.fhcampuswien.richAF.view.controls;
+package at.ac.fhcampuswien.richAF.controller;
 
 import at.ac.fhcampuswien.richAF.data.EventManager;
 import at.ac.fhcampuswien.richAF.services.DBService;
