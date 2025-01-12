@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.TextFlow?>
+
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="770.0" prefWidth="490.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.fhcampuswien.richAF.controller.ResultController">
+   <children>
+      <StackPane prefHeight="150.0" prefWidth="200.0">
+         <children>
+            <Rectangle arcHeight="5.0" fill="WHITE" height="750.0" stroke="BLACK" strokeType="INSIDE" style="-fx-arc-height: 30; -fx-arc-width: 30;" width="470.0" StackPane.alignment="CENTER">
+               <effect>
+                  <DropShadow />
+               </effect>
+            </Rectangle>
+            <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="790.0" prefWidth="470.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints maxHeight="174.0" minHeight="10.0" prefHeight="174.0" valignment="BOTTOM" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="50.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="482.0" minHeight="10.0" prefHeight="370.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="60.0" minHeight="60.0" prefHeight="60.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="60.0" minHeight="60.0" prefHeight="60.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="60.0" minHeight="60.0" prefHeight="60.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="60.0" minHeight="60.0" prefHeight="60.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="60.0" minHeight="60.0" prefHeight="60.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label fx:id="cardTitle" text="\$title of news article">
+                     <font>
+                        <Font name="Arial" size="45.0" />
+                     </font>
+                     <padding>
+                        <Insets left="20.0" />
+                     </padding>
+                  </Label>
+                  <TextFlow prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Summary: ">
+                           <font>
+                              <Font name="Arial Bold" size="20.0" />
+                           </font>
+                        </Text>
+                        <Text fx:id="cardSummary" strokeType="OUTSIDE" strokeWidth="0.0" text="NVIDIA’s stock dipped after a senior executive met with China’s Vice Commerce Minister amid looming U.S. semiconductor restrictions. Investors are concerned about geopolitical risks, high market expectations, and competition with Apple for the top market value. Despite strong chip demand, uncertainties weigh on the stock.">
+                           <font>
+                              <Font name="Arial" size="20.0" />
+                           </font>
+                        </Text>
+                     </children>
+                     <padding>
+                        <Insets left="20.0" right="20.0" top="40.0" />
+                     </padding>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </TextFlow>
+               </children>
+            </GridPane>
+         </children>
+      </StackPane>
+   </children>
+</VBox>
