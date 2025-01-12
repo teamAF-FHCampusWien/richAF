@@ -3,6 +3,7 @@ package at.ac.fhcampuswien.richAF.controller;
 import at.ac.fhcampuswien.richAF.data.ArticleResult;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.text.Text;
 
 public class ResultController {
 
@@ -10,7 +11,7 @@ public class ResultController {
     private Label cardTitle;
 
     @FXML
-    private Label cardSummary;
+    private Text cardSummary;
 
     public void setCardTitle(String title) {
         cardTitle.setText(title);

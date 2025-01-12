@@ -12,6 +12,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 
 import java.io.IOException;
@@ -45,10 +47,14 @@ public class Controller {
     private ProgressIndicator pgiJob;
 
     @FXML
-    private FlowPane resultCardContainer;
+    private ScrollPane resultCardContainer;
+
+    @FXML
+    private HBox cardsBox;
 
     @FXML
     private Button refreshButton;
+
 
     // Constructors
     public Controller() {
@@ -95,7 +101,7 @@ public class Controller {
         // Logic to create new cards dynamically
         for (ArticleResult article : articles) {
             try {
-                FXMLLoader loader = new FXMLLoader((getClass().getResource("/resources/result-card.fxml")));
+                FXMLLoader loader = new FXMLLoader((getClass().getResource("/result-card.fxml")));
                 loader.load();
 
                 ResultController resultController = loader.getController();
@@ -105,7 +111,7 @@ public class Controller {
                 resultController.setCardSummary(article.getSummary());
 
                 // Add node to parent
-                resultCardContainer.getChildren().add(loader.getRoot());
+                cardsBox.getChildren().add(loader.getRoot());
 
             } catch (IOException e) {
                 e.printStackTrace();
