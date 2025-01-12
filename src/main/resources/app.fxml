@@ -20,132 +20,120 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<?import javafx.scene.layout.Pane?>
-<VBox alignment="TOP_CENTER" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/23.0.1"
-      xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.fhcampuswien.richAF.controller.Controller">
-    <HBox alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="66.0" prefWidth="1920.0"
-          style="-fx-background-color: #7F8795;">
+<VBox fx:id="root" alignment="TOP_CENTER" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.fhcampuswien.richAF.controller.Controller">
+    <HBox alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="66.0" prefWidth="1920.0" style="-fx-background-color: #7F8795;">
         <children>
           <GridPane alignment="CENTER" prefHeight="66.0" prefWidth="2017.0">
               <columnConstraints>
-                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="100.0" minWidth="100.0"
-                                     prefWidth="100.0"/>
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="196.0" minWidth="196.0" prefWidth="196.0"/>
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="100.0" prefWidth="100.0"/>
-                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES"/>
-                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="100.0" minWidth="100.0"
-                                     prefWidth="100.0"/>
-                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="196.0" minWidth="196.0"
-                                     prefWidth="196.0"/>
-                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="100.0" minWidth="100.0"
-                                     prefWidth="100.0"/>
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="196.0" minWidth="196.0" prefWidth="196.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="196.0" minWidth="196.0" prefWidth="196.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" />
               </columnConstraints>
               <rowConstraints>
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
               <children>
-                  <Label alignment="CENTER" prefHeight="23.0" prefWidth="676.0" text="Welcome to your Dashboard!"
-                         textFill="WHITE" GridPane.columnIndex="3">
+                  <Label alignment="CENTER" prefHeight="23.0" prefWidth="676.0" text="Welcome to your Dashboard!" textFill="WHITE" GridPane.columnIndex="3">
                       <font>
-                          <Font name="Arial" size="30.0"/>
+                          <Font name="Arial" size="30.0" />
                       </font>
                   </Label>
-                  <Button mnemonicParsing="false" text="+ add data" GridPane.columnIndex="6"/>
-                  <ToggleButton fx:id="tgbJobService" mnemonicParsing="false" text="do work"
-                                GridPane.columnIndex="4"/>
-                  <ComboBox fx:id="cmbCompany" prefWidth="150.0" promptText="Pick company" GridPane.columnIndex="5"/>
-                  <Button alignment="CENTER" mnemonicParsing="false" text="Filter"/>
-                  <Button fx:id="refreshButton" mnemonicParsing="false" onAction="#displayResults" text="Refresh"
-                          GridPane.columnIndex="1"/>
+                  <Button mnemonicParsing="false" onAction="#showAddDataSheet" text="+ add data" GridPane.columnIndex="6" />
+                  <ToggleButton fx:id="tgbJobService" mnemonicParsing="false" text="do work" GridPane.columnIndex="4" />
+                  <ComboBox fx:id="cmbCompany" prefWidth="150.0" promptText="Pick company" GridPane.columnIndex="5" />
+                  <Button alignment="CENTER" mnemonicParsing="false" text="Filter" />
+                  <Button fx:id="refreshButton" mnemonicParsing="false" onAction="#displayResults" text="Refresh" GridPane.columnIndex="1" />
               </children>
           </GridPane>
         </children>
         <padding>
-          <Insets right="20.0"/>
+          <Insets right="20.0" />
         </padding>
     </HBox>
     <StackPane prefHeight="195.0" prefWidth="1080.0">
         <children>
-          <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#7f8795" height="155.0" stroke="TRANSPARENT"
-                     strokeType="INSIDE" style="-fx-arc-width: 30; -fx-arc-height: 30;" width="1870.0">
+          <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#7f8795" height="155.0" stroke="TRANSPARENT" strokeType="INSIDE" style="-fx-arc-width: 30; -fx-arc-height: 30;" width="1870.0">
               <effect>
                   <DropShadow blurType="GAUSSIAN" height="10.0" offsetX="1.0" offsetY="1.0" radius="4.5" width="10.0">
                       <color>
-                          <Color red="0.3947368562221527" green="0.3947368562221527" blue="0.3947368562221527"/>
+                          <Color red="0.3947368562221527" green="0.3947368562221527" blue="0.3947368562221527" />
                       </color>
                   </DropShadow>
               </effect>
           </Rectangle>
           <GridPane alignment="CENTER" StackPane.alignment="CENTER">
               <columnConstraints>
-                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
               </columnConstraints>
               <rowConstraints>
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
               <children>
                   <Label text="\\$nr_of_feeds aded " textFill="WHITE">
                       <font>
-                          <Font size="30.0"/>
+                          <Font size="30.0" />
                       </font>
                   </Label>
                   <Label text="\$nr_of_articles crawled" textFill="WHITE" GridPane.columnIndex="1">
                       <font>
-                          <Font size="30.0"/>
+                          <Font size="30.0" />
                       </font>
                   </Label>
                   <Label text="\$ticker likely to gain" textFill="WHITE" GridPane.columnIndex="2">
                       <font>
-                          <Font size="30.0"/>
+                          <Font size="30.0" />
                       </font>
                   </Label>
                   <Label text="\$ticker likely to loose" textFill="WHITE" GridPane.columnIndex="3">
                       <font>
-                          <Font size="30.0"/>
+                          <Font size="30.0" />
                       </font>
                   </Label>
               </children>
           </GridPane>
         </children>
     </StackPane>
-    <ScrollPane fx:id="resultCardContainer" prefHeight="795.0" prefWidth="1920.0">
-      <content>
-          <HBox fx:id="cardsBox" spacing="10">
-              <padding>
-                  <Insets left="15.0" right="15.0"/>
-              </padding>
+   <StackPane fx:id="bottomSheetContainer" alignment="BOTTOM_CENTER" prefHeight="820.0" prefWidth="1890.0">
+      <children>
+          <ScrollPane fx:id="resultCardContainer" prefHeight="795.0" prefWidth="1920.0">
+            <content>
+                <HBox fx:id="cardsBox" prefHeight="780.0" prefWidth="1920.0" spacing="10">
+                    <padding>
+                        <Insets left="15.0" right="15.0" />
+                    </padding>
+                </HBox>
+            </content>
+          </ScrollPane>
+          <HBox alignment="CENTER_RIGHT" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="25.0" prefWidth="1920.0" style="-fx-background-color: #7F8795;">
+              <children>
+                <Label fx:id="lblOllama" text="Ollama" textFill="WHITE">
+                    <graphic>
+                        <Circle fx:id="cirOllama" fill="DODGERBLUE" radius="5.0" stroke="TRANSPARENT" strokeType="INSIDE" />
+                    </graphic>
+                    <tooltip>
+                        <Tooltip fx:id="ttOllama" text="test" />
+                    </tooltip>
+                    <HBox.margin>
+                        <Insets right="20.0" />
+                    </HBox.margin>
+                </Label>
+                <Label fx:id="lblJob" text="Job-Runner" textFill="WHITE">
+                    <graphic>
+                        <ProgressIndicator fx:id="pgiJob" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="20.0" prefWidth="20.0" />
+                    </graphic>
+                    <HBox.margin>
+                        <Insets right="20.0" />
+                    </HBox.margin>
+                </Label>
+              </children>
           </HBox>
-      </content>
-        <VBox.margin>
-          <Insets/>
-        </VBox.margin>
-    </ScrollPane>
-    <HBox alignment="CENTER_RIGHT" prefHeight="24.0" prefWidth="200.0" style="-fx-background-color: #7F8795;">
-        <children>
-          <Label fx:id="lblOllama" text="Ollama" textFill="WHITE">
-              <graphic>
-                  <Circle fx:id="cirOllama" fill="DODGERBLUE" radius="5.0" stroke="TRANSPARENT" strokeType="INSIDE"/>
-              </graphic>
-              <tooltip>
-                  <Tooltip fx:id="ttOllama" text="test"/>
-              </tooltip>
-              <HBox.margin>
-                  <Insets right="20.0"/>
-              </HBox.margin>
-          </Label>
-          <Label fx:id="lblJob" text="Job-Runner" textFill="WHITE">
-              <graphic>
-                  <ProgressIndicator fx:id="pgiJob" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="20.0"
-                                     prefWidth="20.0"/>
-              </graphic>
-              <HBox.margin>
-                  <Insets right="20.0"/>
-              </HBox.margin>
-          </Label>
-        </children>
-    </HBox>
-    <Pane fx:id="bottomSheetContainer" />
+      </children>
+   </StackPane>
 </VBox>
