@@ -1,6 +1,7 @@
 package at.ac.fhcampuswien.richAF.controller;
 
 import at.ac.fhcampuswien.richAF.crawler.Crawler;
+import at.ac.fhcampuswien.richAF.data.ArticleResult;
 import at.ac.fhcampuswien.richAF.data.EventManager;
 import at.ac.fhcampuswien.richAF.model.Config;
 import at.ac.fhcampuswien.richAF.model.dao.tblSource;
@@ -8,10 +9,12 @@ import at.ac.fhcampuswien.richAF.services.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.shape.Circle;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
@@ -43,6 +46,9 @@ public class Controller {
 
     @FXML
     private FlowPane resultCardContainer;
+
+    @FXML
+    private Button refreshButton;
 
     // Constructors
     public Controller() {
@@ -78,7 +84,33 @@ public class Controller {
 
     public void displayResults() {
         //TODO: connect real results, for now only dummy data is shown
-        List<String> ResultData = new ArrayList<>();
+
+        List<ArticleResult> articles = new ArrayList<>();
+
+        for (int i = 0; i < 5; i++) {
+            ArticleResult article = new ArticleResult("TSLA", true, "Lorem ipsum dolor sit amet");
+            articles.add(article);
+        }
+
+        // Logic to create new cards dynamically
+        for (ArticleResult article : articles) {
+            try {
+                FXMLLoader loader = new FXMLLoader((getClass().getResource("/resources/result-card.fxml")));
+                loader.load();
+
+                ResultController resultController = loader.getController();
+                // Set title
+                resultController.setCardTitle(article.getTickerSymbol());
+                // Set summary
+                resultController.setCardSummary(article.getSummary());
+
+                // Add node to parent
+                resultCardContainer.getChildren().add(loader.getRoot());
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
     }
 
