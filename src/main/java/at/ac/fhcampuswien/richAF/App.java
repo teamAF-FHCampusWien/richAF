@@ -17,8 +17,7 @@ public class App extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/app.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1920, 1080);
         stage.setResizable(false);
-        stage.setTitle("richAF");
-
+        stage.setTitle("Ready to get richAF?");
         stage.setScene(scene);
         stage.show();
     }
