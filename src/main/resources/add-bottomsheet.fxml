@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="bottomSheet" alignment="BOTTOM_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.fhcampuswien.richAF.controller.BottomSheetController">
+<VBox fx:id="bottomSheet" alignment="BOTTOM_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.fhcampuswien.richAF.controller.AddBottomSheetController">
    <children>
       <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="390.0" prefWidth="1870.0" style="-fx-background-color: white; -fx-background-radius: 30 30 0 0; -fx-border-color: black; -fx-border-radius: 30 30 0 0;">
          <effect>
@@ -70,7 +70,7 @@
                         <Insets left="20.0" right="20.0" />
                      </GridPane.margin>
                   </TextField>
-                  <Button fx:id="cancelBottomSheet" mnemonicParsing="false" onAction="#hideBottomSheet" prefHeight="30.0" prefWidth="885.0" text="Cancel" GridPane.rowIndex="5">
+                  <Button fx:id="cancelBottomSheet" mnemonicParsing="false" onAction="#hideAddBottomSheet" prefHeight="30.0" prefWidth="885.0" text="Cancel" GridPane.rowIndex="5">
                      <GridPane.margin>
                         <Insets left="20.0" />
                      </GridPane.margin>
