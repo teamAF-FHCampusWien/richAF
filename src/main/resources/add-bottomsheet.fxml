@@ -12,8 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<VBox alignment="BOTTOM_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" style="-fx-background-color: rgba(84, 95, 113, 0.8);" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="bottomSheet" alignment="BOTTOM_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.fhcampuswien.richAF.controller.BottomSheetController">
    <children>
       <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="390.0" prefWidth="1870.0" style="-fx-background-color: white; -fx-background-radius: 30 30 0 0; -fx-border-color: black; -fx-border-radius: 30 30 0 0;">
          <effect>
@@ -71,12 +70,12 @@
                         <Insets left="20.0" right="20.0" />
                      </GridPane.margin>
                   </TextField>
-                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="885.0" text="Cancel" GridPane.rowIndex="5">
+                  <Button fx:id="cancelBottomSheet" mnemonicParsing="false" onAction="#hideBottomSheet" prefHeight="30.0" prefWidth="885.0" text="Cancel" GridPane.rowIndex="5">
                      <GridPane.margin>
                         <Insets left="20.0" />
                      </GridPane.margin>
                   </Button>
-                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="885.0" text="Ok" GridPane.halignment="RIGHT" GridPane.rowIndex="5">
+                  <Button fx:id="confirmBottomSheet" mnemonicParsing="false" prefHeight="30.0" prefWidth="885.0" text="Ok" GridPane.halignment="RIGHT" GridPane.rowIndex="5">
                      <GridPane.margin>
                         <Insets right="20.0" />
                      </GridPane.margin>
