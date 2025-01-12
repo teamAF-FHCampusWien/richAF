@@ -15,7 +15,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
-
+import java.nio.file.Paths;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,8 +58,8 @@ public class Controller {
 
     // Constructors
     public Controller() {
-        //TODO: ACHTUNG muss noch plattform und rechner unabhängig gewählt werden
-        _em = new EventManager("D:\\temp\\richAF.log");
+        String logPath = Paths.get(System.getProperty("java.io.tmpdir"), "richAF.log").toString();
+        _em = new EventManager(logPath);
         _config = new Config();
         _olService = new OllamaService(_config,_em);
         _dbService = new DBService(_config,_em);
@@ -90,7 +90,6 @@ public class Controller {
 
     public void displayResults() {
         //TODO: connect real results, for now only dummy data is shown
-
         List<ArticleResult> articles = new ArrayList<>();
 
         for (int i = 0; i < 5; i++) {
@@ -114,6 +113,7 @@ public class Controller {
                 cardsBox.getChildren().add(loader.getRoot());
 
             } catch (IOException e) {
+                //TODO: Add to logs @Botan(?)
                 e.printStackTrace();
             }
         }
