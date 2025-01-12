@@ -1,25 +1,21 @@
 package at.ac.fhcampuswien.richAF.controller;
 
-import at.ac.fhcampuswien.richAF.crawler.Crawler;
 import at.ac.fhcampuswien.richAF.data.ArticleResult;
 import at.ac.fhcampuswien.richAF.data.EventManager;
 import at.ac.fhcampuswien.richAF.model.Config;
-import at.ac.fhcampuswien.richAF.model.dao.tblSource;
 import at.ac.fhcampuswien.richAF.services.*;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
-
+import java.nio.file.Paths;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
+import javafx.animation.TranslateTransition;
+import javafx.util.Duration;
 
 
 public class Controller {
@@ -55,18 +51,35 @@ public class Controller {
     @FXML
     private Button refreshButton;
 
+    @FXML
+    private StackPane bottomSheetContainer;
+
+    @FXML
+    private VBox bottomSheet;
+
+    @FXML
+    private VBox editBottomSheet;
+
+    @FXML
+    private Button addData;
+
+    @FXML
+    private Button editData;
+
 
     // Constructors
     public Controller() {
-        //TODO: ACHTUNG muss noch plattform und rechner unabhängig gewählt werden
-        _em = new EventManager("D:\\temp\\richAF.log");
+        String logPath = Paths.get(System.getProperty("java.io.tmpdir"), "richAF.log").toString();
+        _em = new EventManager(logPath);
         _config = new Config();
         _olService = new OllamaService(_config,_em);
         _dbService = new DBService(_config,_em);
     }
 
     // Methods
+    @FXML
     public void initialize() {
+
         OllamaServiceControl osc= new OllamaServiceControl(lblOllama, cirOllama, ttOllama , _olService);
         _scheduler = new ServiceScheduler(_schedulerExec,pgiJob, _olService, _dbService,_em);
         _scheduler.setPcounter(Integer.parseInt(_config.getProperty("jobservice.pcounter")));
@@ -90,7 +103,6 @@ public class Controller {
 
     public void displayResults() {
         //TODO: connect real results, for now only dummy data is shown
-
         List<ArticleResult> articles = new ArrayList<>();
 
         for (int i = 0; i < 5; i++) {
@@ -103,21 +115,80 @@ public class Controller {
             try {
                 FXMLLoader loader = new FXMLLoader((getClass().getResource("/result-card.fxml")));
                 loader.load();
-
                 ResultController resultController = loader.getController();
+
                 // Set title
                 resultController.setCardTitle(article.getTickerSymbol());
                 // Set summary
                 resultController.setCardSummary(article.getSummary());
-
                 // Add node to parent
                 cardsBox.getChildren().add(loader.getRoot());
 
             } catch (IOException e) {
+                //TODO: Add to logs @Botan(?)
                 e.printStackTrace();
             }
         }
 
+    }
+
+    public void showAddDataSheet() {
+        try {
+            // Load the bottom sheet from its FXML
+            FXMLLoader loader = new FXMLLoader((getClass().getResource("/add-bottomsheet.fxml")));
+            bottomSheet = loader.load();
+            System.out.println("Loaded");
+            AddBottomSheetController addBottomSheetController = loader.getController();
+
+
+            bottomSheet.setPrefWidth(bottomSheetContainer.getWidth());
+
+            // Add the bottom sheet to the container
+            bottomSheetContainer.getChildren().add(bottomSheet);
+
+            // Set the initial position off-screen (below the current view)
+            bottomSheet.setLayoutY(bottomSheetContainer.getHeight());
+
+            // Animate it sliding into view
+            TranslateTransition slideUp = new TranslateTransition(Duration.millis(300), bottomSheet);
+            slideUp.setToY(0); // Slide up into view
+            slideUp.play();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void showEditDataSheet() {
+        try {
+            // Load the bottom sheet from its FXML
+            FXMLLoader loader = new FXMLLoader((getClass().getResource("/edit-bottomsheet.fxml")));
+            System.out.println("Loaded");
+            editBottomSheet = loader.load();
+            EditBottomSheetController editBottomSheetController = loader.getController();
+            System.out.println("Controller gotten");
+
+            editBottomSheet.setPrefWidth(bottomSheetContainer.getWidth());
+            System.out.println("Width set");
+
+            // Add the bottom sheet to the container
+            bottomSheetContainer.getChildren().add(editBottomSheet);
+            System.out.println("Added to container");
+
+            // Set the initial position off-screen (below the current view)
+            editBottomSheet.setLayoutY(bottomSheetContainer.getHeight());
+            System.out.println("Set offscreen position");
+
+            // Animate it sliding into view
+            TranslateTransition slideUp = new TranslateTransition(Duration.millis(300), editBottomSheet);
+            slideUp.setToY(0); // Slide up into view
+            slideUp.play();
+            System.out.println("Played animation");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

@@ -1,6 +1,5 @@
 package at.ac.fhcampuswien.richAF.controller;
 
-import at.ac.fhcampuswien.richAF.data.ArticleResult;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.text.Text;
