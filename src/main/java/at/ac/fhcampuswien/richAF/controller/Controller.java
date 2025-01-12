@@ -28,9 +28,6 @@ public class Controller {
 
     // Elements
     @FXML
-    private VBox root;
-
-    @FXML
     private Label lblOllama;
 
     @FXML
@@ -61,7 +58,13 @@ public class Controller {
     private VBox bottomSheet;
 
     @FXML
+    private VBox editBottomSheet;
+
+    @FXML
     private Button addData;
+
+    @FXML
+    private Button editData;
 
 
     // Constructors
@@ -133,8 +136,10 @@ public class Controller {
         try {
             // Load the bottom sheet from its FXML
             FXMLLoader loader = new FXMLLoader((getClass().getResource("/add-bottomsheet.fxml")));
-            BottomSheetController bottomSheetController = loader.getController();
-            Pane bottomSheet = loader.load();
+            bottomSheet = loader.load();
+            System.out.println("Loaded");
+            AddBottomSheetController addBottomSheetController = loader.getController();
+
 
             bottomSheet.setPrefWidth(bottomSheetContainer.getWidth());
 
@@ -155,6 +160,36 @@ public class Controller {
     }
 
 
+    public void showEditDataSheet() {
+        try {
+            // Load the bottom sheet from its FXML
+            FXMLLoader loader = new FXMLLoader((getClass().getResource("/edit-bottomsheet.fxml")));
+            System.out.println("Loaded");
+            editBottomSheet = loader.load();
+            EditBottomSheetController editBottomSheetController = loader.getController();
+            System.out.println("Controller gotten");
+
+            editBottomSheet.setPrefWidth(bottomSheetContainer.getWidth());
+            System.out.println("Width set");
+
+            // Add the bottom sheet to the container
+            bottomSheetContainer.getChildren().add(editBottomSheet);
+            System.out.println("Added to container");
+
+            // Set the initial position off-screen (below the current view)
+            editBottomSheet.setLayoutY(bottomSheetContainer.getHeight());
+            System.out.println("Set offscreen position");
+
+            // Animate it sliding into view
+            TranslateTransition slideUp = new TranslateTransition(Duration.millis(300), editBottomSheet);
+            slideUp.setToY(0); // Slide up into view
+            slideUp.play();
+            System.out.println("Played animation");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 }
 
