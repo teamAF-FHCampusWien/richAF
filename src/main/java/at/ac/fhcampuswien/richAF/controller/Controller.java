@@ -147,7 +147,7 @@ public class Controller {
             bottomSheetContainer.getChildren().add(bottomSheet);
 
             // Set the initial position off-screen (below the current view)
-            bottomSheet.setLayoutY(bottomSheetContainer.getHeight());
+            bottomSheet.setTranslateY(bottomSheetContainer.getHeight());
 
             // Animate it sliding into view
             TranslateTransition slideUp = new TranslateTransition(Duration.millis(300), bottomSheet);
@@ -177,7 +177,7 @@ public class Controller {
             System.out.println("Added to container");
 
             // Set the initial position off-screen (below the current view)
-            editBottomSheet.setLayoutY(bottomSheetContainer.getHeight());
+            bottomSheet.setTranslateY(bottomSheetContainer.getHeight());
             System.out.println("Set offscreen position");
 
             // Animate it sliding into view
