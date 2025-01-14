@@ -1,6 +1,0 @@
-[07.01.2025 6:18:29.594 pm CET] WARNING at.ac.fhcampuswien.richAF.Main main 10: This is a warning message
-[07.01.2025 6:18:29.612 pm CET] WARNING at.ac.fhcampuswien.richAF.Main main 11: This is another warning message
-[11.01.2025 4:16:29.765 PM CET] ERROR at.ac.fhcampuswien.richAF.services.OllamaService lambda$isOllamaRunning$1 119: null
-[11.01.2025 4:16:59.747 PM CET] ERROR at.ac.fhcampuswien.richAF.services.OllamaService lambda$isOllamaRunning$1 119: null
-[11.01.2025 4:17:29.751 PM CET] ERROR at.ac.fhcampuswien.richAF.services.OllamaService lambda$isOllamaRunning$1 119: null
-[11.01.2025 4:17:59.763 PM CET] ERROR at.ac.fhcampuswien.richAF.services.OllamaService lambda$isOllamaRunning$1 119: null
