@@ -147,7 +147,7 @@ public class Controller {
             bottomSheetContainer.getChildren().add(bottomSheet);
 
             // Set the initial position off-screen (below the current view)
-            bottomSheet.setLayoutY(bottomSheetContainer.getHeight());
+            bottomSheet.setTranslateY(bottomSheetContainer.getHeight());
 
             // Animate it sliding into view
             TranslateTransition slideUp = new TranslateTransition(Duration.millis(300), bottomSheet);
@@ -164,27 +164,21 @@ public class Controller {
         try {
             // Load the bottom sheet from its FXML
             FXMLLoader loader = new FXMLLoader((getClass().getResource("/edit-bottomsheet.fxml")));
-            System.out.println("Loaded");
             editBottomSheet = loader.load();
             EditBottomSheetController editBottomSheetController = loader.getController();
-            System.out.println("Controller gotten");
 
             editBottomSheet.setPrefWidth(bottomSheetContainer.getWidth());
-            System.out.println("Width set");
 
             // Add the bottom sheet to the container
             bottomSheetContainer.getChildren().add(editBottomSheet);
-            System.out.println("Added to container");
 
             // Set the initial position off-screen (below the current view)
-            editBottomSheet.setLayoutY(bottomSheetContainer.getHeight());
-            System.out.println("Set offscreen position");
+            editBottomSheet.setTranslateY(bottomSheetContainer.getHeight());
 
             // Animate it sliding into view
             TranslateTransition slideUp = new TranslateTransition(Duration.millis(300), editBottomSheet);
             slideUp.setToY(0); // Slide up into view
             slideUp.play();
-            System.out.println("Played animation");
 
         } catch (IOException e) {
             e.printStackTrace();
