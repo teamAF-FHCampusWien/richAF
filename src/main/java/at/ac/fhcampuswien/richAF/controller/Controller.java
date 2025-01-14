@@ -180,7 +180,7 @@ public class Controller {
             editBottomSheet = loader.load();
             EditBottomSheetController editBottomSheetController = loader.getController();
 
-            // EVent Listener
+            // Event Listener
             editBottomSheetController.setOnCancel(event -> {
             hideGreyOverlay();
             });
