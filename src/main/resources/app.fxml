@@ -19,7 +19,6 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-
 <StackPane fx:id="rootStackPane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.fhcampuswien.richAF.controller.Controller">
    <children>
       <Rectangle fx:id="greyOverlay" arcHeight="5.0" arcWidth="5.0" fill="#999999bf" height="1080.0" stroke="BLACK" strokeType="INSIDE" width="1920.0" />
@@ -41,7 +40,7 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
-                        <Label alignment="CENTER" prefHeight="23.0" prefWidth="676.0" text="Welcome to your Dashboard!" textFill="WHITE" GridPane.columnIndex="3">
+                        <Label fx:id="welcomeLabel" alignment="CENTER" prefHeight="23.0" prefWidth="676.0" text="Welcome to your Dashboard!" textFill="WHITE" GridPane.columnIndex="3">
                             <font>
                                 <Font name="Arial" size="30.0" />
                             </font>
@@ -61,6 +60,9 @@
               <padding>
                 <Insets right="20.0" />
               </padding>
+            <effect>
+               <DropShadow />
+            </effect>
           </HBox>
           <StackPane prefHeight="195.0" prefWidth="1080.0">
               <children>

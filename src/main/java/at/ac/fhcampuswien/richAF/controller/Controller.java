@@ -18,6 +18,7 @@ import javafx.animation.TranslateTransition;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import javafx.animation.Interpolator;
+import javafx.scene.input.MouseEvent;
 
 
 public class Controller {
@@ -27,6 +28,7 @@ public class Controller {
     ServiceScheduler _scheduler;
     ScheduledExecutorService _schedulerExec;
     EventManager _em;
+    private int clickCounter = 0;
 
     // Elements
     @FXML
@@ -80,6 +82,9 @@ public class Controller {
     @FXML
     private ToggleButton filterButton;
 
+    @FXML
+    private Label welcomeLabel;
+
 
     // Constructors
     public Controller() {
@@ -127,6 +132,8 @@ public class Controller {
                 //greyOverlay.toBack();
             }
         });
+
+        welcomeLabel.setOnMouseClicked(event -> handleWelcomeLabelClick(event));
 
     }
 
@@ -253,6 +260,18 @@ public class Controller {
 
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void handleWelcomeLabelClick(MouseEvent event) {
+        clickCounter++;
+        System.out.println("Welcome Label clicked " + clickCounter + " times.");
+
+        if (clickCounter == 5) {
+            clickCounter = 0;
+            //TODO: Replace with actual hidden menu
+            greyOverlay.toFront();
+
         }
     }
 
