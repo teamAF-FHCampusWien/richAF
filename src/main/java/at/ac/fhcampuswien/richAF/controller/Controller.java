@@ -2,7 +2,6 @@ package at.ac.fhcampuswien.richAF.controller;
 
 import at.ac.fhcampuswien.richAF.data.ArticleResult;
 import at.ac.fhcampuswien.richAF.data.EventManager;
-import javafx.event.ActionEvent;
 import at.ac.fhcampuswien.richAF.model.Config;
 import at.ac.fhcampuswien.richAF.services.*;
 import javafx.fxml.FXML;
@@ -18,6 +17,7 @@ import java.util.concurrent.*;
 import javafx.animation.TranslateTransition;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import javafx.animation.Interpolator;
 
 
 public class Controller {
@@ -164,7 +164,8 @@ public class Controller {
 
             // Animate it sliding into view
             TranslateTransition slideUp = new TranslateTransition(Duration.millis(300), bottomSheet);
-            slideUp.setToY(165); // Slide up into view
+            slideUp.setToY(165);
+            slideUp.setInterpolator(Interpolator.EASE_OUT);
             slideUp.play();
 
         } catch (IOException e) {
@@ -196,7 +197,8 @@ public class Controller {
 
             // Animate it sliding into view
             TranslateTransition slideUp = new TranslateTransition(Duration.millis(300), editBottomSheet);
-            slideUp.setToY(165); // Slide up into view
+            slideUp.setToY(165);
+            slideUp.setInterpolator(Interpolator.EASE_OUT);
             slideUp.play();
 
         } catch (IOException e) {
