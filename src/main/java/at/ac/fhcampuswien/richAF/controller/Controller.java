@@ -2,6 +2,7 @@ package at.ac.fhcampuswien.richAF.controller;
 
 import at.ac.fhcampuswien.richAF.data.ArticleResult;
 import at.ac.fhcampuswien.richAF.data.EventManager;
+import javafx.event.ActionEvent;
 import at.ac.fhcampuswien.richAF.model.Config;
 import at.ac.fhcampuswien.richAF.services.*;
 import javafx.fxml.FXML;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 import javafx.animation.TranslateTransition;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 
@@ -66,6 +68,12 @@ public class Controller {
     @FXML
     private Button editData;
 
+    @FXML
+    private StackPane rootStackPane;
+
+    @FXML
+    private Rectangle greyOverlay;
+
 
     // Constructors
     public Controller() {
@@ -81,7 +89,7 @@ public class Controller {
     public void initialize() {
 
         OllamaServiceControl osc= new OllamaServiceControl(lblOllama, cirOllama, ttOllama , _olService);
-        _scheduler = new ServiceScheduler(_schedulerExec,pgiJob, _olService, _dbService,_em);
+        _scheduler = new ServiceScheduler(_schedulerExec, pgiJob, _olService, _dbService,_em);
         _scheduler.setPcounter(Integer.parseInt(_config.getProperty("jobservice.pcounter")));
         // Beispiel für die Interaktion mit dem webcrawler
         // _dbService.SavePagesFromCrawler(new Crawler( _dbService.getSources().getLast().getStrUrl()));
@@ -140,18 +148,23 @@ public class Controller {
             System.out.println("Loaded");
             AddBottomSheetController addBottomSheetController = loader.getController();
 
+            // EventHandler to catch pressing button in AddBottomSheetController
+            addBottomSheetController.setOnCancel(event -> {
+                hideGreyOverlay();
+            });
 
             bottomSheet.setPrefWidth(bottomSheetContainer.getWidth());
 
             // Add the bottom sheet to the container
-            bottomSheetContainer.getChildren().add(bottomSheet);
+            greyOverlay.toFront();
+            rootStackPane.getChildren().add(bottomSheet);
 
             // Set the initial position off-screen (below the current view)
             bottomSheet.setTranslateY(bottomSheetContainer.getHeight());
 
             // Animate it sliding into view
             TranslateTransition slideUp = new TranslateTransition(Duration.millis(300), bottomSheet);
-            slideUp.setToY(0); // Slide up into view
+            slideUp.setToY(165); // Slide up into view
             slideUp.play();
 
         } catch (IOException e) {
@@ -167,22 +180,32 @@ public class Controller {
             editBottomSheet = loader.load();
             EditBottomSheetController editBottomSheetController = loader.getController();
 
+            // EVent Listener
+            editBottomSheetController.setOnCancel(event -> {
+            hideGreyOverlay();
+            });
+
             editBottomSheet.setPrefWidth(bottomSheetContainer.getWidth());
 
             // Add the bottom sheet to the container
-            bottomSheetContainer.getChildren().add(editBottomSheet);
+            greyOverlay.toFront();
+            rootStackPane.getChildren().add(editBottomSheet);
 
             // Set the initial position off-screen (below the current view)
             editBottomSheet.setTranslateY(bottomSheetContainer.getHeight());
 
             // Animate it sliding into view
             TranslateTransition slideUp = new TranslateTransition(Duration.millis(300), editBottomSheet);
-            slideUp.setToY(0); // Slide up into view
+            slideUp.setToY(165); // Slide up into view
             slideUp.play();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void hideGreyOverlay() {
+        greyOverlay.toBack();
     }
 
 }

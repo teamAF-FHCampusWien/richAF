@@ -158,7 +158,7 @@
             </GridPane>
             <HBox alignment="CENTER" prefHeight="70.0" prefWidth="200.0" spacing="25.0">
                <children>
-                  <Button fx:id="cancelEditBottomSheet" mnemonicParsing="false" onAction="#hideEditBottomSheet" prefHeight="30.0" prefWidth="885.0" text="Cancel" />
+                  <Button fx:id="cancelEditBottomSheet" mnemonicParsing="false" onAction="#handleCancelAction" prefHeight="30.0" prefWidth="885.0" text="Cancel" />
                   <Button fx:id="confirmBottomSheet" mnemonicParsing="false" prefHeight="30.0" prefWidth="885.0" text="Ok" />
                </children>
             </HBox>
