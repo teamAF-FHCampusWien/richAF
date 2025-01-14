@@ -9,7 +9,6 @@ import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
 public class EditBottomSheetController {
-
     //Triggers when bottomsheet is hidden
     private EventHandler<ActionEvent> onCancel;
 

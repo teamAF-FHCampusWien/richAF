@@ -74,22 +74,28 @@ public class Controller {
     @FXML
     private Rectangle greyOverlay;
 
+    @FXML
+    private VBox filtermenu;
+
+    @FXML
+    private ToggleButton filterButton;
+
 
     // Constructors
     public Controller() {
         String logPath = Paths.get(System.getProperty("java.io.tmpdir"), "richAF.log").toString();
         _em = new EventManager(logPath);
         _config = new Config();
-        _olService = new OllamaService(_config,_em);
-        _dbService = new DBService(_config,_em);
+        _olService = new OllamaService(_config, _em);
+        _dbService = new DBService(_config, _em);
     }
 
     // Methods
     @FXML
     public void initialize() {
 
-        OllamaServiceControl osc= new OllamaServiceControl(lblOllama, cirOllama, ttOllama , _olService);
-        _scheduler = new ServiceScheduler(_schedulerExec, pgiJob, _olService, _dbService,_em);
+        OllamaServiceControl osc = new OllamaServiceControl(lblOllama, cirOllama, ttOllama, _olService);
+        _scheduler = new ServiceScheduler(_schedulerExec, pgiJob, _olService, _dbService, _em);
         _scheduler.setPcounter(Integer.parseInt(_config.getProperty("jobservice.pcounter")));
         // Beispiel für die Interaktion mit dem webcrawler
         // _dbService.SavePagesFromCrawler(new Crawler( _dbService.getSources().getLast().getStrUrl()));
@@ -104,6 +110,21 @@ public class Controller {
                 tgbJobService.setText("Start Scheduler");
                 _scheduler.stopScheduler();
                 JobService.Abort();
+            }
+        });
+
+        filterButton.setOnAction(event -> {
+            if (filterButton.isSelected()) {
+                filterButton.setText("Done");
+                showFilterMenu();
+
+            } else {
+                filterButton.setText("Filter");
+                TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), filtermenu);
+                slideOut.setToX(-1200);
+                slideOut.setInterpolator(Interpolator.EASE_OUT);
+                slideOut.play();
+                //greyOverlay.toBack();
             }
         });
 
@@ -183,7 +204,7 @@ public class Controller {
 
             // Event Listener
             editBottomSheetController.setOnCancel(event -> {
-            hideGreyOverlay();
+                hideGreyOverlay();
             });
 
             editBottomSheet.setPrefWidth(bottomSheetContainer.getWidth());
@@ -210,5 +231,31 @@ public class Controller {
         greyOverlay.toBack();
     }
 
+    public void showFilterMenu() {
+        try {
+            FXMLLoader loader = new FXMLLoader((getClass().getResource("/filter-menu.fxml")));
+            filtermenu = loader.load();
+            FilterController filterController = loader.getController();
+
+            filterController.setOnDone(event -> {
+                hideGreyOverlay();
+            });
+
+            //greyOverlay.toFront();
+            rootStackPane.getChildren().add(filtermenu);
+            filtermenu.setTranslateX(-rootStackPane.getWidth());
+            filtermenu.setTranslateY(25);
+
+            TranslateTransition slideIn = new TranslateTransition(Duration.millis(300), filtermenu);
+            slideIn.setToX(-790);
+            slideIn.setInterpolator(Interpolator.EASE_OUT);
+            slideIn.play();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
+
 

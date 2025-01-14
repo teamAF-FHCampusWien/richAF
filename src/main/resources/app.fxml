@@ -19,9 +19,10 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
+
 <StackPane fx:id="rootStackPane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.fhcampuswien.richAF.controller.Controller">
    <children>
-      <Rectangle fx:id="greyOverlay" arcHeight="5.0" arcWidth="5.0" fill="#8f8f8fbf" height="1080.0" stroke="BLACK" strokeType="INSIDE" width="1920.0" />
+      <Rectangle fx:id="greyOverlay" arcHeight="5.0" arcWidth="5.0" fill="#999999bf" height="1080.0" stroke="BLACK" strokeType="INSIDE" width="1920.0" />
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="1080.0" stroke="BLACK" strokeType="INSIDE" width="1920.0" />
       <VBox fx:id="root" alignment="TOP_CENTER" prefHeight="1080.0" prefWidth="1920.0">
           <HBox alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="66.0" prefWidth="1920.0" style="-fx-background-color: #7F8795;">
@@ -47,9 +48,13 @@
                         </Label>
                         <Button mnemonicParsing="false" onAction="#showAddDataSheet" text="+ add data" GridPane.columnIndex="6" />
                         <ToggleButton fx:id="tgbJobService" mnemonicParsing="false" text="do work" GridPane.columnIndex="4" />
-                        <Button alignment="CENTER" mnemonicParsing="false" text="Filter" />
                         <Button fx:id="refreshButton" mnemonicParsing="false" onAction="#displayResults" text="Refresh" GridPane.columnIndex="1" />
                      <Button fx:id="editData" mnemonicParsing="false" onAction="#showEditDataSheet" text="Edit" GridPane.columnIndex="5" />
+                     <ToggleButton fx:id="filterButton" mnemonicParsing="false" text="Filter">
+                        <font>
+                           <Font name="Arial" size="13.0" />
+                        </font>
+                     </ToggleButton>
                     </children>
                 </GridPane>
               </children>
