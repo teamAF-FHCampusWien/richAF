@@ -85,6 +85,9 @@ public class Controller {
     @FXML
     private Label welcomeLabel;
 
+    @FXML
+    private StackPane devMenuRoot;
+
 
     // Constructors
     public Controller() {
@@ -133,7 +136,7 @@ public class Controller {
             }
         });
 
-        welcomeLabel.setOnMouseClicked(event -> handleWelcomeLabelClick(event));
+        welcomeLabel.setOnMouseClicked(event -> showHiddenDevMenu(event));
 
     }
 
@@ -263,15 +266,24 @@ public class Controller {
         }
     }
 
-    private void handleWelcomeLabelClick(MouseEvent event) {
+    private void showHiddenDevMenu(MouseEvent event) {
         clickCounter++;
         System.out.println("Welcome Label clicked " + clickCounter + " times.");
 
         if (clickCounter == 5) {
             clickCounter = 0;
-            //TODO: Replace with actual hidden menu
-            greyOverlay.toFront();
 
+            try {
+                FXMLLoader loader = new FXMLLoader((getClass().getResource("/dev-menu.fxml")));
+                devMenuRoot = loader.load();
+                DevMenuController devMenuController = loader.getController();
+
+                rootStackPane.getChildren().add(devMenuRoot);
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
