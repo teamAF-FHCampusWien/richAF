@@ -102,7 +102,7 @@ public class Controller {
     @FXML
     public void initialize() {
 
-        OllamaServiceControl osc = new OllamaServiceControl(lblOllama, cirOllama, ttOllama, _olService);
+        OllamaServiceController osc = new OllamaServiceController(lblOllama, cirOllama, ttOllama, _olService);
         _scheduler = new ServiceScheduler(_schedulerExec, pgiJob, _olService, _dbService, _em);
         _scheduler.setPcounter(Integer.parseInt(_config.getProperty("jobservice.pcounter")));
         // Beispiel für die Interaktion mit dem webcrawler
