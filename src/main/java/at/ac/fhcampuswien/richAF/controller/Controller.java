@@ -279,6 +279,7 @@ public class Controller {
                 DevMenuController devMenuController = loader.getController();
 
                 rootStackPane.getChildren().add(devMenuRoot);
+                devMenuController.loadDataFromConfig();
 
 
             } catch (IOException e) {
