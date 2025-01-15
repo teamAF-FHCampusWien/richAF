@@ -17,7 +17,7 @@
 <StackPane fx:id="devMenuRoot" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.fhcampuswien.richAF.controller.DevMenuController">
    <children>
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#999999bf" height="1080.0" stroke="BLACK" strokeType="INSIDE" width="1920.0" />
-      <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #2E5C33; -fx-background-radius: 30;">
+      <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #7F8795; -fx-background-radius: 30;">
          <effect>
             <DropShadow height="5.0" radius="2.0" width="5.0" />
          </effect>
@@ -38,7 +38,7 @@
                   <RowConstraints maxHeight="110.0" minHeight="0.0" prefHeight="110.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Button mnemonicParsing="false" prefWidth="450.0" text="Save" GridPane.rowIndex="8">
+                  <Button fx:id="devMenuSave" mnemonicParsing="false" onAction="#saveDataToConfig" prefWidth="450.0" text="Save" GridPane.rowIndex="8">
                      <GridPane.margin>
                         <Insets left="500.0" />
                      </GridPane.margin>
@@ -48,7 +48,7 @@
                         <Insets right="500.0" />
                      </GridPane.margin>
                   </Button>
-                  <TextArea maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="950.0" style="-fx-background-radius: 30; -fx-border-radius: 30;" GridPane.rowIndex="7" />
+                  <TextArea fx:id="ollPromptTxt" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="950.0" style="-fx-background-radius: 30; -fx-border-radius: 30;" GridPane.rowIndex="7" />
                   <Label text="System Prompt" textFill="WHITE" GridPane.halignment="LEFT" GridPane.rowIndex="6" GridPane.valignment="BOTTOM">
                      <GridPane.margin>
                         <Insets left="25.0" />
@@ -78,8 +78,8 @@
                         <Font name="Arial" size="20.0" />
                      </font>
                   </Label>
-                  <TextField maxWidth="-Infinity" prefWidth="950.0" GridPane.rowIndex="3" />
-                  <TextField maxWidth="-Infinity" prefWidth="950.0" GridPane.rowIndex="5" />
+                  <TextField fx:id="ollPortTxt" maxWidth="-Infinity" prefWidth="950.0" GridPane.rowIndex="3" />
+                  <TextField fx:id="ollTempTxt" maxWidth="-Infinity" prefWidth="950.0" GridPane.rowIndex="5" />
                </children>
                <opaqueInsets>
                   <Insets />
