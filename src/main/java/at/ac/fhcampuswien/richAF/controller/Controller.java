@@ -15,7 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 import javafx.animation.TranslateTransition;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import javafx.animation.Interpolator;
+import javafx.scene.input.MouseEvent;
 
 
 public class Controller {
@@ -25,6 +28,7 @@ public class Controller {
     ServiceScheduler _scheduler;
     ScheduledExecutorService _schedulerExec;
     EventManager _em;
+    private int clickCounter = 0;
 
     // Elements
     @FXML
@@ -66,22 +70,37 @@ public class Controller {
     @FXML
     private Button editData;
 
+    @FXML
+    private StackPane rootStackPane;
+
+    @FXML
+    private Rectangle greyOverlay;
+
+    @FXML
+    private VBox filtermenu;
+
+    @FXML
+    private ToggleButton filterButton;
+
+    @FXML
+    private Label welcomeLabel;
+
 
     // Constructors
     public Controller() {
         String logPath = Paths.get(System.getProperty("java.io.tmpdir"), "richAF.log").toString();
         _em = new EventManager(logPath);
         _config = new Config();
-        _olService = new OllamaService(_config,_em);
-        _dbService = new DBService(_config,_em);
+        _olService = new OllamaService(_config, _em);
+        _dbService = new DBService(_config, _em);
     }
 
     // Methods
     @FXML
     public void initialize() {
 
-        OllamaServiceControl osc= new OllamaServiceControl(lblOllama, cirOllama, ttOllama , _olService);
-        _scheduler = new ServiceScheduler(_schedulerExec,pgiJob, _olService, _dbService,_em);
+        OllamaServiceControl osc = new OllamaServiceControl(lblOllama, cirOllama, ttOllama, _olService);
+        _scheduler = new ServiceScheduler(_schedulerExec, pgiJob, _olService, _dbService, _em);
         _scheduler.setPcounter(Integer.parseInt(_config.getProperty("jobservice.pcounter")));
         // Beispiel für die Interaktion mit dem webcrawler
         // _dbService.SavePagesFromCrawler(new Crawler( _dbService.getSources().getLast().getStrUrl()));
@@ -98,6 +117,23 @@ public class Controller {
                 JobService.Abort();
             }
         });
+
+        filterButton.setOnAction(event -> {
+            if (filterButton.isSelected()) {
+                filterButton.setText("Done");
+                showFilterMenu();
+
+            } else {
+                filterButton.setText("Filter");
+                TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), filtermenu);
+                slideOut.setToX(-1200);
+                slideOut.setInterpolator(Interpolator.EASE_OUT);
+                slideOut.play();
+                //greyOverlay.toBack();
+            }
+        });
+
+        welcomeLabel.setOnMouseClicked(event -> handleWelcomeLabelClick(event));
 
     }
 
@@ -140,18 +176,24 @@ public class Controller {
             System.out.println("Loaded");
             AddBottomSheetController addBottomSheetController = loader.getController();
 
+            // EventHandler to catch pressing button in AddBottomSheetController
+            addBottomSheetController.setOnCancel(event -> {
+                hideGreyOverlay();
+            });
 
             bottomSheet.setPrefWidth(bottomSheetContainer.getWidth());
 
             // Add the bottom sheet to the container
-            bottomSheetContainer.getChildren().add(bottomSheet);
+            greyOverlay.toFront();
+            rootStackPane.getChildren().add(bottomSheet);
 
             // Set the initial position off-screen (below the current view)
             bottomSheet.setTranslateY(bottomSheetContainer.getHeight());
 
             // Animate it sliding into view
             TranslateTransition slideUp = new TranslateTransition(Duration.millis(300), bottomSheet);
-            slideUp.setToY(0); // Slide up into view
+            slideUp.setToY(165);
+            slideUp.setInterpolator(Interpolator.EASE_OUT);
             slideUp.play();
 
         } catch (IOException e) {
@@ -167,17 +209,24 @@ public class Controller {
             editBottomSheet = loader.load();
             EditBottomSheetController editBottomSheetController = loader.getController();
 
+            // Event Listener
+            editBottomSheetController.setOnCancel(event -> {
+                hideGreyOverlay();
+            });
+
             editBottomSheet.setPrefWidth(bottomSheetContainer.getWidth());
 
             // Add the bottom sheet to the container
-            bottomSheetContainer.getChildren().add(editBottomSheet);
+            greyOverlay.toFront();
+            rootStackPane.getChildren().add(editBottomSheet);
 
             // Set the initial position off-screen (below the current view)
             editBottomSheet.setTranslateY(bottomSheetContainer.getHeight());
 
             // Animate it sliding into view
             TranslateTransition slideUp = new TranslateTransition(Duration.millis(300), editBottomSheet);
-            slideUp.setToY(0); // Slide up into view
+            slideUp.setToY(165);
+            slideUp.setInterpolator(Interpolator.EASE_OUT);
             slideUp.play();
 
         } catch (IOException e) {
@@ -185,5 +234,47 @@ public class Controller {
         }
     }
 
+    public void hideGreyOverlay() {
+        greyOverlay.toBack();
+    }
+
+    public void showFilterMenu() {
+        try {
+            FXMLLoader loader = new FXMLLoader((getClass().getResource("/filter-menu.fxml")));
+            filtermenu = loader.load();
+            FilterController filterController = loader.getController();
+
+            filterController.setOnDone(event -> {
+                hideGreyOverlay();
+            });
+
+            //greyOverlay.toFront();
+            rootStackPane.getChildren().add(filtermenu);
+            filtermenu.setTranslateX(-rootStackPane.getWidth());
+            filtermenu.setTranslateY(25);
+
+            TranslateTransition slideIn = new TranslateTransition(Duration.millis(300), filtermenu);
+            slideIn.setToX(-790);
+            slideIn.setInterpolator(Interpolator.EASE_OUT);
+            slideIn.play();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void handleWelcomeLabelClick(MouseEvent event) {
+        clickCounter++;
+        System.out.println("Welcome Label clicked " + clickCounter + " times.");
+
+        if (clickCounter == 5) {
+            clickCounter = 0;
+            //TODO: Replace with actual hidden menu
+            greyOverlay.toFront();
+
+        }
+    }
+
 }
+
 
