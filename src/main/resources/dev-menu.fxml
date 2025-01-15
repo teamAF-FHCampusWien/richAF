@@ -48,7 +48,7 @@
                         <Insets right="500.0" />
                      </GridPane.margin>
                   </Button>
-                  <TextArea fx:id="ollPromptTxt" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="950.0" style="-fx-background-radius: 30; -fx-border-radius: 30;" GridPane.rowIndex="7" />
+                  <TextArea fx:id="ollPromptTxt" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="950.0" style="-fx-background-radius: 30; -fx-border-radius: 30;" wrapText="true" GridPane.rowIndex="7" />
                   <Label text="System Prompt" textFill="WHITE" GridPane.halignment="LEFT" GridPane.rowIndex="6" GridPane.valignment="BOTTOM">
                      <GridPane.margin>
                         <Insets left="25.0" />
