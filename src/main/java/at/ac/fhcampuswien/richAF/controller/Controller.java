@@ -3,6 +3,7 @@ package at.ac.fhcampuswien.richAF.controller;
 import at.ac.fhcampuswien.richAF.data.ArticleResult;
 import at.ac.fhcampuswien.richAF.data.EventManager;
 import at.ac.fhcampuswien.richAF.model.Config;
+import at.ac.fhcampuswien.richAF.model.dao.tblResult;
 import at.ac.fhcampuswien.richAF.services.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -143,9 +144,9 @@ public class Controller {
     public void displayResults() {
         //TODO: connect real results, for now only dummy data is shown
         List<ArticleResult> articles = new ArrayList<>();
-
-        for (int i = 0; i < 5; i++) {
-            ArticleResult article = new ArticleResult("TSLA", true, "Lorem ipsum dolor sit amet");
+        for (tblResult tblres : _dbService.GetResults())
+         {
+            ArticleResult article = new ArticleResult(tblres.getStrResponeJson());
             articles.add(article);
         }
 
@@ -157,7 +158,7 @@ public class Controller {
                 ResultController resultController = loader.getController();
 
                 // Set title
-                resultController.setCardTitle(article.getTickerSymbol());
+                resultController.setCardTitle(article.getStock());
                 // Set summary
                 resultController.setCardSummary(article.getSummary());
                 // Add node to parent
