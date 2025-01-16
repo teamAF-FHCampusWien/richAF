@@ -11,7 +11,7 @@ import javafx.scene.shape.Circle;
  * Class contains a Control consisting of Standardcontrols to singal the connectivity to the ollama service
  * @author Stefan
  */
-public class OllamaServiceControl {
+public class OllamaServiceController {
     public Label lblOllama;
     public Circle cirOllama;
     public Tooltip ttOllama;
@@ -41,7 +41,7 @@ public class OllamaServiceControl {
      * @param tt the Tooltip-Control
      * @param ols the OllamaService
      */
-    public OllamaServiceControl(Label lbl, Circle cir, Tooltip tt, OllamaService ols) {
+    public OllamaServiceController(Label lbl, Circle cir, Tooltip tt, OllamaService ols) {
         lblOllama = lbl;
         cirOllama = cir;
         ttOllama = tt;
