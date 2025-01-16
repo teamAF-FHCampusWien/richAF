@@ -3,31 +3,34 @@ package at.ac.fhcampuswien.richAF.data;
 import lombok.Setter;
 import lombok.Getter;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.JSONObject;
 
 public class ArticleResult {
     @Getter @Setter
-    private String tickerSymbol;
+    private String stock;
     @Getter @Setter
-    private Boolean relevant;
+    private String relevant;
     @Getter @Setter
     private String summary;
 
     // Construct Object from Strings
-    public ArticleResult(String tickerSymbol, Boolean relevant, String summary) {
-        this.tickerSymbol = tickerSymbol;
+    public ArticleResult(String tickerSymbol, String relevant, String summary) {
+        this.stock = tickerSymbol;
         this.relevant = relevant;
         this.summary = summary;
     }
 
     // Construct Object from json
     public ArticleResult(String jsonString) {
-        ObjectMapper mapper = new ObjectMapper();
+
+        JSONObject jsonResponseObject = new JSONObject(jsonString);
+
 
         try {
-            ArticleResult parsedArticle = mapper.readValue(jsonString, ArticleResult.class);
-            this.tickerSymbol = parsedArticle.getTickerSymbol();
-            this.relevant = parsedArticle.getRelevant();
-            this.summary = parsedArticle.getSummary();
+
+            this.stock = jsonResponseObject.getString("stock");
+            this.relevant = jsonResponseObject.getString("relevant");
+            this.summary = jsonResponseObject.getString("summary");
 
         } catch (Exception e) {
             e.printStackTrace();
