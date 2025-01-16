@@ -85,6 +85,9 @@ public class Controller {
     @FXML
     private Label welcomeLabel;
 
+    @FXML
+    private StackPane devMenuRoot;
+
 
     // Constructors
     public Controller() {
@@ -99,7 +102,7 @@ public class Controller {
     @FXML
     public void initialize() {
 
-        OllamaServiceControl osc = new OllamaServiceControl(lblOllama, cirOllama, ttOllama, _olService);
+        OllamaServiceController osc = new OllamaServiceController(lblOllama, cirOllama, ttOllama, _olService);
         _scheduler = new ServiceScheduler(_schedulerExec, pgiJob, _olService, _dbService, _em);
         _scheduler.setPcounter(Integer.parseInt(_config.getProperty("jobservice.pcounter")));
         // Beispiel für die Interaktion mit dem webcrawler
@@ -133,7 +136,7 @@ public class Controller {
             }
         });
 
-        welcomeLabel.setOnMouseClicked(event -> handleWelcomeLabelClick(event));
+        welcomeLabel.setOnMouseClicked(event -> showHiddenDevMenu(event));
 
     }
 
@@ -263,15 +266,25 @@ public class Controller {
         }
     }
 
-    private void handleWelcomeLabelClick(MouseEvent event) {
+    private void showHiddenDevMenu(MouseEvent event) {
         clickCounter++;
         System.out.println("Welcome Label clicked " + clickCounter + " times.");
 
         if (clickCounter == 5) {
             clickCounter = 0;
-            //TODO: Replace with actual hidden menu
-            greyOverlay.toFront();
 
+            try {
+                FXMLLoader loader = new FXMLLoader((getClass().getResource("/dev-menu.fxml")));
+                devMenuRoot = loader.load();
+                DevMenuController devMenuController = loader.getController();
+
+                rootStackPane.getChildren().add(devMenuRoot);
+                devMenuController.loadDataFromConfig();
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
