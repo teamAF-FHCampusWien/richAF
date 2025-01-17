@@ -1,6 +1,7 @@
 package at.ac.fhcampuswien.richAF.controller;
 
 import at.ac.fhcampuswien.richAF.data.EventManager;
+import at.ac.fhcampuswien.richAF.model.Config;
 import at.ac.fhcampuswien.richAF.services.DBService;
 import at.ac.fhcampuswien.richAF.services.JobService;
 import at.ac.fhcampuswien.richAF.services.OllamaService;
@@ -25,15 +26,7 @@ public class ServiceScheduler{
     private OllamaService _olService;
     private DBService _dbService;
     private EventManager _em;
-    private int pcounter;
-
-    public int getPcounter() {
-        return pcounter;
-    }
-
-    public void setPcounter(int pcounter) {
-        this.pcounter = pcounter;
-    }
+    private Config _config;
 
 
     /*
@@ -55,7 +48,7 @@ public class ServiceScheduler{
      * @param dbs DBService
      * @param em EventManager for logging
      */
-    public ServiceScheduler(ScheduledExecutorService sch, ProgressIndicator pro , OllamaService ols, DBService dbs, EventManager em){
+    public ServiceScheduler(ScheduledExecutorService sch, ProgressIndicator pro , OllamaService ols, DBService dbs, EventManager em, Config config){
         scheduler = sch;
         progressIndicator = pro;
         _em = em;
@@ -63,17 +56,17 @@ public class ServiceScheduler{
         progressIndicator.setVisible(false);
         _olService = ols;
         _dbService = dbs;
-        pcounter = 5;
+        _config =config;
 
     }
 
     /**
      * starts the Scheduler with a new Thread, this Thread will call createAndExecuteJobs in 30 seconds
      */
-    public void startScheduler() {
-        scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.scheduleAtFixedRate(this::createAndExecuteJobs, 0, 30, TimeUnit.SECONDS);
-    }
+//    public void startScheduler() {
+//        scheduler = Executors.newScheduledThreadPool(1);
+//        scheduler.scheduleAtFixedRate(this::createAndExecuteJobs, 0, 30, TimeUnit.SECONDS);
+//    }
 
     /**
      * Stops the Scheduler service so it will not call in another 30 seconds
@@ -88,16 +81,21 @@ public class ServiceScheduler{
     /**
      * Calls if not running the CreateJobs asynchronous and after this completion it will call ExecuteJobs asynchron, this will prevent the UI from freezing while this Tasks are running
      */
-    private void createAndExecuteJobs() {
+    public void doWork() {
         if (!isRunning) {
             isRunning = true;
             Platform.runLater(() -> progressIndicator.setVisible(true));
-            CompletableFuture.runAsync(() -> JobService.CreateJobs(_dbService,pcounter,_em))
+            CompletableFuture.runAsync(() -> JobService.CrawlerCrawl(_dbService,_config,_em))
+                    .thenRunAsync(() -> JobService.CreateJobs(_dbService,Integer.parseInt(_config.getProperty("jobservice.pcounter")),_em))
                     .thenRunAsync(() -> JobService.ExecuteJobs(_olService,_dbService,_em))
                     .thenRun(() -> {
                         isRunning = false;
                         Platform.runLater(() -> progressIndicator.setVisible(false));
                     });
         }
+    }
+
+    public boolean isRunning() {
+        return isRunning;
     }
 }
