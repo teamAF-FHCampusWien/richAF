@@ -150,7 +150,7 @@
                      <graphic>
                         <ImageView fitHeight="32.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@icons/delete.png" />
+                              <Image url="@icons/x.png" />
                            </image>
                         </ImageView>
                      </graphic></Button>
@@ -158,7 +158,7 @@
                      <graphic>
                         <ImageView fitHeight="32.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@icons/delete.png" />
+                              <Image url="@icons/x.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -167,7 +167,7 @@
                      <graphic>
                         <ImageView fitHeight="32.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@icons/delete.png" />
+                              <Image url="@icons/x.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -176,7 +176,7 @@
                      <graphic>
                         <ImageView fitHeight="32.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@icons/delete.png" />
+                              <Image url="@icons/x.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -185,7 +185,7 @@
                      <graphic>
                         <ImageView fitHeight="32.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@icons/delete.png" />
+                              <Image url="@icons/x.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -194,7 +194,7 @@
                      <graphic>
                         <ImageView fitHeight="32.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@icons/delete.png" />
+                              <Image url="@icons/x.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -203,7 +203,7 @@
                      <graphic>
                         <ImageView fitHeight="32.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@icons/delete.png" />
+                              <Image url="@icons/x.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -212,7 +212,7 @@
                      <graphic>
                         <ImageView fitHeight="32.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@icons/delete.png" />
+                              <Image url="@icons/x.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -221,7 +221,7 @@
                      <graphic>
                         <ImageView fitHeight="32.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@icons/delete.png" />
+                              <Image url="@icons/x.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -230,7 +230,7 @@
                      <graphic>
                         <ImageView fitHeight="32.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@icons/delete.png" />
+                              <Image url="@icons/x.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -243,7 +243,7 @@
                      <font>
                         <Font name="Peak Rounded Regular" size="13.0" />
                      </font></Button>
-                  <Button fx:id="confirmBottomSheet" mnemonicParsing="false" prefHeight="30.0" prefWidth="885.0" styleClass="confirm-button" stylesheets="@styles/confirm-button.css" text="Ok">
+                  <Button fx:id="confirmBottomSheet" mnemonicParsing="false" onAction="#hideEditBottomSheet" prefHeight="30.0" prefWidth="885.0" styleClass="confirm-button" stylesheets="@styles/confirm-button.css" text="Ok">
                      <font>
                         <Font name="Peak Rounded Regular" size="13.0" />
                      </font></Button>

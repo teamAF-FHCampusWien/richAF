@@ -103,7 +103,7 @@ public class EditBottomSheetController {
 
         Button btndel = new Button();
         ImageView deleteIcon = new ImageView(
-                new Image(getClass().getResourceAsStream("/icons/delete.png"))
+                new Image(getClass().getResourceAsStream("/icons/x.png"))
         );
 
         deleteIcon.setFitWidth(20);
