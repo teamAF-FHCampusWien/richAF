@@ -8,6 +8,9 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -20,7 +23,9 @@ public class OllamaService {
     private URI baseUri;
     private Config _config;
     private EventManager _em;
-
+    private String model;
+    private double temperature;
+    private int respondtime;
     /**
      * the first part prompt which will be sent which the API call, the prompt can be set with the Setter
      * the first part contains the question to the LLM like "how many words are in the following text:"
@@ -36,6 +41,38 @@ public class OllamaService {
         this.prompt = prompt;
     }
 
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public double getTemperature() {
+        return temperature;
+    }
+
+    public void setTemperature() {
+        try{
+            double t= Double.parseDouble(_config.getProperty("ollama.temperature"));
+            this.temperature = t;
+            return;
+        } catch (NumberFormatException e) {
+            _em.logErrorMessage(e);
+        }
+        this.temperature = 0.8;
+
+    }
+
+    public void SetBaseUri(){
+        baseUri = URI.create(_config.getProperty("ollama.endpoint"));
+
+    }
+
+
+
     /**
      * Constructor:
      * sets the local config file which will be needed in the api call
@@ -47,8 +84,16 @@ public class OllamaService {
     public OllamaService(Config config, EventManager em) {
         _config = config;
         _em = em;
+        try {
+            respondtime = Integer.parseInt(_config.getProperty("ollama.respondtime"));
+        } catch (NumberFormatException e) {
+            respondtime = 15;
+            _em.logErrorMessage(e);
+        }
+
         client = HttpClient.newHttpClient();
-        baseUri = URI.create(_config.getProperty("ollama.endpoint"));
+        model = config.getProperty("ollama.model");
+        SetBaseUri();
     }
 
     /**
@@ -68,38 +113,13 @@ public class OllamaService {
      */
     public CompletableFuture<String> askOllama(String paragraph) {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("model", "llama3.2");
-        jsonObject.put("prompt", this.prompt+paragraph);
+        jsonObject.put("model", model);
+        jsonObject.put("system", this.prompt);
+        jsonObject.put("prompt", "Please analyze this article:"  + paragraph);
+        //jsonObject.put("prompt", this.prompt+paragraph);
         jsonObject.put("stream", false);
         jsonObject.put("format", "json");
-
-        JSONObject jsonFormat = new JSONObject();
-        JSONObject schema = new JSONObject();
-        schema.put("type", "object");
-
-        JSONObject properties = new JSONObject();
-        JSONObject stock = new JSONObject();
-        stock.put("type", "string");
-        properties.put("stock", stock);
-
-        JSONObject relevant = new JSONObject();
-        relevant.put("type", "string");
-        properties.put("relevant", relevant);
-
-        JSONObject summary = new JSONObject();
-        summary.put("type", "string");
-        properties.put("summary", summary);
-
-        schema.put("properties", properties);
-
-        JSONArray required = new JSONArray();
-        required.put("stock");
-        required.put("relevant");
-        required.put("summary");
-        schema.put("required", required);
-
-        //jsonObject.put("format", schema.toString());
-        //{"stock":"NVDA", "relevant":"YES", "summary":"<summary of the article part that mentions the stock NVDA>"}
+        jsonObject.put("temperature", temperature);
 
 
         // request is made asynchron because of the Ollama Client is very unreliable with its responsetimes
@@ -140,7 +160,7 @@ public class OllamaService {
             // building the request
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(baseUri)
-                    .timeout(Duration.ofSeconds(15))
+                    .timeout(Duration.ofSeconds(respondtime))
                     .GET()
                     .build();
             try {

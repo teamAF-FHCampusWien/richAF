@@ -3,23 +3,26 @@ package at.ac.fhcampuswien.richAF.controller;
 import at.ac.fhcampuswien.richAF.data.ArticleResult;
 import at.ac.fhcampuswien.richAF.data.EventManager;
 import at.ac.fhcampuswien.richAF.model.Config;
+import at.ac.fhcampuswien.richAF.model.dao.tblResult;
 import at.ac.fhcampuswien.richAF.services.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import java.nio.file.Paths;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.*;
 import javafx.animation.TranslateTransition;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import javafx.animation.Interpolator;
 import javafx.scene.input.MouseEvent;
-
+import javafx.application.Platform;
 
 public class Controller {
     OllamaService _olService;
@@ -103,20 +106,27 @@ public class Controller {
     public void initialize() {
 
         OllamaServiceController osc = new OllamaServiceController(lblOllama, cirOllama, ttOllama, _olService);
-        _scheduler = new ServiceScheduler(_schedulerExec, pgiJob, _olService, _dbService, _em);
-        _scheduler.setPcounter(Integer.parseInt(_config.getProperty("jobservice.pcounter")));
-        // Beispiel für die Interaktion mit dem webcrawler
-        // _dbService.SavePagesFromCrawler(new Crawler( _dbService.getSources().getLast().getStrUrl()));
-        //for (tblSource ts : _dbService.getSources())
-        //    _dbService.SavePagesFromCrawler(new Crawler(ts.getStrUrl()));
+        _scheduler = new ServiceScheduler(_schedulerExec, pgiJob, _olService, _dbService, _em,_config);
+
+// wird jetzt beim refresh gestartet
+//        tgbJobService.setOnAction(event -> {
+//            if (tgbJobService.isSelected()) {
+//                tgbJobService.setText("Stop Scheduler");
+//                _scheduler.startScheduler();
+//            } else {
+//                tgbJobService.setText("Start Scheduler");
+//                _scheduler.stopScheduler();
+//                JobService.Abort();
+//            }
+//        });
 
         tgbJobService.setOnAction(event -> {
             if (tgbJobService.isSelected()) {
-                tgbJobService.setText("Stop Scheduler");
-                _scheduler.startScheduler();
+                tgbJobService.setStyle("-fx-background-color: green;");
+                tgbJobService.setGraphic(new Rectangle(10, 10, Color.GREEN));
             } else {
-                tgbJobService.setText("Start Scheduler");
-                _scheduler.stopScheduler();
+                tgbJobService.setStyle("-fx-background-color: red;");
+                tgbJobService.setGraphic(new Rectangle(10, 10, Color.RED));
                 JobService.Abort();
             }
         });
@@ -140,30 +150,121 @@ public class Controller {
 
     }
 
-    public void displayResults() {
-        //TODO: connect real results, for now only dummy data is shown
-        List<ArticleResult> articles = new ArrayList<>();
+    int resultcounter=0;
+    ScheduledExecutorService resChecker;
 
-        for (int i = 0; i < 5; i++) {
-            ArticleResult article = new ArticleResult("TSLA", true, "Lorem ipsum dolor sit amet");
+    public void displayResults() {
+        _dbService.clearResults();
+        resultcounter = _dbService.GetResults().size();
+        resChecker = Executors.newScheduledThreadPool(1);
+
+
+        _scheduler.doWork();
+        //checkForNewResults();
+        resChecker.scheduleAtFixedRate(this::checkForNewResults, 0, 5, TimeUnit.SECONDS);
+        refreshResults();
+    }
+
+    public void checkForNewResults(){
+        if ((!_scheduler.isRunning())) {//||(_scheduler==null)
+            resChecker.shutdownNow();
+            refreshResultsOnFxThread();
+            return;
+        }
+
+        int count= _dbService.GetResults().size();
+        if (resultcounter != count){
+            resultcounter = count;
+            refreshResultsOnFxThread();
+
+        }
+
+    }
+
+    private void refreshResultsOnFxThread() {
+        Platform.runLater(this::refreshResults);
+    }
+
+    private List<ArticleResult> articles;
+    private Map mapFilter;
+
+    public void setMapFilterAndRefresh(Map mapFilter) {
+        this.mapFilter = mapFilter;
+        refreshResults();
+    }
+
+    public List<ArticleResult> getArticles() {
+        return articles;
+    }
+
+    public void setArticles(List<ArticleResult> articles) {
+        this.articles = articles;
+    }
+
+    public void refreshResults() {
+        String tickfilter = "ALLE";
+        String tickWL = "ALLE";
+
+        try{
+            tickfilter=mapFilter.get("TICKER").toString();}
+        catch(Exception e){
+            tickfilter = "ALLE";
+        }
+        try{
+            tickWL=mapFilter.get("WL").toString();}
+        catch(Exception e){
+            tickWL = "ALLE";
+        }
+
+        articles = new ArrayList<>();
+        for (tblResult tblres : _dbService.GetResults())
+         {
+            ArticleResult article = new ArticleResult(tblres.getStrResponeJson());
             articles.add(article);
         }
 
         // Logic to create new cards dynamically
+        try {
+            cardsBox.getChildren().clear();
+        } catch (Exception e){
+            _em.logErrorMessage(e);
+        }
         for (ArticleResult article : articles) {
             try {
+                    switch (tickfilter) {
+                        case "":
+                        case "ALLE":
+                            break;
+                            default:
+                                if(!tickfilter.equals(article.getStock())) continue;
+                    }
+                switch (tickWL) {
+                    case "":
+                    case "ALLE":
+                        break;
+
+                    case "WIN":
+                        if(!article.getTrend().toUpperCase().equals("UP")) continue;
+                        break;
+                    case "LOSE":
+                        if(!article.getTrend().toUpperCase().equals("DOWN")) continue;
+                }
+
                 FXMLLoader loader = new FXMLLoader((getClass().getResource("/result-card.fxml")));
                 loader.load();
                 ResultController resultController = loader.getController();
 
                 // Set title
-                resultController.setCardTitle(article.getTickerSymbol());
+                //resultController.setCardTitle(article.getStock());
                 // Set summary
-                resultController.setCardSummary(article.getSummary());
+                //resultController.setCardSummary(article.getSummary());
+
+
+                resultController.setProps(article);
                 // Add node to parent
                 cardsBox.getChildren().add(loader.getRoot());
 
-            } catch (IOException e) {
+            } catch (Exception e) {
                 //TODO: Add to logs @Botan(?)
                 e.printStackTrace();
             }
@@ -175,12 +276,17 @@ public class Controller {
         try {
             // Load the bottom sheet from its FXML
             FXMLLoader loader = new FXMLLoader((getClass().getResource("/add-bottomsheet.fxml")));
+            loader.setControllerFactory(param -> new AddBottomSheetController(_dbService));
             bottomSheet = loader.load();
             System.out.println("Loaded");
             AddBottomSheetController addBottomSheetController = loader.getController();
 
             // EventHandler to catch pressing button in AddBottomSheetController
             addBottomSheetController.setOnCancel(event -> {
+                hideGreyOverlay();
+            });
+
+            addBottomSheetController.setOnSubmit(event -> {
                 hideGreyOverlay();
             });
 
@@ -209,9 +315,9 @@ public class Controller {
         try {
             // Load the bottom sheet from its FXML
             FXMLLoader loader = new FXMLLoader((getClass().getResource("/edit-bottomsheet.fxml")));
+            loader.setControllerFactory(param -> new EditBottomSheetController(_dbService));
             editBottomSheet = loader.load();
             EditBottomSheetController editBottomSheetController = loader.getController();
-
             // Event Listener
             editBottomSheetController.setOnCancel(event -> {
                 hideGreyOverlay();
@@ -244,12 +350,20 @@ public class Controller {
     public void showFilterMenu() {
         try {
             FXMLLoader loader = new FXMLLoader((getClass().getResource("/filter-menu.fxml")));
+            loader.setControllerFactory(param -> new FilterController(this));
             filtermenu = loader.load();
+
             FilterController filterController = loader.getController();
 
             filterController.setOnDone(event -> {
                 hideGreyOverlay();
+
             });
+
+//            filterController.setOnSelectionChanged(event -> {
+//                mapFilter = filterController.getFilter();
+//                refreshResults();
+//            } );
 
             //greyOverlay.toFront();
             rootStackPane.getChildren().add(filtermenu);
@@ -275,12 +389,12 @@ public class Controller {
 
             try {
                 FXMLLoader loader = new FXMLLoader((getClass().getResource("/dev-menu.fxml")));
+                loader.setControllerFactory(param -> new DevMenuController(_config,_olService));
                 devMenuRoot = loader.load();
                 DevMenuController devMenuController = loader.getController();
 
                 rootStackPane.getChildren().add(devMenuRoot);
                 devMenuController.loadDataFromConfig();
-
 
             } catch (IOException e) {
                 e.printStackTrace();
