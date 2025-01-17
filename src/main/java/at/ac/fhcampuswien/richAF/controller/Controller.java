@@ -8,14 +8,20 @@ import at.ac.fhcampuswien.richAF.services.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+
+import java.awt.*;
+import java.io.File;
 import java.nio.file.Paths;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.*;
 import javafx.animation.TranslateTransition;
 import javafx.scene.shape.Rectangle;
@@ -32,6 +38,10 @@ public class Controller {
     ScheduledExecutorService _schedulerExec;
     EventManager _em;
     private int clickCounter = 0;
+    int resultcounter=0;
+    ScheduledExecutorService resChecker;
+    private List<ArticleResult> articles;
+    private Map mapFilter;
 
     // Elements
     @FXML
@@ -45,6 +55,9 @@ public class Controller {
 
     @FXML
     private ToggleButton tgbJobService;
+
+    @FXML
+    private Label lblJob;
 
     @FXML
     private ProgressIndicator pgiJob;
@@ -91,6 +104,21 @@ public class Controller {
     @FXML
     private StackPane devMenuRoot;
 
+    @FXML
+    private ImageView emptyResults;
+
+    @FXML
+    private Label nrFeeds;
+
+    @FXML
+    private Label nrArticles;
+
+    @FXML
+    private Label tickerWin;
+
+    @FXML
+    private Label tickerDown;
+
 
     // Constructors
     public Controller() {
@@ -119,25 +147,25 @@ public class Controller {
 //                JobService.Abort();
 //            }
 //        });
-
+        tgbJobService.setStyle("-fx-background-color: #7F8795;");
         tgbJobService.setOnAction(event -> {
             if (tgbJobService.isSelected()) {
                 tgbJobService.setStyle("-fx-background-color: green;");
-                tgbJobService.setGraphic(new Rectangle(10, 10, Color.GREEN));
+                tgbJobService.setGraphic(new Rectangle(8, 8, Color.GREEN));
             } else {
                 tgbJobService.setStyle("-fx-background-color: red;");
-                tgbJobService.setGraphic(new Rectangle(10, 10, Color.RED));
+                tgbJobService.setGraphic(new Rectangle(8, 8, Color.RED));
                 JobService.Abort();
             }
         });
 
         filterButton.setOnAction(event -> {
             if (filterButton.isSelected()) {
-                filterButton.setText("Done");
+                filterButton.setText(" Close");
                 showFilterMenu();
 
             } else {
-                filterButton.setText("Filter");
+                filterButton.setText("");
                 TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), filtermenu);
                 slideOut.setToX(-1200);
                 slideOut.setInterpolator(Interpolator.EASE_OUT);
@@ -147,12 +175,31 @@ public class Controller {
         });
 
         welcomeLabel.setOnMouseClicked(event -> showHiddenDevMenu(event));
-
+        lblJob.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                openTempDirectory();
+            }
+        });
     }
 
-    int resultcounter=0;
-    ScheduledExecutorService resChecker;
+    /**
+     * öffnet den Explorer zum LogVerzeichnis
+     *
+     */
+    private void openTempDirectory() {
+        String tempDir = System.getProperty("java.io.tmpdir");
+        File file = new File(tempDir);
+        try {
+            Desktop.getDesktop().open(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
+    /**
+     * wird vom Refresh Button getriggert
+     * startet den Work Prozess des ServiceSchedulers und startet den "Result Checker" der die visualierung von neuen Results triggert
+     */
     public void displayResults() {
         _dbService.clearResults();
         resultcounter = _dbService.GetResults().size();
@@ -165,6 +212,10 @@ public class Controller {
         refreshResults();
     }
 
+    /**
+     * die Methodes des Result Checkers, wenn neue Results gefunden oder der Prozess beendet ist wird eine Methode getriggert
+     * die dann die refreshMEthode im JavaFX Thread invoken kann
+     */
     public void checkForNewResults(){
         if ((!_scheduler.isRunning())) {//||(_scheduler==null)
             resChecker.shutdownNow();
@@ -172,7 +223,7 @@ public class Controller {
             return;
         }
 
-        int count= _dbService.GetResults().size();
+        int count = _dbService.GetResults().size();
         if (resultcounter != count){
             resultcounter = count;
             refreshResultsOnFxThread();
@@ -181,12 +232,12 @@ public class Controller {
 
     }
 
+    /**
+     * zum invoken der refreshResults methode aus dem scheduler thread
+     */
     private void refreshResultsOnFxThread() {
         Platform.runLater(this::refreshResults);
     }
-
-    private List<ArticleResult> articles;
-    private Map mapFilter;
 
     public void setMapFilterAndRefresh(Map mapFilter) {
         this.mapFilter = mapFilter;
@@ -201,19 +252,31 @@ public class Controller {
         this.articles = articles;
     }
 
+
+    /**
+     * ließt die Filter werte aus und die Results aus der Datenbank und je nach Filtereinstellung werden dann aus
+     * den ResulstJsons articleResults erzeugt welche die Datenbasis für die Cards der Oberfläche sind
+     *
+     */
     public void refreshResults() {
-        String tickfilter = "ALLE";
-        String tickWL = "ALLE";
+        String filterTick = "ALLE";
+        String filterWL = "ALLE";
+        String filterM = "ALLE";
 
         try{
-            tickfilter=mapFilter.get("TICKER").toString();}
+            filterTick =mapFilter.get("TICKER").toString();}
         catch(Exception e){
-            tickfilter = "ALLE";
+            filterTick = "ALLE";
         }
         try{
-            tickWL=mapFilter.get("WL").toString();}
+            filterWL=mapFilter.get("WL").toString();}
         catch(Exception e){
-            tickWL = "ALLE";
+            filterWL = "ALLE";
+        }
+        try{
+            filterM=mapFilter.get("MATCH").toString();}
+        catch(Exception e){
+            filterM = "ALLE";
         }
 
         articles = new ArrayList<>();
@@ -223,7 +286,10 @@ public class Controller {
             articles.add(article);
         }
 
+        emptyResults.setVisible(false);
+
         // Logic to create new cards dynamically
+        setHeader();
         try {
             cardsBox.getChildren().clear();
         } catch (Exception e){
@@ -231,14 +297,14 @@ public class Controller {
         }
         for (ArticleResult article : articles) {
             try {
-                    switch (tickfilter) {
+                    switch (filterTick) {
                         case "":
                         case "ALLE":
                             break;
                             default:
-                                if(!tickfilter.equals(article.getStock())) continue;
+                                if(!filterTick.equals(article.getStock())) continue;
                     }
-                switch (tickWL) {
+                switch (filterWL) {
                     case "":
                     case "ALLE":
                         break;
@@ -249,16 +315,19 @@ public class Controller {
                     case "LOSE":
                         if(!article.getTrend().toUpperCase().equals("DOWN")) continue;
                 }
+                switch (filterM) {
+                    case "":
+                    case "ALLE":
+                        break;
+                    default:
+                        if(!article.getRelevant().toUpperCase().equals(filterM)) continue;
+                        break;
+
+                }
 
                 FXMLLoader loader = new FXMLLoader((getClass().getResource("/result-card.fxml")));
                 loader.load();
                 ResultController resultController = loader.getController();
-
-                // Set title
-                //resultController.setCardTitle(article.getStock());
-                // Set summary
-                //resultController.setCardSummary(article.getSummary());
-
 
                 resultController.setProps(article);
                 // Add node to parent
@@ -268,6 +337,72 @@ public class Controller {
                 //TODO: Add to logs @Botan(?)
                 e.printStackTrace();
             }
+        }
+    }
+
+    public void setHeader() {
+        int nrOfArticles = _dbService.GetResults().size();
+        nrFeeds.setText(String.valueOf(nrOfArticles));
+
+        int nrCrawled = _dbService.getPages().size();
+        nrArticles.setText(String.valueOf(nrCrawled));
+
+        // =====================================================
+        // 1) Build frequency map for UP trends
+        // =====================================================
+        Map<String, Integer> stockCountUp = new HashMap<>();
+        // =====================================================
+        // 2) Build frequency map for DOWN trends
+        // =====================================================
+        Map<String, Integer> stockCountDown = new HashMap<>();
+
+        List<tblResult> allResults = _dbService.GetResults();
+
+        for (tblResult tblres : allResults) {
+            // Convert JSON string to ArticleResult
+            ArticleResult article = new ArticleResult(tblres.getStrResponeJson());
+
+            // If trend is UP, increase the counter for that stock
+            if ("UP".equalsIgnoreCase(article.getTrend())) {
+                String stock = article.getStock();
+                stockCountUp.put(stock, stockCountUp.getOrDefault(stock, 0) + 1);
+            }
+
+            // If trend is DOWN, increase the counter for that stock
+            if ("DOWN".equalsIgnoreCase(article.getTrend())) {
+                String stock = article.getStock();
+                stockCountDown.put(stock, stockCountDown.getOrDefault(stock, 0) + 1);
+            }
+        }
+
+        // =====================================================
+        // 3) Find the stock with the highest UP count
+        // =====================================================
+        Optional<Map.Entry<String, Integer>> maxEntryUp = stockCountUp.entrySet()
+                .stream()
+                .max(Comparator.comparing(Map.Entry::getValue));
+
+        if (maxEntryUp.isPresent()) {
+            // The stock symbol with the highest UP trend frequency
+            String topStockUp = maxEntryUp.get().getKey();
+            tickerWin.setText(topStockUp);
+        } else {
+            tickerWin.setText("N/A");
+        }
+
+        // =====================================================
+        // 4) Find the stock with the highest DOWN count
+        // =====================================================
+        Optional<Map.Entry<String, Integer>> maxEntryDown = stockCountDown.entrySet()
+                .stream()
+                .max(Comparator.comparing(Map.Entry::getValue));
+
+        if (maxEntryDown.isPresent()) {
+            // The stock symbol with the highest DOWN trend frequency
+            String topStockDown = maxEntryDown.get().getKey();
+            tickerDown.setText(topStockDown);
+        } else {
+            tickerDown.setText("N/A");
         }
 
     }
@@ -310,7 +445,6 @@ public class Controller {
         }
     }
 
-
     public void showEditDataSheet() {
         try {
             // Load the bottom sheet from its FXML
@@ -334,7 +468,7 @@ public class Controller {
 
             // Animate it sliding into view
             TranslateTransition slideUp = new TranslateTransition(Duration.millis(300), editBottomSheet);
-            slideUp.setToY(165);
+            slideUp.setToY(170);
             slideUp.setInterpolator(Interpolator.EASE_OUT);
             slideUp.play();
 
@@ -359,11 +493,6 @@ public class Controller {
                 hideGreyOverlay();
 
             });
-
-//            filterController.setOnSelectionChanged(event -> {
-//                mapFilter = filterController.getFilter();
-//                refreshResults();
-//            } );
 
             //greyOverlay.toFront();
             rootStackPane.getChildren().add(filtermenu);

@@ -18,6 +18,22 @@ public class AddBottomSheetController {
     private EventHandler<ActionEvent> onCancel;
     private EventHandler<ActionEvent> onSubmit;
     private DBService _dbService;
+
+    @FXML
+    private VBox bottomSheet;
+
+    @FXML
+    private Button cancelBottomSheet;
+
+    @FXML
+    private Button confirmBottomSheet;
+
+    @FXML
+    private TextField txtName;
+
+    @FXML
+    private TextField txtLink;
+
     public AddBottomSheetController(DBService dbService) {
         this._dbService = dbService;
 
@@ -61,20 +77,7 @@ public class AddBottomSheetController {
     }
 
     //End of EventHandler
-    @FXML
-    private VBox bottomSheet;
 
-    @FXML
-    private Button cancelBottomSheet;
-
-    @FXML
-    private Button confirmBottomSheet;
-
-    @FXML
-    private TextField txtName;
-
-    @FXML
-    private TextField txtLink;
 
     // Methods
 

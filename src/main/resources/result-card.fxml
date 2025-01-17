@@ -4,8 +4,11 @@
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
@@ -14,11 +17,11 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="770.0" prefWidth="490.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.fhcampuswien.richAF.controller.ResultController">
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="770.0" prefWidth="490.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.fhcampuswien.richAF.controller.ResultController">
    <children>
       <StackPane prefHeight="150.0" prefWidth="200.0">
          <children>
-            <Rectangle arcHeight="5.0" fill="WHITE" height="750.0" stroke="BLACK" strokeType="INSIDE" style="-fx-arc-height: 30; -fx-arc-width: 30;" width="470.0" StackPane.alignment="CENTER">
+            <Rectangle arcHeight="5.0" fill="WHITE" height="750.0" stroke="BLACK" strokeType="INSIDE" style="-fx-arc-height: 100; -fx-arc-width: 100;" width="470.0" StackPane.alignment="CENTER">
                <effect>
                   <DropShadow />
                </effect>
@@ -28,9 +31,8 @@
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
               </columnConstraints>
               <rowConstraints>
-                <RowConstraints maxHeight="174.0" minHeight="10.0" prefHeight="174.0" valignment="BOTTOM" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="50.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="482.0" minHeight="10.0" prefHeight="370.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="222.0" minHeight="10.0" prefHeight="198.0" valignment="BOTTOM" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="482.0" minHeight="10.0" prefHeight="292.0" vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="60.0" minHeight="60.0" prefHeight="60.0" vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="60.0" minHeight="60.0" prefHeight="60.0" vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="60.0" minHeight="60.0" prefHeight="60.0" vgrow="SOMETIMES" />
@@ -38,55 +40,213 @@
                   <RowConstraints maxHeight="60.0" minHeight="60.0" prefHeight="60.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label fx:id="cardTitle" text="\$title of news article">
-                     <font>
-                        <Font name="Arial" size="45.0" />
-                     </font>
-                     <padding>
-                        <Insets left="20.0" />
-                     </padding>
-                  </Label>
-                  <TextFlow prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2">
+                  <TextFlow maxHeight="-Infinity" prefHeight="150.0" prefWidth="200.0" GridPane.halignment="LEFT" GridPane.valignment="BOTTOM">
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Summary: ">
+                        <Text fx:id="cardTitle" strokeType="OUTSIDE" strokeWidth="0.0" text="&lt;Title&gt;">
                            <font>
-                              <Font name="Arial Bold" size="20.0" />
-                           </font>
-                        </Text>
-                        <Text fx:id="cardSummary" strokeType="OUTSIDE" strokeWidth="0.0" text="NVIDIA’s stock dipped after a senior executive met with China’s Vice Commerce Minister amid looming U.S. semiconductor restrictions. Investors are concerned about geopolitical risks, high market expectations, and competition with Apple for the top market value. Despite strong chip demand, uncertainties weigh on the stock.">
-                           <font>
-                              <Font name="Arial" size="20.0" />
+                              <Font name="Peak Rounded Regular" size="35.0" />
                            </font>
                         </Text>
                      </children>
                      <padding>
-                        <Insets left="20.0" right="20.0" top="40.0" />
+                        <Insets top="75.0" />
+                     </padding>
+                  </TextFlow>
+                  <TextFlow prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Summary: ">
+                           <font>
+                              <Font name="Peak Rounded Bold" size="22.0" />
+                           </font>
+                        </Text>
+                        <Text fx:id="cardSummary" strokeType="OUTSIDE" strokeWidth="0.0" text="NVIDIA’s stock dipped after a senior executive met with China’s Vice Commerce Minister amid looming U.S. semiconductor restrictions. Investors are concerned about geopolitical risks, high market expectations, and competition with Apple for the top market value. Despite strong chip demand, uncertainties weigh on the stock.">
+                           <font>
+                              <Font name="Peak Rounded Regular" size="22.0" />
+                           </font>
+                        </Text>
+                     </children>
+                     <padding>
+                        <Insets top="40.0" />
                      </padding>
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
                   </TextFlow>
-                  <Label fx:id="cardStock" text="Stock" GridPane.rowIndex="3">
-                     <font>
-                        <Font name="Arial" size="20.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="cardRelevant" text="Relevant" GridPane.rowIndex="4">
-                     <font>
-                        <Font size="20.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="cardTrend" text="Trend" GridPane.rowIndex="5">
-                     <font>
-                        <Font name="Arial" size="20.0" />
-                     </font>
-                  </Label>
-                  <Hyperlink fx:id="cardSource" text="SourceHyperlink" GridPane.rowIndex="6">
-                     <font>
-                        <Font name="Arial" size="20.0" />
-                     </font>
-                  </Hyperlink>
+                  <HBox GridPane.rowIndex="2">
+                     <children>
+                        <StackPane alignment="CENTER_LEFT">
+                           <children>
+                              <Rectangle fx:id="stockLabel" arcHeight="5.0" arcWidth="5.0" fill="#00bb00" height="45.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" style="-fx-arc-height: 30; -fx-arc-width: 30;" width="220.0">
+                                 <effect>
+                                    <DropShadow height="10.0" radius="4.5" width="10.0" />
+                                 </effect>
+                              </Rectangle>
+                              <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@icons/check-circle.png" />
+                                 </image>
+                                 <StackPane.margin>
+                                    <Insets left="10.0" />
+                                 </StackPane.margin>
+                              </ImageView>
+                              <Label fx:id="cardStock" text="Stock" textFill="WHITE">
+                                 <font>
+                                    <Font name="Peak Rounded Regular" size="20.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets left="40.0" />
+                                 </padding>
+                              </Label>
+                           </children>
+                        </StackPane>
+                        <StackPane>
+                           <children>
+                              <StackPane fx:id="notRelevantLabel" alignment="CENTER_LEFT">
+                                 <children>
+                                    <Rectangle fx:id="relevanceLabel1" arcHeight="5.0" arcWidth="5.0" fill="#bb1600" height="45.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" style="-fx-arc-height: 30; -fx-arc-width: 30;" width="170.0">
+                                       <effect>
+                                          <DropShadow height="10.0" radius="4.5" width="10.0" />
+                                       </effect>
+                                    </Rectangle>
+                                    <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@icons/x-circle.png" />
+                                       </image>
+                                       <StackPane.margin>
+                                          <Insets left="10.0" />
+                                       </StackPane.margin>
+                                    </ImageView>
+                                    <Label fx:id="cardNotRelevant" text="not relevant" textFill="WHITE">
+                                       <font>
+                                          <Font name="Peak Rounded Regular" size="20.0" />
+                                       </font>
+                                       <padding>
+                                          <Insets left="40.0" />
+                                       </padding>
+                                    </Label>
+                                 </children>
+                                 <padding>
+                                    <Insets left="10.0" />
+                                 </padding>
+                              </StackPane>
+                              <StackPane fx:id="relevantLabel" alignment="CENTER_LEFT">
+                                 <children>
+                                    <Rectangle fx:id="relevanceLabel" arcHeight="5.0" arcWidth="5.0" fill="#00bb00" height="45.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" style="-fx-arc-height: 30; -fx-arc-width: 30;" width="130.0">
+                                       <effect>
+                                          <DropShadow height="10.0" radius="4.5" width="10.0" />
+                                       </effect>
+                                    </Rectangle>
+                                    <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@icons/check-circle.png" />
+                                       </image>
+                                       <StackPane.margin>
+                                          <Insets left="10.0" />
+                                       </StackPane.margin>
+                                    </ImageView>
+                                    <Label fx:id="cardRelevant" text="relevant" textFill="WHITE">
+                                       <font>
+                                          <Font name="Peak Rounded Regular" size="20.0" />
+                                       </font>
+                                       <padding>
+                                          <Insets left="40.0" />
+                                       </padding>
+                                    </Label>
+                                 </children>
+                                 <padding>
+                                    <Insets left="10.0" />
+                                 </padding>
+                              </StackPane>
+                           </children>
+                        </StackPane>
+                     </children>
+                  </HBox>
+                  <StackPane GridPane.rowIndex="3">
+                     <children>
+                        <StackPane fx:id="likelyToWin" alignment="CENTER_LEFT">
+                           <children>
+                              <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#00bb00" height="45.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" style="-fx-arc-height: 30; -fx-arc-width: 30;" width="170.0">
+                                 <effect>
+                                    <DropShadow height="10.0" radius="4.5" width="10.0" />
+                                 </effect>
+                              </Rectangle>
+                              <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@icons/up.png" />
+                                 </image>
+                                 <StackPane.margin>
+                                    <Insets left="10.0" />
+                                 </StackPane.margin>
+                              </ImageView>
+                              <Label fx:id="cardTrend" text="likely to win" textFill="WHITE">
+                                 <font>
+                                    <Font name="Peak Rounded Regular" size="20.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets left="40.0" />
+                                 </padding>
+                              </Label>
+                           </children>
+                        </StackPane>
+                        <StackPane fx:id="likelyToLose" alignment="CENTER_LEFT">
+                           <children>
+                              <Rectangle fx:id="trendLabel" arcHeight="5.0" arcWidth="5.0" fill="#bb1600" height="45.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" style="-fx-arc-height: 30; -fx-arc-width: 30;" width="170.0">
+                                 <effect>
+                                    <DropShadow height="10.0" radius="4.5" width="10.0" />
+                                 </effect>
+                              </Rectangle>
+                              <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@icons/down.png" />
+                                 </image>
+                                 <StackPane.margin>
+                                    <Insets left="10.0" />
+                                 </StackPane.margin>
+                              </ImageView>
+                              <Label text="likely to lose" textFill="WHITE">
+                                 <font>
+                                    <Font name="Peak Rounded Regular" size="20.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets left="40.0" />
+                                 </padding>
+                              </Label>
+                           </children>
+                        </StackPane>
+                     </children>
+                  </StackPane>
+                  <StackPane alignment="CENTER_LEFT" GridPane.rowIndex="4">
+                     <children>
+                        <Rectangle fx:id="stockLabel1" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="45.0" stroke="#727272" strokeType="INSIDE" style="-fx-arc-height: 30; -fx-arc-width: 30;" width="390.0">
+                           <effect>
+                              <DropShadow height="10.0" radius="4.5" width="10.0" />
+                           </effect>
+                        </Rectangle>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icons/rss.png" />
+                           </image>
+                           <StackPane.margin>
+                              <Insets left="10.0" />
+                           </StackPane.margin>
+                        </ImageView>
+                        <Hyperlink fx:id="cardSource" maxWidth="375.0" text="SourceHyperlink">
+                           <font>
+                              <Font name="Peak Rounded Regular" size="20.0" />
+                           </font>
+                           <padding>
+                              <Insets left="40.0" />
+                           </padding>
+                        </Hyperlink>
+                     </children>
+                  </StackPane>
                </children>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <padding>
+                  <Insets left="30.0" right="30.0" />
+               </padding>
             </GridPane>
          </children>
       </StackPane>

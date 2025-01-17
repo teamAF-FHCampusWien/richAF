@@ -8,6 +8,8 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -22,37 +24,48 @@ public class EditBottomSheetController {
 
     private DBService _dbservice;
 
+    @FXML
+    private VBox editBottomSheet;
+
+    @FXML
+    private Button cancelEditBottomSheet;
+
+    @FXML
+    private Label defaultLabel;
+
+    @FXML
+    private Text defaultText;
+
+    @FXML
+    private GridPane gridSources;
+
+    private String labelStyle;
+    private String linkStyle;
+
 
     public EditBottomSheetController(DBService dbservice) {
         this._dbservice = dbservice;
     }
 
 
-    @FXML
-    private GridPane gridSources;
+
 
     public void setOnCancel(EventHandler<ActionEvent> handler) {
         this.onCancel = handler;
-        System.out.println("onCancel handler set");
+        System.out.println("Handler engaged");
     }
 
     @FXML
     private void handleCancelAction(ActionEvent event) {
-        System.out.println("Cancel button pressed");
         hideEditBottomSheet();
         if (onCancel != null) {
-            System.out.println("Invoking onCancel handler");
             onCancel.handle(event);
         } else {
-            System.out.println("onCancel handler is not set");
+            System.out.println(" ");
         }
     }
 
-    @FXML
-    private VBox editBottomSheet;
 
-    @FXML
-    private Button cancelEditBottomSheet;
 
     // Methods
     public void hideEditBottomSheet() {
@@ -61,14 +74,6 @@ public class EditBottomSheetController {
         slideDown.play();
     }
 
-    @FXML
-    private Label defaultLabel;
-
-    @FXML
-    private Text defaultText;
-
-    private String labelStyle;
-    private String linkStyle;
 
     @FXML
     public void initialize() {
@@ -95,7 +100,18 @@ public class EditBottomSheetController {
 
         Label lblname = new Label(tbls.getName());
         Text txtlink = new Text(tbls.getStrUrl());
-        Button btndel = new Button("Delete");
+
+        Button btndel = new Button();
+        ImageView deleteIcon = new ImageView(
+                new Image(getClass().getResourceAsStream("/icons/x.png"))
+        );
+
+        deleteIcon.setFitWidth(20);
+        deleteIcon.setFitHeight(20);
+
+        btndel.setGraphic(deleteIcon);
+        btndel.getStyleClass().add("icon-button"); // apply your custom CSS class
+        btndel.setOnAction(event -> removeSource(tbls.getId()));
 
         if (labelStyle != null) {
             lblname.setStyle(labelStyle);

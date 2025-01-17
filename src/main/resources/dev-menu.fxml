@@ -38,12 +38,12 @@
                   <RowConstraints maxHeight="110.0" minHeight="0.0" prefHeight="110.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Button fx:id="devMenuSave" mnemonicParsing="false" onAction="#saveDataToConfig" prefWidth="450.0" text="Save" GridPane.rowIndex="8">
+                  <Button fx:id="devMenuSave" mnemonicParsing="false" onAction="#saveDataToConfig" prefWidth="400.0" stylesheets="@styles/confirm-button.css" text="Save" GridPane.rowIndex="8">
                      <GridPane.margin>
                         <Insets left="500.0" />
                      </GridPane.margin>
                   </Button>
-                  <Button fx:id="devMenuDiscard" mnemonicParsing="false" onAction="#hideHiddenDevMenu" prefWidth="450.0" text="Discard" GridPane.rowIndex="8">
+                  <Button fx:id="devMenuDiscard" mnemonicParsing="false" onAction="#hideHiddenDevMenu" prefWidth="450.0" stylesheets="@styles/cancel-button.css" text="Discard" GridPane.rowIndex="8">
                      <GridPane.margin>
                         <Insets right="500.0" />
                      </GridPane.margin>
@@ -51,31 +51,31 @@
                   <TextArea fx:id="ollPromptTxt" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="950.0" style="-fx-background-radius: 30; -fx-border-radius: 30;" wrapText="true" GridPane.rowIndex="7" />
                   <Label text="System Prompt" textFill="WHITE" GridPane.halignment="LEFT" GridPane.rowIndex="6" GridPane.valignment="BOTTOM">
                      <GridPane.margin>
-                        <Insets left="25.0" />
+                        <Insets left="5.0" />
                      </GridPane.margin>
                      <font>
-                        <Font name="Arial" size="20.0" />
+                        <Font name="Peak Rounded Regular" size="20.0" />
                      </font>
                   </Label>
                   <Label text="Temperature" textFill="WHITE" GridPane.halignment="LEFT" GridPane.rowIndex="4" GridPane.valignment="BOTTOM">
                      <font>
-                        <Font name="Arial" size="20.0" />
+                        <Font name="Peak Rounded Regular" size="20.0" />
                      </font>
-                     <padding>
-                        <Insets left="25.0" />
-                     </padding>
+                     <GridPane.margin>
+                        <Insets left="5.0" />
+                     </GridPane.margin>
                   </Label>
                   <Label text="Ollama Port" textFill="WHITE" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
                      <font>
-                        <Font name="Arial" size="20.0" />
+                        <Font name="Peak Rounded Regular" size="20.0" />
                      </font>
                      <GridPane.margin>
-                        <Insets left="25.0" />
+                        <Insets left="5.0" />
                      </GridPane.margin>
                   </Label>
                   <Label text="Developer Settings" textFill="WHITE" GridPane.valignment="BOTTOM">
                      <font>
-                        <Font name="Arial" size="20.0" />
+                        <Font name="Peak Rounded Extrabold" size="20.0" />
                      </font>
                   </Label>
                   <TextField fx:id="ollPortTxt" maxWidth="-Infinity" prefWidth="950.0" GridPane.rowIndex="3" />
@@ -84,6 +84,9 @@
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
+               <padding>
+                  <Insets left="25.0" right="25.0" />
+               </padding>
             </GridPane>
          </children>
       </VBox>
