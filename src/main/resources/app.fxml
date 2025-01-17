@@ -8,6 +8,8 @@
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
@@ -19,7 +21,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<StackPane fx:id="rootStackPane" stylesheets="@styles/highlight-button.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.fhcampuswien.richAF.controller.Controller">
+<StackPane fx:id="rootStackPane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.fhcampuswien.richAF.controller.Controller">
    <children>
       <Rectangle fx:id="greyOverlay" arcHeight="5.0" arcWidth="5.0" fill="#999999bf" height="1080.0" stroke="BLACK" strokeType="INSIDE" width="1920.0" />
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="1080.0" stroke="BLACK" strokeType="INSIDE" width="1920.0" />
@@ -42,16 +44,37 @@
                     <children>
                         <Label fx:id="welcomeLabel" alignment="CENTER" prefHeight="23.0" prefWidth="676.0" text="Welcome to your Dashboard!" textFill="WHITE" GridPane.columnIndex="3">
                             <font>
-                                <Font name="Arial" size="30.0" />
+                                <Font name="Peak Rounded Medium" size="30.0" />
                             </font>
                         </Label>
                         <Button mnemonicParsing="false" onAction="#showAddDataSheet" styleClass="add-button" stylesheets="@styles/highlight-button.css" text="+ add data" GridPane.columnIndex="6" />
-                        <Button fx:id="refreshButton" mnemonicParsing="false" onAction="#displayResults" text="Refresh" GridPane.columnIndex="1" />
-                     <Button fx:id="editData" mnemonicParsing="false" onAction="#showEditDataSheet" text="Edit" GridPane.columnIndex="5" />
-                     <ToggleButton fx:id="filterButton" mnemonicParsing="false" text="Filter">
+                        <Button fx:id="refreshButton" mnemonicParsing="false" onAction="#displayResults" styleClass="icon-button" stylesheets="@styles/icon-button.css" GridPane.columnIndex="1">
+                        <graphic>
+                           <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                              <image>
+                                 <Image url="@icons/refresh.png" />
+                              </image>
+                           </ImageView>
+                        </graphic></Button>
+                     <Button fx:id="editData" mnemonicParsing="false" onAction="#showEditDataSheet" styleClass="icon-button" stylesheets="@styles/icon-button.css" GridPane.columnIndex="5">
+                        <graphic>
+                           <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                              <image>
+                                 <Image url="@icons/settings.png" />
+                              </image>
+                           </ImageView>
+                        </graphic></Button>
+                     <ToggleButton fx:id="filterButton" mnemonicParsing="false" styleClass="icon-button" stylesheets="@styles/icon-button.css">
                         <font>
                            <Font name="Arial" size="13.0" />
                         </font>
+                        <graphic>
+                           <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                              <image>
+                                 <Image url="@icons/search-alt.png" />
+                              </image>
+                           </ImageView>
+                        </graphic>
                      </ToggleButton>
                     </children>
                 </GridPane>
@@ -87,22 +110,22 @@
                     <children>
                         <Label text="\\$nr_of_feeds aded " textFill="WHITE">
                             <font>
-                                <Font size="30.0" />
+                                <Font name="Peak Rounded Regular" size="30.0" />
                             </font>
                         </Label>
                         <Label text="\$nr_of_articles crawled" textFill="WHITE" GridPane.columnIndex="1">
                             <font>
-                                <Font size="30.0" />
+                                <Font name="Peak Rounded Regular" size="30.0" />
                             </font>
                         </Label>
                         <Label text="\$ticker likely to gain" textFill="WHITE" GridPane.columnIndex="2">
                             <font>
-                                <Font size="30.0" />
+                                <Font name="Peak Rounded Regular" size="30.0" />
                             </font>
                         </Label>
                         <Label text="\$ticker likely to loose" textFill="WHITE" GridPane.columnIndex="3">
                             <font>
-                                <Font size="30.0" />
+                                <Font name="Peak Rounded Regular" size="30.0" />
                             </font>
                         </Label>
                     </children>

@@ -54,12 +54,12 @@
                         <Insets left="25.0" />
                      </GridPane.margin>
                      <font>
-                        <Font name="Arial" size="20.0" />
+                        <Font name="Peak Rounded Regular" size="20.0" />
                      </font>
                   </Label>
                   <Label text="Temperature" textFill="WHITE" GridPane.halignment="LEFT" GridPane.rowIndex="4" GridPane.valignment="BOTTOM">
                      <font>
-                        <Font name="Arial" size="20.0" />
+                        <Font name="Peak Rounded Regular" size="20.0" />
                      </font>
                      <padding>
                         <Insets left="25.0" />
@@ -67,7 +67,7 @@
                   </Label>
                   <Label text="Ollama Port" textFill="WHITE" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
                      <font>
-                        <Font name="Arial" size="20.0" />
+                        <Font name="Peak Rounded Regular" size="20.0" />
                      </font>
                      <GridPane.margin>
                         <Insets left="25.0" />
@@ -75,7 +75,7 @@
                   </Label>
                   <Label text="Developer Settings" textFill="WHITE" GridPane.valignment="BOTTOM">
                      <font>
-                        <Font name="Arial" size="20.0" />
+                        <Font name="Peak Rounded Extrabold" size="20.0" />
                      </font>
                   </Label>
                   <TextField fx:id="ollPortTxt" maxWidth="-Infinity" prefWidth="950.0" GridPane.rowIndex="3" />
