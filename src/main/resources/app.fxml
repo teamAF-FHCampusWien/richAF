@@ -161,7 +161,7 @@
                       </Label>
                       <Label fx:id="lblJob" text="Job-Runner" textFill="WHITE">
                           <graphic>
-                              <ProgressIndicator fx:id="pgiJob" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="20.0" prefWidth="20.0" />
+                              <ProgressIndicator fx:id="pgiJob" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="20.0" prefWidth="25.0"/>
                           </graphic>
                           <HBox.margin>
                               <Insets right="20.0" />
@@ -170,7 +170,7 @@
                            <Font name="Peak Rounded Regular" size="13.0" />
                         </font>
                       </Label>
-                        <ToggleButton fx:id="tgbJobService" mnemonicParsing="false" style="-fx-background-color: green;" />
+                        <ToggleButton fx:id="tgbJobService" mnemonicParsing="false" />
                     </children>
                 </HBox>
             </children>

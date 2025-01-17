@@ -29,7 +29,56 @@ public class FilterController {
     private ChoiceBox<String> choiceWL;
 
     @FXML
+    private VBox filterMenu;
+
     private ChoiceBox<String> choiceFeed;
+
+    public FilterController(Controller controller){
+        this._controller = controller;
+
+    }
+
+    @FXML
+    public void initialize() {
+        filtermap = new HashMap();
+        articles = _controller.getArticles();
+        choiceTicker.getItems().add("ALLE");
+        choiceTicker.getItems().add("NONE");
+        if (articles != null) {
+            for (ArticleResult article : articles) {
+                if (!choiceTicker.getItems().contains(article.getStock())) {
+                    choiceTicker.getItems().add(article.getStock());
+                }
+            }
+        }
+        choiceTicker.setValue("ALLE");
+
+        choiceWL.getItems().add("ALLE");
+        choiceWL.getItems().add("WIN");
+        choiceWL.getItems().add("LOSE");
+        choiceWL.setValue("ALLE");
+
+
+        choiceMatch.getItems().add("ALLE");
+        choiceMatch.getItems().add("YES");
+        choiceMatch.getItems().add("NO");
+        choiceMatch.setValue("ALLE");
+
+        choiceTicker.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            fillFilterMap();
+            _controller.setMapFilterAndRefresh(filtermap);
+        });
+
+        choiceWL.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            fillFilterMap();
+            _controller.setMapFilterAndRefresh(filtermap);
+        });
+
+        choiceMatch.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            fillFilterMap();
+            _controller.setMapFilterAndRefresh(filtermap);
+        });
+    }
 
     public void setOnDone(EventHandler<ActionEvent> handler) {
         this.onDone = handler;
@@ -48,61 +97,17 @@ public class FilterController {
         }
     }
 
-    @FXML
-    private VBox filterMenu;
-
     public void hideFilterMenu() {
         TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), filterMenu);
         slideOut.setToX(300);
         slideOut.play();
     }
 
-
-    public FilterController(Controller controller){
-        this._controller = controller;
-
-    }
-
-    @FXML
-    public void initialize() {
-        filtermap = new HashMap();
-        articles = _controller.getArticles();
-        choiceTicker.getItems().add("ALLE");
-        choiceTicker.getItems().add("NONE");
-        if (articles != null) {
-            for (ArticleResult article : articles) {
-                if (!choiceTicker.getItems().contains(article.getStock())) {
-                    choiceTicker.getItems().add(article.getStock());
-                }
-
-
-            }
-
-        }
-        choiceTicker.setValue("ALLE");
-
-        choiceWL.getItems().add("ALLE");
-        choiceWL.getItems().add("WIN");
-        choiceWL.getItems().add("LOSE");
-        choiceWL.setValue("ALLE");
-
-        choiceTicker.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            fillFilterMap();
-            _controller.setMapFilterAndRefresh(filtermap);
-        });
-
-        choiceWL.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            fillFilterMap();
-            _controller.setMapFilterAndRefresh(filtermap);
-        });
-    }
-
-
-
     public void fillFilterMap() {
         filtermap.clear();
         filtermap.put("TICKER", choiceTicker.getValue());
         filtermap.put("WL", choiceWL.getValue());
+        filtermap.put("MATCH", choiceMatch.getValue());
         System.out.println("filter fill");
     }
 

@@ -97,11 +97,10 @@ public class OllamaService {
     }
 
     /**
-     * Sets the prompt to a standard prompt which was tested and provided the good results, the companyname is inserted in the text
-     * @param companyname
+     * loads the prompt form the configuration file
      */
-    public void SetBasePrompt(String companyname){
-        prompt = String.format(_config.getProperty("ollama.baseprompt"), companyname);
+    public void SetBasePrompt(){
+        prompt = _config.getProperty("ollama.baseprompt");
     }
 
 
