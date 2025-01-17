@@ -11,7 +11,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox fx:id="editBottomSheet" alignment="BOTTOM_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.fhcampuswien.richAF.controller.EditBottomSheetController">
+<VBox fx:id="editBottomSheet" alignment="BOTTOM_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.fhcampuswien.richAF.controller.EditBottomSheetController">
    <children>
       <VBox maxWidth="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1870.0" style="-fx-background-color: white; -fx-background-radius: 30 30 0 0; -fx-border-color: black; -fx-border-radius: 30 30 0 0;">
          <children>
@@ -19,7 +19,7 @@
                <children>
                   <Label text="Edit RSS Feeds">
                      <font>
-                        <Font name="Arial Bold" size="25.0" />
+                        <Font name="Peak Rounded Bold" size="25.0" />
                      </font>
                   </Label>
                </children>
@@ -46,102 +46,102 @@
                <children>
                   <Label fx:id="defaultLabel" text="RSS Feed 1" GridPane.rowIndex="1">
                      <font>
-                        <Font name="Arial" size="15.0" />
+                        <Font name="Peak Rounded Regular" size="15.0" />
                      </font>
                   </Label>
                   <Label text="RSS Feed 1" GridPane.rowIndex="2">
                      <font>
-                        <Font name="Arial" size="15.0" />
+                        <Font name="Peak Rounded Regular" size="15.0" />
                      </font>
                   </Label>
                   <Label text="RSS Feed 1" GridPane.rowIndex="3">
                      <font>
-                        <Font name="Arial" size="15.0" />
+                        <Font name="Peak Rounded Regular" size="15.0" />
                      </font>
                   </Label>
                   <Label text="RSS Feed 1" GridPane.rowIndex="4">
                      <font>
-                        <Font name="Arial" size="15.0" />
+                        <Font name="Peak Rounded Regular" size="15.0" />
                      </font>
                   </Label>
                   <Label text="RSS Feed 1" GridPane.rowIndex="5">
                      <font>
-                        <Font name="Arial" size="15.0" />
+                        <Font name="Peak Rounded Regular" size="15.0" />
                      </font>
                   </Label>
                   <Label text="RSS Feed 1" GridPane.rowIndex="6">
                      <font>
-                        <Font name="Arial" size="15.0" />
+                        <Font name="Peak Rounded Regular" size="15.0" />
                      </font>
                   </Label>
                   <Label text="RSS Feed 1" GridPane.rowIndex="7">
                      <font>
-                        <Font name="Arial" size="15.0" />
+                        <Font name="Peak Rounded Regular" size="15.0" />
                      </font>
                   </Label>
                   <Label text="RSS Feed 1" GridPane.rowIndex="8">
                      <font>
-                        <Font name="Arial" size="15.0" />
+                        <Font name="Peak Rounded Regular" size="15.0" />
                      </font>
                   </Label>
                   <Label text="RSS Feed 1" GridPane.rowIndex="9">
                      <font>
-                        <Font name="Arial" size="15.0" />
+                        <Font name="Peak Rounded Regular" size="15.0" />
                      </font>
                   </Label>
                   <Label text="RSS Feed 1" GridPane.rowIndex="10">
                      <font>
-                        <Font name="Arial" size="15.0" />
+                        <Font name="Peak Rounded Regular" size="15.0" />
                      </font>
                   </Label>
                   <Text fx:id="defaultText" strokeType="OUTSIDE" strokeWidth="0.0" text="https://rss.app/feed/ts68CNrMw5xKZlUb" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <font>
-                        <Font name="Arial" size="15.0" />
+                        <Font name="Peak Rounded Regular" size="15.0" />
                      </font>
                   </Text>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="https://rss.app/feed/ts68CNrMw5xKZlUb" GridPane.columnIndex="1" GridPane.rowIndex="2">
                      <font>
-                        <Font name="Arial" size="15.0" />
+                        <Font name="Peak Rounded Regular" size="15.0" />
                      </font>
                   </Text>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="https://rss.app/feed/ts68CNrMw5xKZlUb" GridPane.columnIndex="1" GridPane.rowIndex="3">
                      <font>
-                        <Font name="Arial" size="15.0" />
+                        <Font name="Peak Rounded Regular" size="15.0" />
                      </font>
                   </Text>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="https://rss.app/feed/ts68CNrMw5xKZlUb" GridPane.columnIndex="1" GridPane.rowIndex="4">
                      <font>
-                        <Font name="Arial" size="15.0" />
+                        <Font name="Peak Rounded Regular" size="15.0" />
                      </font>
                   </Text>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="https://rss.app/feed/ts68CNrMw5xKZlUb" GridPane.columnIndex="1" GridPane.rowIndex="5">
                      <font>
-                        <Font name="Arial" size="15.0" />
+                        <Font name="Peak Rounded Regular" size="15.0" />
                      </font>
                   </Text>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="https://rss.app/feed/ts68CNrMw5xKZlUb" GridPane.columnIndex="1" GridPane.rowIndex="6">
                      <font>
-                        <Font name="Arial" size="15.0" />
+                        <Font name="Peak Rounded Regular" size="15.0" />
                      </font>
                   </Text>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="https://rss.app/feed/ts68CNrMw5xKZlUb" GridPane.columnIndex="1" GridPane.rowIndex="7">
                      <font>
-                        <Font name="Arial" size="15.0" />
+                        <Font name="Peak Rounded Regular" size="15.0" />
                      </font>
                   </Text>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="https://rss.app/feed/ts68CNrMw5xKZlUb" GridPane.columnIndex="1" GridPane.rowIndex="8">
                      <font>
-                        <Font name="Arial" size="15.0" />
+                        <Font name="Peak Rounded Regular" size="15.0" />
                      </font>
                   </Text>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="https://rss.app/feed/ts68CNrMw5xKZlUb" GridPane.columnIndex="1" GridPane.rowIndex="9">
                      <font>
-                        <Font name="Arial" size="15.0" />
+                        <Font name="Peak Rounded Regular" size="15.0" />
                      </font>
                   </Text>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="https://rss.app/feed/ts68CNrMw5xKZlUb" GridPane.columnIndex="1" GridPane.rowIndex="10">
                      <font>
-                        <Font name="Arial" size="15.0" />
+                        <Font name="Peak Rounded Regular" size="15.0" />
                      </font>
                   </Text>
                   <Button mnemonicParsing="false" text="Delete" GridPane.columnIndex="2" GridPane.rowIndex="1" />
@@ -158,8 +158,14 @@
             </GridPane>
             <HBox alignment="CENTER" prefHeight="70.0" prefWidth="200.0" spacing="25.0">
                <children>
-                  <Button fx:id="cancelEditBottomSheet" mnemonicParsing="false" onAction="#handleCancelAction" prefHeight="30.0" prefWidth="885.0" text="Cancel" />
-                  <Button fx:id="confirmBottomSheet" mnemonicParsing="false" prefHeight="30.0" prefWidth="885.0" text="Ok" />
+                  <Button fx:id="cancelEditBottomSheet" mnemonicParsing="false" onAction="#handleCancelAction" prefHeight="30.0" prefWidth="885.0" text="Cancel">
+                     <font>
+                        <Font name="Peak Rounded Regular" size="13.0" />
+                     </font></Button>
+                  <Button fx:id="confirmBottomSheet" mnemonicParsing="false" prefHeight="30.0" prefWidth="885.0" text="Ok">
+                     <font>
+                        <Font name="Peak Rounded Regular" size="13.0" />
+                     </font></Button>
                </children>
             </HBox>
          </children>

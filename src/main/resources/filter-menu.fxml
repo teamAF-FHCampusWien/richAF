@@ -41,7 +41,7 @@
          <children>
             <Label text="Ticker Symbol" textFill="WHITE" GridPane.rowIndex="2">
                <font>
-                  <Font name="Arial" size="25.0" />
+                  <Font name="Peak Rounded Bold" size="25.0" />
                </font>
                <padding>
                   <Insets left="20.0" />
@@ -49,7 +49,7 @@
             </Label>
             <Label text="Match" textFill="WHITE" GridPane.rowIndex="5">
                <font>
-                  <Font name="Arial" size="25.0" />
+                  <Font name="Peak Rounded Bold" size="25.0" />
                </font>
                <padding>
                   <Insets left="20.0" />
@@ -57,7 +57,7 @@
             </Label>
             <Label text="Win/Loose" textFill="WHITE" GridPane.rowIndex="8">
                <font>
-                  <Font name="Arial" size="25.0" />
+                  <Font name="Peak Rounded Bold" size="25.0" />
                </font>
                <padding>
                   <Insets left="20.0" />
@@ -65,7 +65,7 @@
             </Label>
             <Label text="Feed" textFill="WHITE" GridPane.rowIndex="11">
                <font>
-                  <Font name="Arial" size="25.0" />
+                  <Font name="Peak Rounded Bold" size="25.0" />
                </font>
                <padding>
                   <Insets left="20.0" />

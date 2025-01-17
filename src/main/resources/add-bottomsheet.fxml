@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="bottomSheet" alignment="BOTTOM_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.fhcampuswien.richAF.controller.AddBottomSheetController">
+<VBox fx:id="bottomSheet" alignment="BOTTOM_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.fhcampuswien.richAF.controller.AddBottomSheetController">
    <children>
       <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="390.0" prefWidth="1870.0" style="-fx-background-color: white; -fx-background-radius: 30 30 0 0; -fx-border-color: black; -fx-border-radius: 30 30 0 0;">
          <effect>
@@ -35,12 +35,12 @@
                <children>
                   <Label text="Add Data Source" GridPane.halignment="CENTER">
                      <font>
-                        <Font name="Arial Bold" size="25.0" />
+                        <Font name="Peak Rounded Bold" size="25.0" />
                      </font>
                   </Label>
                   <Label text="Add a Name for this Feed" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
                      <font>
-                        <Font name="Arial" size="15.0" />
+                        <Font name="Peak Rounded Regular" size="25.0" />
                      </font>
                      <GridPane.margin>
                         <Insets left="20.0" />
@@ -48,7 +48,7 @@
                   </Label>
                   <Label text="Paste RSS Feed Link" GridPane.rowIndex="3" GridPane.valignment="BOTTOM">
                      <font>
-                        <Font name="Arial" size="15.0" />
+                        <Font name="Peak Rounded Regular" size="25.0" />
                      </font>
                      <GridPane.margin>
                         <Insets left="20.0" />
