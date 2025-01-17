@@ -10,13 +10,14 @@ import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class FilterController {
     private EventHandler<ActionEvent> onDone;
-    private EventHandler<ActionEvent> onChanged;
     private List<ArticleResult> articles;
+    private Controller _controller;
     private Map filtermap;
     @FXML
     private ChoiceBox<String> choiceTicker;
@@ -56,17 +57,16 @@ public class FilterController {
         slideOut.play();
     }
 
-    public Map getFilter() {
-        return filtermap;
-    }
 
-    public FilterController(List<ArticleResult> articles){
-        this.articles = articles;
+    public FilterController(Controller controller){
+        this._controller = controller;
 
     }
 
     @FXML
     public void initialize() {
+        filtermap = new HashMap();
+        articles = _controller.getArticles();
         choiceTicker.getItems().add("ALLE");
         choiceTicker.getItems().add("NONE");
         if (articles != null) {
@@ -80,13 +80,32 @@ public class FilterController {
 
         }
         choiceTicker.setValue("ALLE");
+
+        choiceWL.getItems().add("ALLE");
+        choiceWL.getItems().add("WIN");
+        choiceWL.getItems().add("LOSE");
+        choiceWL.setValue("ALLE");
+
+        choiceTicker.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            fillFilterMap();
+            _controller.setMapFilterAndRefresh(filtermap);
+        });
+
+        choiceWL.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            fillFilterMap();
+            _controller.setMapFilterAndRefresh(filtermap);
+        });
     }
 
-    public void setOnSelectionChanged(EventHandler<ActionEvent> handler) {
+
+
+    public void fillFilterMap() {
         filtermap.clear();
-        filtermap.put("Ticker", choiceTicker.getValue());
-        this.onChanged = handler;
-        System.out.println("selection changed");
+        filtermap.put("TICKER", choiceTicker.getValue());
+        filtermap.put("WL", choiceWL.getValue());
+        System.out.println("filter fill");
     }
+
+
 
 }
