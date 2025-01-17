@@ -487,4 +487,12 @@ public class DBService {
         }
         return null;
     }
+
+    public void clearResults() {
+        try {
+            _context.getTblResultDao().delete(_context.getTblResultDao().queryForAll());
+        } catch (SQLException e) {
+            _em.logErrorMessage(e);
+        }
+    }
 }
