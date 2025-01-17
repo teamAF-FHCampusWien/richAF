@@ -28,18 +28,6 @@ public class ServiceScheduler{
     private EventManager _em;
     private Config _config;
 
-
-    /*
-    entspricht nicht mehr den vorstellungen der Applikation
-    private int companyid;
-    public int getCompanyid() {
-        return companyid;
-    }
-
-    public void setCompanyid(int companyid) {
-        this.companyid = companyid;
-    }
-*/
     /**
      * Constructor: parameters are taken and put into the local variables. the pcounters value is set to 5 and the company to 0, to force that a companyid has to be chosen
      * @param sch ScheduledExecutorService for the scheduled JobService methods running

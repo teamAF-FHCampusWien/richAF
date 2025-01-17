@@ -50,14 +50,14 @@ public class OllamaServiceController {
         displayServiceStatus();
 
         // animationtimer like Backgroundworker but for JavaFx
-        // calls checkServiceStatus every 30 seconds
+        // calls checkServiceStatus every 20 seconds
         AnimationTimer timer = new AnimationTimer() {
             private long lastUpdate = 0;
 
             @Override
             public void handle(long now) {
 
-                if (now - lastUpdate >= 30_000_000_000L) {
+                if (now - lastUpdate >= 20_000_000_000L) {
                     checkServiceStatus();
                     lastUpdate = now;
                 }
