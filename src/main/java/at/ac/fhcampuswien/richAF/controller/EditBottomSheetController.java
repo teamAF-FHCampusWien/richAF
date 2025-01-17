@@ -24,14 +24,31 @@ public class EditBottomSheetController {
 
     private DBService _dbservice;
 
+    @FXML
+    private VBox editBottomSheet;
+
+    @FXML
+    private Button cancelEditBottomSheet;
+
+    @FXML
+    private Label defaultLabel;
+
+    @FXML
+    private Text defaultText;
+
+    @FXML
+    private GridPane gridSources;
+
+    private String labelStyle;
+    private String linkStyle;
+
 
     public EditBottomSheetController(DBService dbservice) {
         this._dbservice = dbservice;
     }
 
 
-    @FXML
-    private GridPane gridSources;
+
 
     public void setOnCancel(EventHandler<ActionEvent> handler) {
         this.onCancel = handler;
@@ -48,11 +65,7 @@ public class EditBottomSheetController {
         }
     }
 
-    @FXML
-    private VBox editBottomSheet;
 
-    @FXML
-    private Button cancelEditBottomSheet;
 
     // Methods
     public void hideEditBottomSheet() {
@@ -61,14 +74,6 @@ public class EditBottomSheetController {
         slideDown.play();
     }
 
-    @FXML
-    private Label defaultLabel;
-
-    @FXML
-    private Text defaultText;
-
-    private String labelStyle;
-    private String linkStyle;
 
     @FXML
     public void initialize() {
