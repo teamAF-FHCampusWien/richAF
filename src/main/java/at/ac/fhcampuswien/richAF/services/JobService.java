@@ -244,7 +244,7 @@ public class JobService {
 
                                 orderedMap.put("title", page != null ? page.getStrTitle() : "");
 
-                                if (!jsonResult.has("summary"))
+                                if (jsonResult.has("summary"))
                                     orderedMap.put("summary", jsonResult.get("summary"));
                                 else
                                     orderedMap.put("summary","");

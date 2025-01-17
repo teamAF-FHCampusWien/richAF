@@ -22,7 +22,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import javafx.animation.Interpolator;
 import javafx.scene.input.MouseEvent;
-
+import javafx.application.Platform;
 
 public class Controller {
     OllamaService _olService;
@@ -154,34 +154,67 @@ public class Controller {
     ScheduledExecutorService resChecker;
 
     public void displayResults() {
+        _dbService.clearResults();
         resultcounter = _dbService.GetResults().size();
         resChecker = Executors.newScheduledThreadPool(1);
-        //_dbService.clearResults();
+
+
         _scheduler.doWork();
-        resChecker.scheduleAtFixedRate(this::checkForNewResults, 0, 30, TimeUnit.SECONDS);
+        //checkForNewResults();
+        resChecker.scheduleAtFixedRate(this::checkForNewResults, 0, 5, TimeUnit.SECONDS);
         refreshResults();
     }
 
     public void checkForNewResults(){
-        if (!_scheduler.isRunning()) {
+        if ((!_scheduler.isRunning())) {//||(_scheduler==null)
             resChecker.shutdownNow();
-            refreshResults();
+            refreshResultsOnFxThread();
             return;
         }
 
         int count= _dbService.GetResults().size();
         if (resultcounter != count){
             resultcounter = count;
-            refreshResults();
+            refreshResultsOnFxThread();
 
         }
 
     }
 
-    List<ArticleResult> articles;
-    Map mapFilter;
-    public void refreshResults() {
+    private void refreshResultsOnFxThread() {
+        Platform.runLater(this::refreshResults);
+    }
 
+    private List<ArticleResult> articles;
+    private Map mapFilter;
+
+    public void setMapFilterAndRefresh(Map mapFilter) {
+        this.mapFilter = mapFilter;
+        refreshResults();
+    }
+
+    public List<ArticleResult> getArticles() {
+        return articles;
+    }
+
+    public void setArticles(List<ArticleResult> articles) {
+        this.articles = articles;
+    }
+
+    public void refreshResults() {
+        String tickfilter = "ALLE";
+        String tickWL = "ALLE";
+
+        try{
+            tickfilter=mapFilter.get("TICKER").toString();}
+        catch(Exception e){
+            tickfilter = "ALLE";
+        }
+        try{
+            tickWL=mapFilter.get("WL").toString();}
+        catch(Exception e){
+            tickWL = "ALLE";
+        }
 
         articles = new ArrayList<>();
         for (tblResult tblres : _dbService.GetResults())
@@ -191,16 +224,31 @@ public class Controller {
         }
 
         // Logic to create new cards dynamically
+        try {
+            cardsBox.getChildren().clear();
+        } catch (Exception e){
+            _em.logErrorMessage(e);
+        }
         for (ArticleResult article : articles) {
             try {
-                if (mapFilter != null)
-                    switch (mapFilter.get("stock").toString()) {
+                    switch (tickfilter) {
                         case "":
                         case "ALLE":
                             break;
                             default:
-                                if(mapFilter.get("stock").toString() != article.getStock()) continue;
+                                if(!tickfilter.equals(article.getStock())) continue;
                     }
+                switch (tickWL) {
+                    case "":
+                    case "ALLE":
+                        break;
+
+                    case "WIN":
+                        if(!article.getTrend().toUpperCase().equals("UP")) continue;
+                        break;
+                    case "LOSE":
+                        if(!article.getTrend().toUpperCase().equals("DOWN")) continue;
+                }
 
                 FXMLLoader loader = new FXMLLoader((getClass().getResource("/result-card.fxml")));
                 loader.load();
@@ -216,7 +264,7 @@ public class Controller {
                 // Add node to parent
                 cardsBox.getChildren().add(loader.getRoot());
 
-            } catch (IOException e) {
+            } catch (Exception e) {
                 //TODO: Add to logs @Botan(?)
                 e.printStackTrace();
             }
@@ -302,14 +350,14 @@ public class Controller {
     public void showFilterMenu() {
         try {
             FXMLLoader loader = new FXMLLoader((getClass().getResource("/filter-menu.fxml")));
-            loader.setControllerFactory(param -> new FilterController(articles));
+            loader.setControllerFactory(param -> new FilterController(this));
             filtermenu = loader.load();
 
             FilterController filterController = loader.getController();
 
             filterController.setOnDone(event -> {
                 hideGreyOverlay();
-                refreshResults();
+
             });
 
 //            filterController.setOnSelectionChanged(event -> {
