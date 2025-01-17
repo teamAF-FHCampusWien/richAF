@@ -152,9 +152,11 @@ public class Controller {
 
     int resultcounter=0;
     ScheduledExecutorService resChecker;
+
     public void displayResults() {
         resultcounter = _dbService.GetResults().size();
         resChecker = Executors.newScheduledThreadPool(1);
+        //_dbService.clearResults();
         _scheduler.doWork();
         resChecker.scheduleAtFixedRate(this::checkForNewResults, 0, 30, TimeUnit.SECONDS);
         refreshResults();
@@ -180,7 +182,7 @@ public class Controller {
     Map mapFilter;
     public void refreshResults() {
 
-        //TODO: connect real results, for now only dummy data is shown
+
         articles = new ArrayList<>();
         for (tblResult tblres : _dbService.GetResults())
          {
@@ -345,7 +347,6 @@ public class Controller {
 
                 rootStackPane.getChildren().add(devMenuRoot);
                 devMenuController.loadDataFromConfig();
-
 
             } catch (IOException e) {
                 e.printStackTrace();
