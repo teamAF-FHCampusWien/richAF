@@ -133,11 +133,11 @@ public class Controller {
 
         filterButton.setOnAction(event -> {
             if (filterButton.isSelected()) {
-                filterButton.setText("Done");
+                filterButton.setText(" Close");
                 showFilterMenu();
 
             } else {
-                filterButton.setText("Filter");
+                filterButton.setText("");
                 TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), filtermenu);
                 slideOut.setToX(-1200);
                 slideOut.setInterpolator(Interpolator.EASE_OUT);
@@ -334,7 +334,7 @@ public class Controller {
 
             // Animate it sliding into view
             TranslateTransition slideUp = new TranslateTransition(Duration.millis(300), editBottomSheet);
-            slideUp.setToY(165);
+            slideUp.setToY(170);
             slideUp.setInterpolator(Interpolator.EASE_OUT);
             slideUp.play();
 

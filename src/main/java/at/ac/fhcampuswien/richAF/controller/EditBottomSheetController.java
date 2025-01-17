@@ -8,6 +8,8 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -33,18 +35,16 @@ public class EditBottomSheetController {
 
     public void setOnCancel(EventHandler<ActionEvent> handler) {
         this.onCancel = handler;
-        System.out.println("onCancel handler set");
+        System.out.println("Handler engaged");
     }
 
     @FXML
     private void handleCancelAction(ActionEvent event) {
-        System.out.println("Cancel button pressed");
         hideEditBottomSheet();
         if (onCancel != null) {
-            System.out.println("Invoking onCancel handler");
             onCancel.handle(event);
         } else {
-            System.out.println("onCancel handler is not set");
+            System.out.println(" ");
         }
     }
 
@@ -95,7 +95,18 @@ public class EditBottomSheetController {
 
         Label lblname = new Label(tbls.getName());
         Text txtlink = new Text(tbls.getStrUrl());
-        Button btndel = new Button("Delete");
+
+        Button btndel = new Button();
+        ImageView deleteIcon = new ImageView(
+                new Image(getClass().getResourceAsStream("/icons/delete.png"))
+        );
+
+        deleteIcon.setFitWidth(20);
+        deleteIcon.setFitHeight(20);
+
+        btndel.setGraphic(deleteIcon);
+        btndel.getStyleClass().add("icon-button"); // apply your custom CSS class
+        btndel.setOnAction(event -> removeSource(tbls.getId()));
 
         if (labelStyle != null) {
             lblname.setStyle(labelStyle);

@@ -64,9 +64,9 @@
                               </image>
                            </ImageView>
                         </graphic></Button>
-                     <ToggleButton fx:id="filterButton" mnemonicParsing="false" styleClass="icon-button" stylesheets="@styles/icon-button.css">
+                     <ToggleButton fx:id="filterButton" mnemonicParsing="false" styleClass="icon-button" stylesheets="@styles/icon-button.css" textFill="WHITE">
                         <font>
-                           <Font name="Arial" size="13.0" />
+                           <Font name="Peak Rounded Regular" size="13.0" />
                         </font>
                         <graphic>
                            <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
@@ -155,6 +155,9 @@
                           <HBox.margin>
                               <Insets right="20.0" />
                           </HBox.margin>
+                        <font>
+                           <Font name="Peak Rounded Regular" size="13.0" />
+                        </font>
                       </Label>
                       <Label fx:id="lblJob" text="Job-Runner" textFill="WHITE">
                           <graphic>
@@ -163,6 +166,9 @@
                           <HBox.margin>
                               <Insets right="20.0" />
                           </HBox.margin>
+                        <font>
+                           <Font name="Peak Rounded Regular" size="13.0" />
+                        </font>
                       </Label>
                         <ToggleButton fx:id="tgbJobService" mnemonicParsing="false" style="-fx-background-color: green;" />
                     </children>

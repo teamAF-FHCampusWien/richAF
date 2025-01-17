@@ -15,7 +15,7 @@
     -fx-font-weight: normal;
 
     /* Padding and sizing */
-    -fx-padding: 6 12 6 12; /* top/right/bottom/left */
+    -fx-padding: 8 12 8 12; /* top/right/bottom/left */
 
     /* Optional drop shadow effect */
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 0, 0, 0, 2);
