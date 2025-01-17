@@ -9,7 +9,7 @@ import javafx.scene.text.Text;
 public class ResultController {
 
     @FXML
-    private Label cardTitle;
+    private Text cardTitle;
 
     @FXML
     private Text cardSummary;

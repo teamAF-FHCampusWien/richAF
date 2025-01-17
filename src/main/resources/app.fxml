@@ -88,7 +88,7 @@
           </HBox>
           <StackPane prefHeight="195.0" prefWidth="1080.0">
               <children>
-                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#7f8795" height="155.0" stroke="TRANSPARENT" strokeType="INSIDE" style="-fx-arc-width: 30; -fx-arc-height: 30;" width="1870.0">
+                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#7f8795" height="155.0" stroke="TRANSPARENT" strokeType="INSIDE" style="-fx-arc-width: 100; -fx-arc-height: 100;" width="1870.0">
                     <effect>
                         <DropShadow blurType="GAUSSIAN" height="10.0" offsetX="1.0" offsetY="1.0" radius="4.5" width="10.0">
                             <color>
