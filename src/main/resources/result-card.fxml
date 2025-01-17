@@ -230,7 +230,7 @@
                               <Insets left="10.0" />
                            </StackPane.margin>
                         </ImageView>
-                        <Hyperlink fx:id="cardSource" text="SourceHyperlink">
+                        <Hyperlink fx:id="cardSource" maxWidth="375.0" text="SourceHyperlink">
                            <font>
                               <Font name="Peak Rounded Regular" size="20.0" />
                            </font>

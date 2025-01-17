@@ -11,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -103,6 +104,9 @@ public class Controller {
 
     @FXML
     private StackPane devMenuRoot;
+
+    @FXML
+    private ImageView emptyResults;
 
 
     // Constructors
@@ -272,6 +276,8 @@ public class Controller {
             ArticleResult article = new ArticleResult(tblres.getStrResponeJson());
             articles.add(article);
         }
+
+        emptyResults.setVisible(false);
 
         // Logic to create new cards dynamically
         try {
