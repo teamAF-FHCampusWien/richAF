@@ -243,7 +243,7 @@
                      <font>
                         <Font name="Peak Rounded Regular" size="13.0" />
                      </font></Button>
-                  <Button fx:id="confirmBottomSheet" mnemonicParsing="false" prefHeight="30.0" prefWidth="885.0" styleClass="confirm-button" stylesheets="@styles/confirm-button.css" text="Ok">
+                  <Button fx:id="confirmBottomSheet" mnemonicParsing="false" onAction="#hideEditBottomSheet" prefHeight="30.0" prefWidth="885.0" styleClass="confirm-button" stylesheets="@styles/confirm-button.css" text="Ok">
                      <font>
                         <Font name="Peak Rounded Regular" size="13.0" />
                      </font></Button>

@@ -140,7 +140,7 @@
                         <children>
                               <Label fx:id="tickerWin" text="\$Ticker" textFill="WHITE">
                                   <font>
-                                      <Font name="Peak Rounded Regular" size="30.0" />
+                                      <Font name="Peak Rounded Regular" size="45.0" />
                                   </font>
                               </Label>
                            <Label text="most likely to gain" textFill="WHITE">
@@ -154,7 +154,7 @@
                         <children>
                               <Label fx:id="tickerDown" text="\$Ticker" textFill="WHITE">
                                   <font>
-                                      <Font name="Peak Rounded Regular" size="30.0" />
+                                      <Font name="Peak Rounded Regular" size="45.0" />
                                   </font>
                               </Label>
                            <Label text="most likely to lose" textFill="WHITE">
