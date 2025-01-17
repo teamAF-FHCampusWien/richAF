@@ -20,9 +20,8 @@ import java.awt.*;
 import java.io.File;
 import java.nio.file.Paths;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.*;
 import javafx.animation.TranslateTransition;
 import javafx.scene.shape.Rectangle;
@@ -108,6 +107,18 @@ public class Controller {
     @FXML
     private ImageView emptyResults;
 
+    @FXML
+    private Label nrFeeds;
+
+    @FXML
+    private Label nrArticles;
+
+    @FXML
+    private Label tickerWin;
+
+    @FXML
+    private Label tickerDown;
+
 
     // Constructors
     public Controller() {
@@ -185,7 +196,6 @@ public class Controller {
         }
     }
 
-
     /**
      * wird vom Refresh Button getriggert
      * startet den Work Prozess des ServiceSchedulers und startet den "Result Checker" der die visualierung von neuen Results triggert
@@ -213,7 +223,7 @@ public class Controller {
             return;
         }
 
-        int count= _dbService.GetResults().size();
+        int count = _dbService.GetResults().size();
         if (resultcounter != count){
             resultcounter = count;
             refreshResultsOnFxThread();
@@ -228,7 +238,6 @@ public class Controller {
     private void refreshResultsOnFxThread() {
         Platform.runLater(this::refreshResults);
     }
-
 
     public void setMapFilterAndRefresh(Map mapFilter) {
         this.mapFilter = mapFilter;
@@ -280,6 +289,7 @@ public class Controller {
         emptyResults.setVisible(false);
 
         // Logic to create new cards dynamically
+        setHeader();
         try {
             cardsBox.getChildren().clear();
         } catch (Exception e){
@@ -328,6 +338,72 @@ public class Controller {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void setHeader() {
+        int nrOfArticles = _dbService.GetResults().size();
+        nrFeeds.setText(String.valueOf(nrOfArticles));
+
+        int nrCrawled = _dbService.getPages().size();
+        nrArticles.setText(String.valueOf(nrCrawled));
+
+        // =====================================================
+        // 1) Build frequency map for UP trends
+        // =====================================================
+        Map<String, Integer> stockCountUp = new HashMap<>();
+        // =====================================================
+        // 2) Build frequency map for DOWN trends
+        // =====================================================
+        Map<String, Integer> stockCountDown = new HashMap<>();
+
+        List<tblResult> allResults = _dbService.GetResults();
+
+        for (tblResult tblres : allResults) {
+            // Convert JSON string to ArticleResult
+            ArticleResult article = new ArticleResult(tblres.getStrResponeJson());
+
+            // If trend is UP, increase the counter for that stock
+            if ("UP".equalsIgnoreCase(article.getTrend())) {
+                String stock = article.getStock();
+                stockCountUp.put(stock, stockCountUp.getOrDefault(stock, 0) + 1);
+            }
+
+            // If trend is DOWN, increase the counter for that stock
+            if ("DOWN".equalsIgnoreCase(article.getTrend())) {
+                String stock = article.getStock();
+                stockCountDown.put(stock, stockCountDown.getOrDefault(stock, 0) + 1);
+            }
+        }
+
+        // =====================================================
+        // 3) Find the stock with the highest UP count
+        // =====================================================
+        Optional<Map.Entry<String, Integer>> maxEntryUp = stockCountUp.entrySet()
+                .stream()
+                .max(Comparator.comparing(Map.Entry::getValue));
+
+        if (maxEntryUp.isPresent()) {
+            // The stock symbol with the highest UP trend frequency
+            String topStockUp = maxEntryUp.get().getKey();
+            tickerWin.setText(topStockUp);
+        } else {
+            tickerWin.setText("N/A");
+        }
+
+        // =====================================================
+        // 4) Find the stock with the highest DOWN count
+        // =====================================================
+        Optional<Map.Entry<String, Integer>> maxEntryDown = stockCountDown.entrySet()
+                .stream()
+                .max(Comparator.comparing(Map.Entry::getValue));
+
+        if (maxEntryDown.isPresent()) {
+            // The stock symbol with the highest DOWN trend frequency
+            String topStockDown = maxEntryDown.get().getKey();
+            tickerDown.setText(topStockDown);
+        } else {
+            tickerDown.setText("N/A");
+        }
 
     }
 
@@ -368,7 +444,6 @@ public class Controller {
             e.printStackTrace();
         }
     }
-
 
     public void showEditDataSheet() {
         try {
