@@ -239,11 +239,7 @@
             </GridPane>
             <HBox alignment="CENTER" prefHeight="70.0" prefWidth="200.0" spacing="25.0">
                <children>
-                  <Button fx:id="cancelEditBottomSheet" mnemonicParsing="false" onAction="#handleCancelAction" prefHeight="30.0" prefWidth="885.0" styleClass="cancel-button" stylesheets="@styles/cancel-button.css" text="Cancel">
-                     <font>
-                        <Font name="Peak Rounded Regular" size="13.0" />
-                     </font></Button>
-                  <Button fx:id="confirmBottomSheet" mnemonicParsing="false" onAction="#hideEditBottomSheet" prefHeight="30.0" prefWidth="885.0" styleClass="confirm-button" stylesheets="@styles/confirm-button.css" text="Ok">
+                  <Button fx:id="cancelEditBottomSheet" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleCancelAction" prefHeight="30.0" prefWidth="900.0" styleClass="confirm-button" stylesheets="@styles/confirm-button.css" text="Close">
                      <font>
                         <Font name="Peak Rounded Regular" size="13.0" />
                      </font></Button>
