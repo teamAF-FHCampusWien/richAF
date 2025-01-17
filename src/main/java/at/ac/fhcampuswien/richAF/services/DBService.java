@@ -10,6 +10,7 @@ import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.Where;
 import com.j256.ormlite.support.DatabaseConnection;
 
+import java.net.URI;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -113,23 +114,20 @@ public class DBService {
     */
     public void SavePagesFromCrawler(Crawler crawler) {
         for (Node node : crawler.getMesh().getNodes()) {
-
             try  (Connection conn = DriverManager.getConnection(_url);){
                 String raw = node.getPage().getRawContent();
+                URI uri = node.getPage().getUri();
 
-                if (conn != null) {
-                    String sql = "INSERT INTO tblPages(intStatus, strPage, tsCreated_on) VALUES(?, ?, ?)";
-                    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                        pstmt.setInt(1, Enums_.Status.NEW.ordinal());
-                        pstmt.setString(2, raw);
-                        pstmt.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
-                        pstmt.executeUpdate();
+                Dao<tblPage, Integer> daoTblPage = _context.getTblPageDao();
 
-                    } catch (SQLException e) {
-                        _em.logErrorMessage(e);
-                        //_em.logErrorMessage("SavePagesFromCrawler INSERT:"+e.getMessage());
-                    }
-                }
+                tblPage tp= new tblPage();
+                tp.setStatus(Enums_.Status.NEW);
+                tp.setStrPage(raw);
+                tp.setStrLink(uri.toString());
+                tp.setTsCreated_on(new Timestamp(System.currentTimeMillis()));
+
+                daoTblPage.create(tp);
+
             } catch (SQLException e) {
                 _em.logErrorMessage(e);
                 //_em.logErrorMessage("SavePagesFromCrawler:"+e.getMessage());
@@ -137,6 +135,18 @@ public class DBService {
 
         }
 
+    }
+
+    /**
+     * updated die übergebene tblPage
+     * @param tp
+     */
+    public void updatePage(tblPage tp){
+        try {
+            _context.getTblPageDao().update((tblPage) tp);
+        } catch (SQLException e) {
+            _em.logErrorMessage(e);
+        }
     }
 
     /**
@@ -431,7 +441,7 @@ public class DBService {
 
 
     /**
-     * Inserts a result in tblSource
+     * Inserts a source in tblSource
      * @param name short description of the source
      * @param url the url of source
      */
@@ -443,6 +453,20 @@ public class DBService {
             ts.setStrUrl(url);
             ts.setTsCreated_on(new Timestamp(System.currentTimeMillis()));
             daoTblSource.create(ts);
+        } catch (SQLException e) {
+            _em.logErrorMessage(e);
+        }
+
+    }
+
+    /**
+     * Deletes a source in tblSource
+     * @param id id of the source to delete
+     */
+    public void deleteSource(int id) {
+        try  (Connection conn = DriverManager.getConnection(_url);){
+            Dao<tblSource, Integer> daoTblSource= _context.getTblSourceDao();
+            daoTblSource.deleteById(id);
         } catch (SQLException e) {
             _em.logErrorMessage(e);
         }

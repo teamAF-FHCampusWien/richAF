@@ -1,14 +1,19 @@
 package at.ac.fhcampuswien.richAF.services;
 
+import at.ac.fhcampuswien.richAF.crawler.Crawler;
 import at.ac.fhcampuswien.richAF.data.EventManager;
 import at.ac.fhcampuswien.richAF.model.*;
 import at.ac.fhcampuswien.richAF.model.dao.tblJob;
 import at.ac.fhcampuswien.richAF.model.dao.tblPage;
+import at.ac.fhcampuswien.richAF.model.dao.tblSource;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.*;
 import org.jsoup.select.Elements;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 /**
  * Class containing the Methods for JobCreation for the Ollama Service and JobExcecution with the OllamaService
@@ -60,6 +65,12 @@ public class JobService {
                 String doctype = doc.documentType().name();
                 //currently we only want to parse html pages
                 if (doctype.equals("html")) {
+
+                    String title = doc.getElementsByTag("title").text();
+                    if (title != null && !title.equals("")) {
+                        p.setStrTitle(title);
+                        dbservice.updatePage(p);
+                    }
                     //getting only the <p> from the html-document
                     Elements paragraphs= doc.select("p");
                     String strParagraph="";
@@ -187,7 +198,10 @@ public class JobService {
         JobService.wecanrun=true;
         // getting the jobs from DB which have not been processed
         ArrayList<tblJob> lisJobs = dbservice.getJobs(Enums_.Status.NEW);
+        ArrayList<tblPage> lisPages = dbservice.getPages(Enums_.Status.ALL);
+        ollamaService.SetBaseUri();
         ollamaService.SetBasePrompt("");
+        ollamaService.setTemperature();
         for (tblJob j : lisJobs) {
             if (!wecanrun) {
                 //em.logInfoMessage("ExecuteJobs: manual abort");
@@ -209,16 +223,105 @@ public class JobService {
                 // the response is in a json format so it will be casted in a json object
                 JSONObject jsonResponseObject = new JSONObject(response);
                 // the section response holds the created answer/result from the service
-                String strResponse = jsonResponseObject.getString("response");
+                String strResponse = trimJsonString(jsonResponseObject.getString("response"));
+                if (strResponse != null){
+                    if (strResponse.matches( "^\\{.*\\}$")){
+                        JSONObject jsonResult= new JSONObject(strResponse);
+                        if ((jsonResult.has("stock")) && (jsonResult.length()<5))
+                            if (jsonResult.get("stock") != ""){ // TO DO splitten
+                                Map<String, Object> orderedMap = new LinkedHashMap<>();
 
-                //adding the result to the DB
-                dbservice.addResult(j.getId(), strResponse);
+                                orderedMap.put("stock", jsonResult.get("stock"));
+
+
+
+                                Optional<tblPage> result = lisPages.stream()
+                                        .filter(page -> page.getId() == j.getIntPageID())
+                                        .findFirst();
+                                tblPage page = null;
+                                if (result.isPresent())
+                                    page = result.get();
+
+                                orderedMap.put("title", page != null ? page.getStrTitle() : "");
+
+                                if (!jsonResult.has("summary"))
+                                    orderedMap.put("summary", jsonResult.get("summary"));
+                                else
+                                    orderedMap.put("summary","");
+
+                                if (jsonResult.has("relevant"))
+                                    orderedMap.put("relevant", jsonResult.get("relevant"));
+                                else
+                                    orderedMap.put("relevant","NO");
+
+                                if (jsonResult.has("trend"))
+                                    orderedMap.put("trend", jsonResult.get("trend"));
+                                else
+                                    orderedMap.put("trend","NONE");
+
+                                orderedMap.put("source", page != null ? page.getStrLink() : "");
+
+                                JSONObject jsonFinalResult= new JSONObject(orderedMap);
+                                //adding the result to the DB
+                                dbservice.addResult(j.getId(), jsonFinalResult.toString());
+                            }
+
+                    }
+                }
+
 
             } catch (InterruptedException | ExecutionException e) {
                 em.logErrorMessage(e);
                 //em.logErrorMessage(String.format("ExecuteJobs (Job-id %s):%s",j.getId(),e.getMessage()));
             }
             dbservice.UpdateStatus(j, Enums_.Status.PROCESSED);
+        }
+    }
+
+    /**
+     *
+     * @param jsonString
+     * @return
+     * @author Copilot
+     */
+    private static String trimJsonString(String jsonString) {
+        // Entferne Whitespaces vor dem ersten '{'
+        jsonString = jsonString.replaceAll("^[^\\{]*\\{", "{");
+        // Entferne Whitespaces nach dem letzten '}'
+        jsonString = jsonString.replaceAll("\\}[^\\}]*$", "}");
+        return jsonString;
+    }
+
+
+    /**
+     * starten den Crawldurchgang, für jede Source in tblsource wird ein crawler erzeugt und der vorgang durchgeführt
+     * die depth wird aus der config bezogen
+     * @param dbservice
+     * @param conf
+     * @param em
+     */
+    public static void CrawlerCrawl(DBService dbservice, Config conf, EventManager em) {
+        JobService.wecanrun = true;
+        if (conf.getProperty("crawleroff").equals("true")) {
+            System.err.println("WARNING CRAWLER DEACTIVATED");
+            return;
+        }
+        ArrayList<tblSource> lissources = dbservice.getSources();
+        for (tblSource s : lissources) {
+            if (!wecanrun) {
+                //em.logInfoMessage("CreateJobs: manual abort");
+                return;
+            }
+            int depth=2;
+            try{
+                depth=  Integer.parseInt(conf.getProperty("crawlerdepth"));
+            } catch (NumberFormatException e) {
+                em.logErrorMessage(e);
+            }
+            Crawler crawler = new Crawler(s.getStrUrl(),depth);
+            crawler.crawl();
+
+            dbservice.SavePagesFromCrawler(crawler);
         }
     }
 }

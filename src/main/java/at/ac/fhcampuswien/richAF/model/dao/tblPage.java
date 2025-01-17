@@ -28,6 +28,20 @@ public class tblPage extends baseTbl {
     @DatabaseField
     private String strPage;
 
+    /**
+     * the Title of the html code
+     */
+    @DatabaseField
+    private String strTitle;
+
+    /**
+     * the link of the source
+     */
+    @DatabaseField
+    private String strLink;
+
+
+
 
 
     public tblPage() {
@@ -49,4 +63,20 @@ public class tblPage extends baseTbl {
         this.strPage = strPage;
     }
 
+
+    public String getStrTitle() {
+        return strTitle;
+    }
+
+    public void setStrTitle(String strTitle) {
+        this.strTitle = strTitle;
+    }
+
+    public String getStrLink() {
+        return strLink;
+    }
+
+    public void setStrLink(String strLink) {
+        this.strLink = strLink;
+    }
 }

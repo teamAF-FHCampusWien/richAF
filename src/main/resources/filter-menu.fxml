@@ -71,7 +71,7 @@
                   <Insets left="20.0" />
                </padding>
             </Label>
-            <ChoiceBox prefWidth="300.0" GridPane.halignment="LEFT" GridPane.rowIndex="3">
+            <ChoiceBox fx:id="choiceTicker" prefWidth="300.0" GridPane.halignment="LEFT" GridPane.rowIndex="3">
                <padding>
                   <Insets left="20.0" />
                </padding>
@@ -79,7 +79,7 @@
                   <Insets left="20.0" />
                </GridPane.margin>
             </ChoiceBox>
-            <ChoiceBox prefWidth="300.0" GridPane.rowIndex="6">
+            <ChoiceBox fx:id="choiceMatch" prefWidth="300.0" GridPane.rowIndex="6">
                <padding>
                   <Insets left="20.0" />
                </padding>
@@ -87,7 +87,7 @@
                   <Insets left="20.0" />
                </GridPane.margin>
             </ChoiceBox>
-            <ChoiceBox prefWidth="300.0" GridPane.rowIndex="9">
+            <ChoiceBox fx:id="choiceWL" prefWidth="300.0" GridPane.rowIndex="9">
                <padding>
                   <Insets left="20.0" />
                </padding>
@@ -95,7 +95,7 @@
                   <Insets left="20.0" />
                </GridPane.margin>
             </ChoiceBox>
-            <ChoiceBox prefWidth="300.0" GridPane.rowIndex="12">
+            <ChoiceBox fx:id="choiceFeed" prefWidth="300.0" GridPane.rowIndex="12">
                <padding>
                   <Insets left="20.0" />
                </padding>

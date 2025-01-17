@@ -12,6 +12,12 @@ public class ArticleResult {
     private String relevant;
     @Getter @Setter
     private String summary;
+    @Getter @Setter
+    private String title;
+    @Getter @Setter
+    private String trend;
+    @Getter @Setter
+    private String source;
 
     // Construct Object from Strings
     public ArticleResult(String tickerSymbol, String relevant, String summary) {
@@ -31,6 +37,9 @@ public class ArticleResult {
             this.stock = jsonResponseObject.getString("stock");
             this.relevant = jsonResponseObject.getString("relevant");
             this.summary = jsonResponseObject.getString("summary");
+            this.title = jsonResponseObject.getString("title");
+            this.trend = jsonResponseObject.getString("trend");
+            this.source = jsonResponseObject.getString("source");
 
         } catch (Exception e) {
             e.printStackTrace();
