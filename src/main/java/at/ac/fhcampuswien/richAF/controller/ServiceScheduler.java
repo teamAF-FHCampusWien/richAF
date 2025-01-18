@@ -9,9 +9,8 @@ import javafx.application.Platform;
 import javafx.scene.control.ProgressIndicator;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+
 /**
  * Class contains the Scheduler to run the JobService Methods
  * it has its own progressIndicator icon to show if its running so its part a control and part a scheduler
@@ -30,16 +29,17 @@ public class ServiceScheduler{
 
     /**
      * Constructor: parameters are taken and put into the local variables. the pcounters value is set to 5 and the company to 0, to force that a companyid has to be chosen
+     *
      * @param sch ScheduledExecutorService for the scheduled JobService methods running
      * @param pro ProgressIndicator so signal running
      * @param ols OllamaService
      * @param dbs DBService
-     * @param em EventManager for logging
+     * @param em  EventManager for logging
      */
     public ServiceScheduler(ScheduledExecutorService sch, ProgressIndicator pro , OllamaService ols, DBService dbs, EventManager em, Config config){
         scheduler = sch;
         progressIndicator = pro;
-        _em = em;
+        this._em = em;
         isRunning = false;
         progressIndicator.setVisible(false);
         _olService = ols;

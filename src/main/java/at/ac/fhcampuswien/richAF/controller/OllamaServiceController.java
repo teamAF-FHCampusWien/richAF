@@ -1,5 +1,6 @@
 package at.ac.fhcampuswien.richAF.controller;
 
+import at.ac.fhcampuswien.richAF.data.EventManager;
 import at.ac.fhcampuswien.richAF.services.OllamaService;
 import javafx.animation.AnimationTimer;
 import javafx.scene.control.Label;
@@ -16,6 +17,7 @@ public class OllamaServiceController {
     public Circle cirOllama;
     public Tooltip ttOllama;
     private OllamaService olService;
+    private EventManager _em;
 
     private int _status;
 
@@ -36,17 +38,20 @@ public class OllamaServiceController {
     /**
      * Constructor: takes the given Controls to use it as his. sets the Status to pending and activates the AnimationTimer which
      * makes the status check every 30 seconds
+     *
      * @param lbl the Label-Control
      * @param cir the Circle-DrawingElement
-     * @param tt the Tooltip-Control
+     * @param tt  the Tooltip-Control
      * @param ols the OllamaService
+     * @param _em
      */
-    public OllamaServiceController(Label lbl, Circle cir, Tooltip tt, OllamaService ols) {
+    public OllamaServiceController(Label lbl, Circle cir, Tooltip tt, OllamaService ols, EventManager _em) {
         lblOllama = lbl;
         cirOllama = cir;
         ttOllama = tt;
         olService = ols;
         _status = -1;
+        this._em = _em;
         displayServiceStatus();
 
         // animationtimer like Backgroundworker but for JavaFx
@@ -73,16 +78,19 @@ public class OllamaServiceController {
     void displayServiceStatus() {
         switch (_status) {
             case 0: {
+                _em.logErrorMessage("Ollama Service not responding");
                 ttOllama.setText("not responding");
                 cirOllama.setFill(Color.RED);
                 break;
             }
             case 1: {
+                _em.logInfoMessage("Ollama Service running");
                 ttOllama.setText("running");
                 cirOllama.setFill(Color.GREEN);
                 break;
             }
             default: {
+                _em.logWarningMessage("Ollama Service pending");
                 ttOllama.setText("pending");
                 cirOllama.setFill(Color.ORANGE);
                 break;
@@ -102,6 +110,7 @@ public class OllamaServiceController {
                         set_status(0);
                 })// if an Exception happens then the service was not available
                 .exceptionally(ex -> {
+                    _em.logWarningMessage(ex);
                     set_status(0);
                     return null;
                 });
