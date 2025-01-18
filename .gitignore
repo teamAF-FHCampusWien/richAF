@@ -4,7 +4,7 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
-TestDB.db
+TestDB
 
 ### IntelliJ IDEA ###
 .idea/modules.xml

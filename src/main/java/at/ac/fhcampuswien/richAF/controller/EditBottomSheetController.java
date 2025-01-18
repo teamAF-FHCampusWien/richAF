@@ -66,7 +66,6 @@ public class EditBottomSheetController {
     }
 
 
-
     // Methods
     public void hideEditBottomSheet() {
         TranslateTransition slideDown = new TranslateTransition(Duration.millis(300), editBottomSheet);
