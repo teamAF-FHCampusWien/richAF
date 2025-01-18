@@ -1,5 +1,6 @@
 package at.ac.fhcampuswien.richAF.services;
 
+import at.ac.fhcampuswien.richAF.controller.Controller;
 import at.ac.fhcampuswien.richAF.crawler.Crawler;
 import at.ac.fhcampuswien.richAF.data.EventManager;
 import at.ac.fhcampuswien.richAF.model.*;
@@ -41,12 +42,12 @@ public class JobService {
         ArrayList<tblPage> lisPages = dbservice.getPages(Enums_.Status.NEW);
         // less than 1 Paragraph is not allowed
         if (pcounter < 1){
-            //em.logErrorMessage("CreateJobs: pcounter to low");
+            em.logErrorMessage("CreateJobs: pcounter to low");
             return;
         }
         for (tblPage p : lisPages) {
             if (!wecanrun) {
-                //em.logInfoMessage("CreateJobs: manual abort");
+                em.logInfoMessage("CreateJobs: manual abort");
                 return;
             }
             // get the page String into a structured Document Object with Jsoup
@@ -79,19 +80,19 @@ public class JobService {
                         dbservice.addJob(strParagraph ,p.getId());
                     // page done
                     dbservice.UpdateStatus(p, Enums_.Status.PROCESSED);
-                    //em.logInfoMessage(String.format("Page with id %s processed", p.getId()));
+                    em.logInfoMessage(String.format("Page with id %s processed", p.getId()));
                 }
                 // page is not a html page, the page is not relevant anymore
                 else {
                     dbservice.UpdateStatus(p, Enums_.Status.PROCESSED_FAILURE);
-                    //em.logInfoMessage(String.format("Page with id %s cant be processed", p.getId()));
+                    em.logInfoMessage(String.format("Page with id %s cant be processed", p.getId()));
                 }
 
 
             } catch (Exception e) {
                 dbservice.UpdateStatus(p, Enums_.Status.PROCESSED_FAILURE);
                 em.logErrorMessage(e);
-                //em.logErrorMessage(String.format("CreateJobs processing with doctype[%s] failed:%s",doc.documentType(),e.getMessage()));
+                em.logErrorMessage(String.format("CreateJobs processing with doctype[%s] failed:%s",doc.documentType(),e.getMessage()));
             }
         }
 
@@ -117,19 +118,20 @@ public class JobService {
         ollamaService.setTemperature();
         for (tblJob j : lisJobs) {
             if (!wecanrun) {
-                //em.logInfoMessage("ExecuteJobs: manual abort");
+                em.logWarningMessage("ExecuteJobs: manual abort");
                 return;
             }
             // for the response of the ollamaservice
             String response = "";
             // job enters status processing
             dbservice.UpdateStatus(j, Enums_.Status.PROCESSING);
+            em.logInfoMessage(String.format("ExecuteJobs processing Job-id %s",j.getId()));
 
             try {
                 // sending the Request to Ollama
                 response = ollamaService.askOllama(j.getStrParagraphs()).get();
                 if(!response.contains("response")){
-                    //em.logWarningMessage(String.format("ExecuteJobs processing failed: Ollama did not responded correctly (Job-id %s)",j.getId()));
+                    em.logWarningMessage(String.format("ExecuteJobs processing failed: Ollama did not responded correctly (Job-id %s)",j.getId()));
                     dbservice.UpdateStatus(j, Enums_.Status.PROCESSED_FAILURE);
                     continue;
                 }
@@ -185,7 +187,6 @@ public class JobService {
 
             } catch (InterruptedException | ExecutionException e) {
                 em.logErrorMessage(e);
-                //em.logErrorMessage(String.format("ExecuteJobs (Job-id %s):%s",j.getId(),e.getMessage()));
             }
             dbservice.UpdateStatus(j, Enums_.Status.PROCESSED);
         }
@@ -216,13 +217,13 @@ public class JobService {
     public static void CrawlerCrawl(DBService dbservice, Config conf, EventManager em) {
         JobService.wecanrun = true;
         if (conf.getProperty("crawleroff").equals("true")) {
-            System.err.println("WARNING CRAWLER DEACTIVATED");
+            em.logWarningMessage("Crawler deactivated");
             return;
         }
         ArrayList<tblSource> lissources = dbservice.getSources();
         for (tblSource s : lissources) {
             if (!wecanrun) {
-                //em.logInfoMessage("CreateJobs: manual abort");
+                em.logInfoMessage("CreateJobs: manual abort");
                 return;
             }
             int depth=2;
@@ -231,7 +232,7 @@ public class JobService {
             } catch (NumberFormatException e) {
                 em.logErrorMessage(e);
             }
-            Crawler crawler = new Crawler(s.getStrUrl(),depth);
+            Crawler crawler = new Crawler(s.getStrUrl(),depth, em);
             crawler.crawl();
 
             dbservice.SavePagesFromCrawler(crawler);

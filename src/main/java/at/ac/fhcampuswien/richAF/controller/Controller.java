@@ -123,6 +123,7 @@ public class Controller {
     // Constructors
     public Controller() {
         String logPath = Paths.get(System.getProperty("java.io.tmpdir"), "richAF.log").toString();
+        System.out.println(logPath);
         _em = new EventManager(logPath);
         _config = new Config();
         _olService = new OllamaService(_config, _em);
@@ -133,7 +134,7 @@ public class Controller {
     @FXML
     public void initialize() {
 
-        OllamaServiceController osc = new OllamaServiceController(lblOllama, cirOllama, ttOllama, _olService);
+        OllamaServiceController osc = new OllamaServiceController(lblOllama, cirOllama, ttOllama, _olService, _em);
         _scheduler = new ServiceScheduler(_schedulerExec, pgiJob, _olService, _dbService, _em,_config);
 
 // wird jetzt beim refresh gestartet
@@ -282,7 +283,7 @@ public class Controller {
         articles = new ArrayList<>();
         for (tblResult tblres : _dbService.GetResults())
          {
-            ArticleResult article = new ArticleResult(tblres.getStrResponeJson());
+            ArticleResult article = new ArticleResult(tblres.getStrResponeJson(), _em);
             articles.add(article);
         }
 
@@ -334,8 +335,7 @@ public class Controller {
                 cardsBox.getChildren().add(loader.getRoot());
 
             } catch (Exception e) {
-                //TODO: Add to logs @Botan(?)
-                e.printStackTrace();
+                _em.logErrorMessage(e);
             }
         }
     }
@@ -360,7 +360,7 @@ public class Controller {
 
         for (tblResult tblres : allResults) {
             // Convert JSON string to ArticleResult
-            ArticleResult article = new ArticleResult(tblres.getStrResponeJson());
+            ArticleResult article = new ArticleResult(tblres.getStrResponeJson(), this._em);
 
             // If trend is UP, increase the counter for that stock
             if ("UP".equalsIgnoreCase(article.getTrend())) {
@@ -441,7 +441,7 @@ public class Controller {
             slideUp.play();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            _em.logErrorMessage(e);
         }
     }
 
@@ -473,7 +473,7 @@ public class Controller {
             slideUp.play();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            _em.logErrorMessage(e);
         }
     }
 
@@ -505,7 +505,7 @@ public class Controller {
             slideIn.play();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            _em.logErrorMessage(e);
         }
     }
 
@@ -526,7 +526,7 @@ public class Controller {
                 devMenuController.loadDataFromConfig();
 
             } catch (IOException e) {
-                e.printStackTrace();
+                _em.logErrorMessage(e);
             }
         }
     }

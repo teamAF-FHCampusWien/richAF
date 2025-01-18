@@ -1,5 +1,6 @@
 package at.ac.fhcampuswien.richAF.crawler;
 
+import at.ac.fhcampuswien.richAF.data.EventManager;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
@@ -16,7 +17,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Log4j2
+
 @Getter
 @Setter
 public class Page implements Comparable<Page> {
@@ -27,12 +28,14 @@ public class Page implements Comparable<Page> {
     private Integer statusCode;
     private Set<URI> links;
     private Set<URI> disallowedLinks;
+    private EventManager _em;
 
-    public Page(URI uri) {
+    public Page(URI uri, EventManager em) {
         this.uri = uri;
         Pair<Integer, String> result = getContent(this.uri);
         this.rawContent = result.getRight();
         this.statusCode = result.getLeft();
+        this._em = em;
         this.links = findLinks();
     }
 
@@ -51,7 +54,7 @@ public class Page implements Comparable<Page> {
             }
             in.close();
         } catch (IOException e) {
-            log.error(e);
+            this._em.logErrorMessage("Error reading input stream: " + e.getMessage());
         }
         return content.toString();
     }
@@ -65,13 +68,14 @@ public class Page implements Comparable<Page> {
             con.disconnect();
             return Pair.of(status, content);
         } catch (IOException e) {
-            log.error(e);
+            this._em.logErrorMessage("Error getting content: " + e.getMessage());
             return Pair.of(404, "");
         }
     }
 
     private String parseLink(String link) {
         if (!link.startsWith("http") && !link.startsWith("/") && (link.contains(".") && !link.endsWith(".html"))) {
+            this._em.logWarningMessage("Link not supported: " + link);
             throw new IllegalArgumentException();
         }
         if (link.startsWith("http")) return link;
@@ -89,7 +93,10 @@ public class Page implements Comparable<Page> {
             try {
                 parsedLink = this.parseLink(rawResult);
             } catch (IllegalArgumentException e) {
-                log.error("Error parsing link: {}", rawResult);
+                if (rawResult.endsWith(".css")){
+                    _em.logErrorMessage(e);
+                    break;
+                }
                 continue;
             }
             rawLinks.add(parsedLink);
@@ -99,7 +106,7 @@ public class Page implements Comparable<Page> {
             try {
                 parsedLinks.add(URI.create(link));
             } catch (IllegalArgumentException e) {
-                log.error(e);
+                this._em.logErrorMessage("Error creating URI: " + link);
             }
         }
         return parsedLinks;

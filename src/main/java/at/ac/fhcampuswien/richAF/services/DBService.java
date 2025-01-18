@@ -1,5 +1,6 @@
 package at.ac.fhcampuswien.richAF.services;
 
+import at.ac.fhcampuswien.richAF.controller.Controller;
 import at.ac.fhcampuswien.richAF.data.EventManager;
 import at.ac.fhcampuswien.richAF.model.*;
 import at.ac.fhcampuswien.richAF.crawler.Crawler;
@@ -8,7 +9,6 @@ import at.ac.fhcampuswien.richAF.model.dao.*;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.Where;
-import com.j256.ormlite.support.DatabaseConnection;
 
 import java.net.URI;
 import java.sql.*;
@@ -29,13 +29,14 @@ public class DBService {
     /**
      * Constructor: setting the path for the Database and try the connection with getConnection
      * then the DBContext is created
+     *
      * @param config
-     * @param em EventManager object for logging
+     * @param _em
      */
-    public DBService(Config config, EventManager em)  {
+    public DBService(Config config, EventManager _em)  {
         _config = config;
         _url = _config.getProperty("db.url");
-        _em = em;
+        this._em = _em;
         Connection conn = getConnection();
 
         if (conn == null) {
@@ -44,9 +45,9 @@ public class DBService {
         }
         try {
             conn.close();
-            _context = new DBContext( config,allTablesExist(),_em );
+            _context = new DBContext( config,allTablesExist(), this._em);
         } catch (SQLException e) {
-            _em.logErrorMessage(e);
+            this._em.logErrorMessage(e);
         }
 
     }

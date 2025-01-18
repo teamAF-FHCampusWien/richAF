@@ -1,5 +1,6 @@
 package at.ac.fhcampuswien.richAF.crawler;
 
+import at.ac.fhcampuswien.richAF.data.EventManager;
 import at.ac.fhcampuswien.richAF.mesh.Mesh;
 import at.ac.fhcampuswien.richAF.mesh.Node;
 import lombok.Getter;
@@ -8,7 +9,6 @@ import lombok.extern.log4j.Log4j2;
 
 import java.net.URI;
 
-@Log4j2
 @Getter
 @Setter
 public class Crawler {
@@ -18,14 +18,17 @@ public class Crawler {
     private Node currentNode;
     private int maxDepth = 2;
     private int currentDepth = 0;
+    private EventManager _em;
 
-    public Crawler(String uri) {
-        this.currentNode = this.mesh.createNode(new Page(URI.create(uri)), this.currentNode);
+    public Crawler(String uri, EventManager em) {
+        this.currentNode = this.mesh.createNode(new Page(URI.create(uri),em), this.currentNode);
+        this._em = em;
     }
 
-    public Crawler(String uri, int maxDepth) {
-        this.currentNode = this.mesh.createNode(new Page(URI.create(uri)), this.currentNode);
+    public Crawler(String uri, int maxDepth, EventManager em) {
+        this.currentNode = this.mesh.createNode(new Page(URI.create(uri),em), this.currentNode);
         this.maxDepth = maxDepth;
+        this._em = em;
     }
 
     // Steps of the crawler
@@ -37,8 +40,8 @@ public class Crawler {
         currentDepth++;
         if (this.currentDepth == this.maxDepth) return;
         for (URI link : this.currentNode.getPage().getLinks()) {
-            mesh.createNode(new Page(link), this.currentNode);
-            log.info("New node created for URI: {}", link.toString());
+            mesh.createNode(new Page(link,this._em), this.currentNode);
+            this._em.logInfoMessage("New node created for URI: " + link.toString());
         }
     }
 }

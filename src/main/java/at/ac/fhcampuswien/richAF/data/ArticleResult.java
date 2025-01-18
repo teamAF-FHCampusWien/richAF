@@ -27,7 +27,7 @@ public class ArticleResult {
     }
 
     // Construct Object from json
-    public ArticleResult(String jsonString) {
+    public ArticleResult(String jsonString, EventManager _em) {
 
         JSONObject jsonResponseObject = new JSONObject(jsonString);
 
@@ -42,8 +42,8 @@ public class ArticleResult {
             this.source = jsonResponseObject.getString("source");
 
         } catch (Exception e) {
+            _em.logWarningMessage("Error while parsing JSON: " + e.getMessage());
             e.printStackTrace();
         }
     }
-
 }

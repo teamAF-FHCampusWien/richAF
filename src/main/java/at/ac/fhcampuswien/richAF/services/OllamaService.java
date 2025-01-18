@@ -1,5 +1,6 @@
 package at.ac.fhcampuswien.richAF.services;
 
+import at.ac.fhcampuswien.richAF.controller.Controller;
 import at.ac.fhcampuswien.richAF.data.EventManager;
 import at.ac.fhcampuswien.richAF.model.Config;
 
@@ -8,11 +9,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import org.json.JSONArray;
+
 import org.json.JSONObject;
 /**
  * Class containing the Ollama Service and its API Call
@@ -78,17 +76,18 @@ public class OllamaService {
      * sets the local config file which will be needed in the api call
      * creates a httpclient
      * sets the endpoint url of the ollama api
+     *
      * @param config
-     * @param em EventManager object for logging
+     * @param _em
      */
-    public OllamaService(Config config, EventManager em) {
+    public OllamaService(Config config, EventManager _em) {
         _config = config;
-        _em = em;
+        this._em = _em;
         try {
             respondtime = Integer.parseInt(_config.getProperty("ollama.respondtime"));
         } catch (NumberFormatException e) {
             respondtime = 15;
-            _em.logErrorMessage(e);
+            this._em.logErrorMessage(e);
         }
 
         client = HttpClient.newHttpClient();
